@@ -1,0 +1,43 @@
+{
+  "name": "node-video-chat",
+  "version": "1.0.0",
+  "description": "A peer-to-peer video and direct message chat app made with Node.js",
+  "main": "./bin/www",
+  "scripts": {
+    "test": "test",
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": ".git"
+  },
+  "keywords": [],
+  "author": "Dylan Cutler",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "body-parser": "^1.15.2",
+    "css-loader": "^0.26.1",
+    "debug": "^2.5.1",
+    "express": "^4.14.0",
+    "https": "^1.0.0",
+    "jade": "^1.11.0",
+    "jquery": "^3.1.1",
+    "json-loader": "^0.5.4",
+    "letsencrypt-express": "^2.0.5",
+    "node-sass": "^4.1.1",
+    "pusher": "^1.5.1",
+    "pusher-js": "^4.0.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "sass-loader": "^4.1.1",
+    "simple-peer": "^6.1.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.14.0",
+    "wrtc": "0.0.61"
+  }
+}
