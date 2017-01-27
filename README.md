@@ -10,4 +10,5 @@ Look at `bin/www.js` to see how the app uses the cryptographic info to create an
 
 To install run `npm install`
 Run `npm start`
+
 To get front-end code ready for browser run Webpack
