@@ -5,7 +5,7 @@ A working web RTC video and text chat.
 
 A simple MV node server that serves a video chat React app.
 
-# Needs an SSL certificate and key to work
+### Needs an SSL certificate and key to work
 Look at `bin/www.js` to see how the app uses the cryptographic info to create an HTTPS server.
 
 To install run `npm install`
