@@ -5,9 +5,7 @@ let express = require('express')
   , router = require('./routes')
   , path = require('path')
   , fs = require('fs')
-  , https = require('https')
-  , key = fs.readFileSync('sslcert/key.pem').toString()
-  , cert = fs.readFileSync('sslcert/cert.pem').toString()
+  , http = require('http')
   , bodyParser = require('body-parser');
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,7 +17,7 @@ app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 app.use(router);
 
-let server = https.createServer({ key, cert, passphrase: 'Dylan' }, app);
+let server = http.createServer();
 
 global.apiSuccessWrapper = (json, message) => Object.assign({}, json, { message, sucess: true });
 global.apiFailureWrapper = (json, message) => Object.assign({}, json, { message, sucess: false });
