@@ -7,6 +7,3 @@ TO RESOLVE PROBABLE NAT ISSUE (1)
 - Get HTTPS to not throw security warning
 TO RESOLVE NO-WEBRTC-COMPATIBILITY (2)
 - Try to get webcamjs working on current system
-
-https://www.ssls.com/user/certificates
-login: dylan.james.cutler@gmail.com, fn.bd
