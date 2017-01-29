@@ -17,7 +17,7 @@ app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 app.use(router);
 
-let server = http.createServer();
+let server = http.createServer(app);
 
 global.apiSuccessWrapper = (json, message) => Object.assign({}, json, { message, sucess: true });
 global.apiFailureWrapper = (json, message) => Object.assign({}, json, { message, sucess: false });
