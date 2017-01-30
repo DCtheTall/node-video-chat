@@ -1,6 +1,7 @@
 import * as React from "react";
+import { connect } from "react-redux";
 
-export default class Chat extends React.Component {
+class Chat extends React.Component {
   static propTypes = {
     server: React.PropTypes.object.isRequired
   }
@@ -22,21 +23,35 @@ export default class Chat extends React.Component {
     this.setState({ message: '' });
   }
   render() {
-    return (<div className="message-container">
-      <div className='message-display'>
-        {this.state.messages.map((msg, i) =>
-          (<span key={i}>
-            <span className='msg-tag'>{(msg.status === 'received' ? 'Friend>  ' : 'You>  ')}</span>
-            {msg.text}<br/>
-          </span>)
-        )}
+    return (
+      <div className="message-container">
+        <div className='message-display'>
+          {this.state.messages.map((msg, i) => (
+            <span key={i}>
+              <span className='msg-tag'>{(msg.status === 'received' ? 'Friend>  ' : 'You>  ')}</span>
+              {msg.text}<br/>
+            </span>
+          ))}
+        </div>
+        <input
+          className='message-input'
+          type='text'
+          onChange={ev => this.setState({ message: ev.target.value })}
+          value={this.state.message}
+        />
+        <button
+          disabled={this.state.message === ''}
+          onClick={ev => this.sendMessage()}
+        >
+          Send
+        </button>
       </div>
-      <input className='message-input'
-             type='text'
-             onChange={ev => this.setState({ message: ev.target.value })}
-             value={this.state.message}/>
-      <button disabled={this.state.message === ''}
-              onClick={ev => this.sendMessage()}>Send</button>
-    </div>);
+    );
   }
 }
+
+const mapStateToProps = ({ server }) => ({ server });
+
+const SmartChat = connect(mapStateToProps)(Chat);
+
+export default SmartChat;

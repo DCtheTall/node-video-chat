@@ -1,25 +1,32 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { createStore } from "redux";
+import {
+  connect,
+  Provider,
+} from "react-redux";
 
-import Host from "./components/host.jsx";
-import Connect from "./components/connect.jsx";
-import Video from "./components/video.jsx";
-import Chat from "./components/chat.jsx";
+import {
+  setStatus,
+  setStream,
+} from "./actions.js";
+import reducer from "./reducer.js";
+import SmartHost from "./components/host.jsx";
+import SmartConnect from "./components/connect.jsx";
+import SmartVideo from "./components/video.jsx";
+import SmartChat from "./components/chat.jsx";
+import SmartDisconnected from "./components/disconnect.jsx";
 
 let css = require('!style-loader!css-loader!sass-loader!./scss/main.scss');
 
-class Main extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      status: 'prompting',
-      server: null,
-      stream: null,
-      peerStream: null,
-    };
+const store = createStore(reducer);
+
+class App extends React.Component {
+  static propTypes = {
+    setStream: React.PropTypes.func.isRequired,
   }
   componentWillMount() {
-    const onSuccess = stream => this.setState({ stream });
+    const onSuccess = stream => this.props.setStream(stream);
     const onError = error => console.log(error);
     navigator.getUserMedia = ( navigator.mozGetUserMedia ||
                                navigator.getUserMedia ||
@@ -29,38 +36,56 @@ class Main extends React.Component {
   }
   render() {
     let children;
-    switch(this.state.status) {
+    switch(this.props.status) {
       case 'hosting':
-        children = (<Host stream={this.state.stream}
-                          setStatus={status => this.setState({ status })}
-                          setServer={server => this.setState({ server })}
-                          setPeerStream={peerStream => this.setState({ peerStream })}/>);
+        children = (<SmartHost />);
         break;
       case 'connecting':
-        children = (<Connect stream={this.state.stream}
-                             setStatus={status => this.setState({ status })}
-                             setServer={server => this.setState({ server })}
-                             setPeerStream={peerStream => this.setState({ peerStream })} />);
+        children = (<SmartConnect />);
         break;
       case 'connected':
-        children = (<div className="chat-container">
-          <Video peerStream={this.state.peerStream}
-                 ownStream={this.state.stream} />
-          <Chat server={this.state.server} />
-        </div>);
+        children = (
+          <div className="chat-container">
+            <SmartVideo />
+            <SmartChat />
+          </div>
+        );
+        break;
+      case 'disconnected':
+        children = (
+          <SmartDisconnected />
+        );
         break;
       case 'prompting':
       default:
-        children = (<div>
-          <button onClick={() => this.setState({ status: 'hosting' })}>Host</button>
-          <button onClick={() => this.setState({ status: 'connecting' })}>Connect</button>
-        </div>);
+        children = (
+          <div>
+            <button onClick={() => this.props.setStatus('hosting')}>
+              Host
+            </button>
+            <button onClick={() => this.props.setStatus('connecting')}>
+              Connect
+            </button>
+          </div>
+        );
+        break;
     }
-    return (<div className='container'>
-      <h2>Peer-to-Peer Chat</h2>
-      {children}
-    </div>);
+    return (
+      <div className='container'>
+        <h2>Peer-to-Peer Chat</h2>
+        {children}
+      </div>
+    );
   }
 }
 
-ReactDOM.render(<Main />, document.getElementById('entry-point'));
+const mapStateToProps = ({ status, server, peerServer }) => ({ status, server, peerServer });
+
+const SmartApp = connect(mapStateToProps, { setStatus, setStream })(App);
+
+ReactDOM.render(
+  (<Provider store={store}>
+    <SmartApp />
+  </Provider>),
+  document.getElementById('entry-point')
+);
