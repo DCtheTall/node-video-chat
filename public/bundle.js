@@ -487,8 +487,15 @@
 /* 4 */
 /***/ function(module, exports) {
 
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+
 	'use strict';
 	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
@@ -509,7 +516,7 @@
 			// Detect buggy property enumeration order in older V8 versions.
 
 			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
 			test1[5] = 'de';
 			if (Object.getOwnPropertyNames(test1)[0] === '5') {
 				return false;
@@ -538,7 +545,7 @@
 			}
 
 			return true;
-		} catch (e) {
+		} catch (err) {
 			// We don't expect any of the above to throw, but better to be safe.
 			return false;
 		}
@@ -558,8 +565,8 @@
 				}
 			}
 
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
 				for (var i = 0; i < symbols.length; i++) {
 					if (propIsEnumerable.call(from, symbols[i])) {
 						to[symbols[i]] = from[symbols[i]];
@@ -839,17 +846,6 @@
 	  }
 	};
 
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -889,8 +885,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 
 	module.exports = PooledClass;
@@ -3230,7 +3225,14 @@
 	    // We warn in this case but don't throw. We expect the element creation to
 	    // succeed and there will likely be errors in render.
 	    if (!validType) {
-	      process.env.NODE_ENV !== 'production' ? warning(false, 'React.createElement: type should not be null, undefined, boolean, or ' + 'number. It should be a string (for DOM elements) or a ReactClass ' + '(for composite components).%s', getDeclarationErrorAddendum()) : void 0;
+	      if (typeof type !== 'function' && typeof type !== 'string') {
+	        var info = '';
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	        info += getDeclarationErrorAddendum();
+	        process.env.NODE_ENV !== 'production' ? warning(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info) : void 0;
+	      }
 	    }
 
 	    var element = ReactElement.createElement.apply(this, arguments);
@@ -4201,7 +4203,7 @@
 
 	'use strict';
 
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 31 */
@@ -4400,6 +4402,13 @@
 	var internalInstanceKey = '__reactInternalInstance$' + Math.random().toString(36).slice(2);
 
 	/**
+	 * Check if a given node should be cached.
+	 */
+	function shouldPrecacheNode(node, nodeID) {
+	  return node.nodeType === 1 && node.getAttribute(ATTR_NAME) === String(nodeID) || node.nodeType === 8 && node.nodeValue === ' react-text: ' + nodeID + ' ' || node.nodeType === 8 && node.nodeValue === ' react-empty: ' + nodeID + ' ';
+	}
+
+	/**
 	 * Drill down (through composites and empty components) until we get a host or
 	 * host text component.
 	 *
@@ -4464,7 +4473,7 @@
 	    }
 	    // We assume the child nodes are in the same order as the child instances.
 	    for (; childNode !== null; childNode = childNode.nextSibling) {
-	      if (childNode.nodeType === 1 && childNode.getAttribute(ATTR_NAME) === String(childID) || childNode.nodeType === 8 && childNode.nodeValue === ' react-text: ' + childID + ' ' || childNode.nodeType === 8 && childNode.nodeValue === ' react-empty: ' + childID + ' ') {
+	      if (shouldPrecacheNode(childNode, childID)) {
 	        precacheNode(childInst, childNode);
 	        continue outer;
 	      }
@@ -6705,17 +6714,6 @@
 	  }
 	};
 
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -6755,8 +6753,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 
 	module.exports = PooledClass;
@@ -11574,12 +11571,18 @@
 	    } else {
 	      var contentToUse = CONTENT_TYPES[typeof props.children] ? props.children : null;
 	      var childrenToUse = contentToUse != null ? null : props.children;
+	      // TODO: Validate that text is allowed as a child of this node
 	      if (contentToUse != null) {
-	        // TODO: Validate that text is allowed as a child of this node
-	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, contentToUse);
+	        // Avoid setting textContent when the text is empty. In IE11 setting
+	        // textContent on a text area will cause the placeholder to not
+	        // show within the textarea until it has been focused and blurred again.
+	        // https://github.com/facebook/react/issues/6731#issuecomment-254874553
+	        if (contentToUse !== '') {
+	          if (process.env.NODE_ENV !== 'production') {
+	            setAndValidateContentChildDev.call(this, contentToUse);
+	          }
+	          DOMLazyTree.queueText(lazyTree, contentToUse);
 	        }
-	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
 	        for (var i = 0; i < mountImages.length; i++) {
@@ -13499,7 +13502,17 @@
 	      }
 	    } else {
 	      if (props.value == null && props.defaultValue != null) {
-	        node.defaultValue = '' + props.defaultValue;
+	        // In Chrome, assigning defaultValue to certain input types triggers input validation.
+	        // For number inputs, the display value loses trailing decimal points. For email inputs,
+	        // Chrome raises "The specified value <x> is not a valid email address".
+	        //
+	        // Here we check to see if the defaultValue has actually changed, avoiding these problems
+	        // when the user is inputting text
+	        //
+	        // https://github.com/facebook/react/issues/7253
+	        if (node.defaultValue !== '' + props.defaultValue) {
+	          node.defaultValue = '' + props.defaultValue;
+	        }
 	      }
 	      if (props.checked == null && props.defaultChecked != null) {
 	        node.defaultChecked = !!props.defaultChecked;
@@ -14246,9 +14259,15 @@
 	    // This is in postMount because we need access to the DOM node, which is not
 	    // available until after the component has mounted.
 	    var node = ReactDOMComponentTree.getNodeFromInstance(inst);
+	    var textContent = node.textContent;
 
-	    // Warning: node.value may be the empty string at this point (IE11) if placeholder is set.
-	    node.value = node.textContent; // Detach value from defaultValue
+	    // Only set node.value if textContent is equal to the expected
+	    // initial value. In IE10/IE11 there is a bug where the placeholder attribute
+	    // will populate textContent as well.
+	    // https://developer.microsoft.com/microsoft-edge/platform/issues/101525/
+	    if (textContent === inst._wrapperState.initialValue) {
+	      node.value = textContent;
+	    }
 	  }
 	};
 
@@ -15050,7 +15069,17 @@
 	    instance = ReactEmptyComponent.create(instantiateReactComponent);
 	  } else if (typeof node === 'object') {
 	    var element = node;
-	    !(element && (typeof element.type === 'function' || typeof element.type === 'string')) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : _prodInvariant('130', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : void 0;
+	    var type = element.type;
+	    if (typeof type !== 'function' && typeof type !== 'string') {
+	      var info = '';
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	      }
+	      info += getDeclarationErrorAddendum(element._owner);
+	       true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', type == null ? type : typeof type, info) : _prodInvariant('130', type == null ? type : typeof type, info) : void 0;
+	    }
 
 	    // Special case string values
 	    if (typeof element.type === 'string') {
@@ -15340,7 +15369,7 @@
 	      // Since plain JS classes are defined without any special initialization
 	      // logic, we can not catch common errors early. Therefore, we have to
 	      // catch them here, at initialization time, instead.
-	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved || inst.state, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.getDefaultProps || inst.getDefaultProps.isReactClassApproved, 'getDefaultProps was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Use a static property to define defaultProps instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.propTypes, 'propTypes was defined as an instance property on %s. Use a static ' + 'property to define propTypes instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.contextTypes, 'contextTypes was defined as an instance property on %s. Use a ' + 'static property to define contextTypes instead.', this.getName() || 'a component') : void 0;
@@ -16344,14 +16373,11 @@
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(35),
-	    _assign = __webpack_require__(4);
+	var _prodInvariant = __webpack_require__(35);
 
 	var invariant = __webpack_require__(8);
 
 	var genericComponentClass = null;
-	// This registry keeps track of wrapper classes around host tags.
-	var tagToComponentClass = {};
 	var textComponentClass = null;
 
 	var ReactHostComponentInjection = {
@@ -16364,11 +16390,6 @@
 	  // rendered as props.
 	  injectTextComponentClass: function (componentClass) {
 	    textComponentClass = componentClass;
-	  },
-	  // This accepts a keyed object with classes as values. Each key represents a
-	  // tag. That particular tag will use this class instead of the generic one.
-	  injectComponentClasses: function (componentClasses) {
-	    _assign(tagToComponentClass, componentClasses);
 	  }
 	};
 
@@ -21223,7 +21244,7 @@
 
 	'use strict';
 
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 172 */
@@ -21787,17 +21808,16 @@
 	  self.destroyed = false
 	  self.connected = false
 
-	  // so Peer object always has same shape (V8 optimization)
 	  self.remoteAddress = undefined
 	  self.remoteFamily = undefined
 	  self.remotePort = undefined
 	  self.localAddress = undefined
 	  self.localPort = undefined
 
-	  self._isWrtc = !!opts.wrtc // HACK: to fix `wrtc` bug. See issue: #60
 	  self._wrtc = (opts.wrtc && typeof opts.wrtc === 'object')
 	    ? opts.wrtc
 	    : getBrowserRTC()
+
 	  if (!self._wrtc) {
 	    if (typeof window === 'undefined') {
 	      throw new Error('No WebRTC support: Specify `opts.wrtc` option in this environment')
@@ -21819,6 +21839,12 @@
 	  self._reconnectTimeout = null
 
 	  self._pc = new (self._wrtc.RTCPeerConnection)(self.config, self.constraints)
+
+	  // We prefer feature detection whenever possible, but sometimes that's not
+	  // possible for certain implementations.
+	  self._isWrtc = Array.isArray(self._pc.RTCIceConnectionStates)
+	  self._isReactNativeWebrtc = typeof self._pc._peerConnectionId === 'number'
+
 	  self._pc.oniceconnectionstatechange = function () {
 	    self._onIceConnectionStateChange()
 	  }
@@ -21844,18 +21870,18 @@
 	  }
 
 	  if (self.initiator) {
-	    self._setupData({
-	      channel: self._pc.createDataChannel(self.channelName, self.channelConfig)
-	    })
-
 	    var createdOffer = false
 	    self._pc.onnegotiationneeded = function () {
 	      if (!createdOffer) self._createOffer()
 	      createdOffer = true
 	    }
-	    // Only Chrome triggers "negotiationneeded"; this is a workaround for other
-	    // implementations
-	    if (typeof window === 'undefined' || !window.webkitRTCPeerConnection) {
+
+	    self._setupData({
+	      channel: self._pc.createDataChannel(self.channelName, self.channelConfig)
+	    })
+
+	    // HACK: wrtc doesn't fire the 'negotionneeded' event
+	    if (self._isWrtc) {
 	      self._pc.onnegotiationneeded()
 	    }
 	  } else {
@@ -21896,8 +21922,7 @@
 	Peer.config = {
 	  iceServers: [
 	    {
-	      url: 'stun:23.21.150.121', // deprecated, replaced by `urls`
-	      urls: 'stun:23.21.150.121'
+	      urls: 'stun:stun.l.google.com:19302'
 	    }
 	  ]
 	}
@@ -21965,8 +21990,9 @@
 	Peer.prototype.send = function (chunk) {
 	  var self = this
 
-	  // HACK: `wrtc` module doesn't accept node.js buffer. See issue: #60
-	  if (Buffer.isBuffer(chunk) && self._isWrtc) {
+	  // HACK: `wrtc` module crashes on Node.js Buffer, so convert to Uint8Array
+	  // See: https://github.com/feross/simple-peer/issues/60
+	  if (self._isWrtc && Buffer.isBuffer(chunk)) {
 	    chunk = new Uint8Array(chunk)
 	  }
 
@@ -22152,31 +22178,48 @@
 
 	Peer.prototype.getStats = function (cb) {
 	  var self = this
-	  if (!self._pc.getStats) { // No ability to call stats
-	    cb([])
-	  } else if (typeof window !== 'undefined' && !!window.mozRTCPeerConnection) { // Mozilla
-	    self._pc.getStats(null, function (res) {
-	      var items = []
-	      res.forEach(function (item) {
-	        items.push(item)
+
+	  // Promise-based getStats() (standard)
+	  if (self._pc.getStats.length === 0) {
+	    self._pc.getStats().then(function (res) {
+	      var reports = []
+	      res.forEach(function (report) {
+	        reports.push(report)
 	      })
-	      cb(items)
+	      cb(reports)
 	    }, function (err) { self._onError(err) })
-	  } else {
-	    self._pc.getStats(function (res) { // Chrome
-	      var items = []
-	      res.result().forEach(function (result) {
-	        var item = {}
-	        result.names().forEach(function (name) {
-	          item[name] = result.stat(name)
-	        })
-	        item.id = result.id
-	        item.type = result.type
-	        item.timestamp = result.timestamp
-	        items.push(item)
+
+	  // Two-parameter callback-based getStats() (deprecated, former standard)
+	  } else if (self._isReactNativeWebrtc) {
+	    self._pc.getStats(null, function (res) {
+	      var reports = []
+	      res.forEach(function (report) {
+	        reports.push(report)
 	      })
-	      cb(items)
-	    })
+	      cb(reports)
+	    }, function (err) { self._onError(err) })
+
+	  // Single-parameter callback-based getStats() (non-standard)
+	  } else if (self._pc.getStats.length > 0) {
+	    self._pc.getStats(function (res) {
+	      var reports = []
+	      res.result().forEach(function (result) {
+	        var report = {}
+	        result.names().forEach(function (name) {
+	          report[name] = result.stat(name)
+	        })
+	        report.id = result.id
+	        report.type = result.type
+	        report.timestamp = result.timestamp
+	        reports.push(report)
+	      })
+	      cb(reports)
+	    }, function (err) { self._onError(err) })
+
+	  // Unknown browser, skip getStats() since it's anyone's guess which style of
+	  // getStats() they implement.
+	  } else {
+	    cb([])
 	  }
 	}
 
@@ -22192,48 +22235,78 @@
 
 	    var remoteCandidates = {}
 	    var localCandidates = {}
+	    var candidatePairs = {}
 
-	    function setActiveCandidates (item) {
-	      var local = localCandidates[item.localCandidateId]
-	      var remote = remoteCandidates[item.remoteCandidateId]
+	    items.forEach(function (item) {
+	      // TODO: Once all browsers support the hyphenated stats report types, remove
+	      // the non-hypenated ones
+	      if (item.type === 'remotecandidate' || item.type === 'remote-candidate') {
+	        remoteCandidates[item.id] = item
+	      }
+	      if (item.type === 'localcandidate' || item.type === 'local-candidate') {
+	        localCandidates[item.id] = item
+	      }
+	      if (item.type === 'candidatepair' || item.type === 'candidate-pair') {
+	        candidatePairs[item.id] = item
+	      }
+	    })
 
-	      if (local) {
+	    items.forEach(function (item) {
+	      // Spec-compliant
+	      if (item.type === 'transport') {
+	        setSelectedCandidatePair(candidatePairs[item.selectedCandidatePairId])
+	      }
+
+	      // Old implementations
+	      if (
+	        (item.type === 'googCandidatePair' && item.googActiveConnection === 'true') ||
+	        ((item.type === 'candidatepair' || item.type === 'candidate-pair') && item.selected)
+	      ) {
+	        setSelectedCandidatePair(item)
+	      }
+	    })
+
+	    function setSelectedCandidatePair (selectedCandidatePair) {
+	      var local = localCandidates[selectedCandidatePair.localCandidateId]
+
+	      if (local && local.ip) {
+	        // Spec
+	        self.localAddress = local.ip
+	        self.localPort = Number(local.port)
+	      } else if (local && local.ipAddress) {
+	        // Firefox
 	        self.localAddress = local.ipAddress
 	        self.localPort = Number(local.portNumber)
-	      } else if (typeof item.googLocalAddress === 'string') {
-	        // Sometimes `item.id` is undefined in `wrtc` and Chrome
-	        // See: https://github.com/feross/simple-peer/issues/66
-	        local = item.googLocalAddress.split(':')
+	      } else if (typeof selectedCandidatePair.googLocalAddress === 'string') {
+	        // TODO: remove this once Chrome 58 is released
+	        local = selectedCandidatePair.googLocalAddress.split(':')
 	        self.localAddress = local[0]
 	        self.localPort = Number(local[1])
 	      }
-	      self._debug('connect local: %s:%s', self.localAddress, self.localPort)
 
-	      if (remote) {
+	      var remote = remoteCandidates[selectedCandidatePair.remoteCandidateId]
+
+	      if (remote && remote.ip) {
+	        // Spec
+	        self.remoteAddress = remote.ip
+	        self.remotePort = Number(remote.port)
+	      } else if (remote && remote.ipAddress) {
+	        // Firefox
 	        self.remoteAddress = remote.ipAddress
 	        self.remotePort = Number(remote.portNumber)
-	        self.remoteFamily = 'IPv4'
-	      } else if (typeof item.googRemoteAddress === 'string') {
-	        remote = item.googRemoteAddress.split(':')
+	      } else if (typeof selectedCandidatePair.googRemoteAddress === 'string') {
+	        // TODO: remove this once Chrome 58 is released
+	        remote = selectedCandidatePair.googRemoteAddress.split(':')
 	        self.remoteAddress = remote[0]
 	        self.remotePort = Number(remote[1])
-	        self.remoteFamily = 'IPv4'
 	      }
-	      self._debug('connect remote: %s:%s', self.remoteAddress, self.remotePort)
-	    }
+	      self.remoteFamily = 'IPv4'
 
-	    items.forEach(function (item) {
-	      if (item.type === 'remotecandidate') remoteCandidates[item.id] = item
-	      if (item.type === 'localcandidate') localCandidates[item.id] = item
-	    })
-
-	    items.forEach(function (item) {
-	      var isCandidatePair = (
-	        (item.type === 'googCandidatePair' && item.googActiveConnection === 'true') ||
-	        (item.type === 'candidatepair' && item.selected)
+	      self._debug(
+	        'connect local: %s:%s remote: %s:%s',
+	        self.localAddress, self.localPort, self.remoteAddress, self.remotePort
 	      )
-	      if (isCandidatePair) setActiveCandidates(item)
-	    })
+	    }
 
 	    if (self._chunk) {
 	      try {
@@ -24407,20 +24480,20 @@
 	  // NB: In an Electron preload script, document will be defined but not fully
 	  // initialized. Since we know we're in Chrome, we'll just detect this case
 	  // explicitly
-	  if (typeof window !== 'undefined' && typeof window.process !== 'undefined' && window.process.type === 'renderer') {
+	  if (typeof window !== 'undefined' && window && typeof window.process !== 'undefined' && window.process.type === 'renderer') {
 	    return true;
 	  }
 
 	  // is webkit? http://stackoverflow.com/a/16459606/376773
 	  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-	  return (typeof document !== 'undefined' && 'WebkitAppearance' in document.documentElement.style) ||
+	  return (typeof document !== 'undefined' && document && 'WebkitAppearance' in document.documentElement.style) ||
 	    // is firebug? http://stackoverflow.com/a/398120/376773
-	    (typeof window !== 'undefined' && window.console && (console.firebug || (console.exception && console.table))) ||
+	    (typeof window !== 'undefined' && window && window.console && (console.firebug || (console.exception && console.table))) ||
 	    // is firefox >= v31?
 	    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-	    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+	    (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
 	    // double check webkit in userAgent just in case we are in a worker
-	    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+	    (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
 	}
 
 	/**
@@ -24546,11 +24619,6 @@
 	  try {
 	    return window.localStorage;
 	  } catch (e) {}
-	}
-
-	/** Attach to Window*/
-	if (window) {
-	  window.debug = exports;
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))

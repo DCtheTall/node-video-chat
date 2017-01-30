@@ -47,7 +47,7 @@ export default class Connect extends React.Component {
       console.log(data.message);
 
       let stream = this.props.stream;
-      peer = new Peer({ stream, wrtc  });
+      peer = new Peer({ stream, wrtc });
       peer.on('signal', data => {
         channel.trigger('client-signal-'+ clientID, { userId: 2, data });
       });
