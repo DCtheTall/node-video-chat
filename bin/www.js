@@ -1,5 +1,7 @@
 "use strict";
 
+require('dotenv').load();
+
 var server = require('../app')
   , debug = require('debug')
   , port = normalizePort(process.env.PORT || 3000);
