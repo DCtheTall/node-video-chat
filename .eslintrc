@@ -1,0 +1,66 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "globals": {
+    "models": true,
+    "successResponse": true,
+    "failureResponse": true,
+    "ObjectId": true
+  },
+  "plugins": [
+    "jsx-a11y",
+    "import",
+    "react"
+  ],
+  "rules": {
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "ignore"
+      }
+    ],
+    "valid-jsdoc": [
+      "error",
+      {
+        "requireReturn": true,
+        "requireReturnType": true,
+        "requireParamDescription": true,
+        "requireReturnDescription": true
+      }
+    ],
+    "require-jsdoc": [
+      "error",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true
+        }
+      }
+    ],
+    "no-console": 0,
+    "max-len": 0,
+    "no-param-reassign": 1,
+    "no-shadow": [
+      "error",
+      {
+        "allow": [
+          "err"
+        ]
+      }
+    ],
+    "no-underscore-dangle": 0,
+    "react/require-default-props": 0,
+    "no-return-assign": 0
+  }
+}
