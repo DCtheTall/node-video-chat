@@ -61,6 +61,7 @@
     ],
     "no-underscore-dangle": 0,
     "react/require-default-props": 0,
-    "no-return-assign": 0
+    "no-return-assign": 0,
+    "react/prefer-stateless-function": 0
   }
 }
