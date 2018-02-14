@@ -1,3 +1,5 @@
+if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line
+
 const publicPath = require('./webpack/public-path');
 const nodeExternals = require('webpack-node-externals');
 
