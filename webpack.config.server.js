@@ -1,7 +1,8 @@
-if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line
+if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line global-require
 
 const publicPath = require('./webpack/public-path');
 const nodeExternals = require('webpack-node-externals');
+const { serverPlugins: plugins } = require('./webpack/plugins');
 
 module.exports = {
   name: 'server',
@@ -28,4 +29,5 @@ module.exports = {
       },
     }],
   },
+  plugins,
 };

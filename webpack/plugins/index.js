@@ -12,4 +12,12 @@ const serverPlugins = [
   ...commonPlugins,
 ];
 
-module.exports = { serverPlugins };
+const clientPlugins = [
+  ...commonPlugins,
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: Infinity,
+  }),
+];
+
+module.exports = { serverPlugins, clientPlugins };

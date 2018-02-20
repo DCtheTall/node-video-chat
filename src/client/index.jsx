@@ -6,10 +6,10 @@ import App from './app';
  * @returns {undefined}
  */
 function render() {
-  ReactDOM.render(
+  ReactDOM.hydrate(
     <App />,
     document.getElementById('entry-point')
   );
 }
 
-window.onload = render;
+render();

@@ -15,6 +15,8 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false, limit: '2mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 
+app.use(express.static(path.join('.', '/public')));
+
 // Views
 app.set('view engine', 'pug');
 app.set('views', path.join('.', '/views/'));

@@ -15,7 +15,7 @@ function normalizePort(val) {
   return isNaN(port) ? val : port;
 }
 
-const port = normalizePort(process.env.PORT || 3001);
+const port = normalizePort(process.env.PORT || 4000);
 const server = http.createServer(app);
 
 /**
