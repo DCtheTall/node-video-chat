@@ -18,6 +18,11 @@ const clientPlugins = [
     name: 'vendor',
     minChunks: Infinity,
   }),
+  // new webpack.optimize.CommonsChunkPlugin({
+  //   name: 'wp-runtime',
+  //   chunks: ['app', 'vendor'],
+  // }),
+  new webpack.optimize.AggressiveSplittingPlugin(),
 ];
 
 module.exports = { serverPlugins, clientPlugins };
