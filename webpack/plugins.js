@@ -15,9 +15,9 @@ const serverPlugins = [
 const clientPlugins = [
   ...commonPlugins,
   new webpack.optimize.CommonsChunkPlugin({
-    name: ['app', 'vendor'],
+    names: ['app', 'vendor'],
+    minChunks: Infinity,
   }),
-  new webpack.optimize.AggressiveSplittingPlugin(),
   new webpack.optimize.ModuleConcatenationPlugin(),
 ];
 

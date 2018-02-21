@@ -2,6 +2,7 @@ if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line glob
 
 const publicPath = require('./webpack/public-path');
 const vendor = require('./webpack/vendor.js');
+const { clientPlugins: plugins } = require('./webpack/plugins');
 
 module.exports = {
   name: 'browser',
@@ -31,4 +32,5 @@ module.exports = {
       },
     }],
   },
+  plugins,
 };
