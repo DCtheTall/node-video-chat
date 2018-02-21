@@ -15,14 +15,10 @@ const serverPlugins = [
 const clientPlugins = [
   ...commonPlugins,
   new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity,
+    name: ['app', 'vendor'],
   }),
-  // new webpack.optimize.CommonsChunkPlugin({
-  //   name: 'wp-runtime',
-  //   chunks: ['app', 'vendor'],
-  // }),
   new webpack.optimize.AggressiveSplittingPlugin(),
+  new webpack.optimize.ModuleConcatenationPlugin(),
 ];
 
 module.exports = { serverPlugins, clientPlugins };

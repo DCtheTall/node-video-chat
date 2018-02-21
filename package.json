@@ -32,6 +32,9 @@
     "pug": "^2.0.0-rc.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-router": "^4.2.0",
+    "react-router-config": "^1.0.0-beta.4",
+    "react-router-dom": "^4.2.2",
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.10.0",
     "webpack-node-externals": "^1.6.0"

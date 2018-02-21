@@ -1,20 +1,20 @@
 if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line global-require
 
 const publicPath = require('./webpack/public-path');
-const vendor = require('./webpack/vendor');
+const vendor = require('./webpack/vendor.js');
 
 module.exports = {
   name: 'browser',
   entry: {
-    app: './src/client/index.jsx',
     vendor,
+    app: './src/client/index.jsx',
   },
   target: 'web',
   output: {
     publicPath,
     path: `${__dirname}/public/dist/`,
     filename: '[name].js',
-    chunkFilename: '[name].js',
+    chunkFilename: '[name].[chunkhash].js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],

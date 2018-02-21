@@ -21,6 +21,6 @@ app.use(express.static(path.join('.', '/public')));
 app.set('view engine', 'pug');
 app.set('views', path.join('.', '/views/'));
 
-app.get('/', render);
+app.get('*', render);
 
 module.exports = app;
