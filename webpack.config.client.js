@@ -3,6 +3,7 @@ if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line glob
 const publicPath = require('./webpack/public-path');
 const vendor = require('./webpack/vendor.js');
 const { clientPlugins: plugins } = require('./webpack/plugins');
+const rules = require('./webpack/rules');
 
 module.exports = {
   name: 'browser',
@@ -20,17 +21,6 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  module: {
-    rules: [{
-      test: /\.jsx?$/,
-      exclude: /(node_modules|bower_components)/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['react', 'es2015', 'stage-1'],
-        },
-      },
-    }],
-  },
+  module: { rules },
   plugins,
 };

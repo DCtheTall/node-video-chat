@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import { HELLO_WORLD_QUERY } from '../queries/hello-world';
+import HELLO_WORLD_QUERY from '../queries/hello-world.graphql';
 
 /**
  * @class HelloWorld
@@ -15,16 +15,16 @@ class HelloWorld extends React.PureComponent {
   render() {
     return (
       <div>
-        Hello {this.props.helloWorld.hello}
+        Hello {this.props.data.hello}
       </div>
     );
   }
 }
 
 HelloWorld.propTypes = {
-  helloWorld: PropTypes.shape({
+  data: PropTypes.shape({
     hello: PropTypes.string,
   }),
 };
 
-export default graphql(HELLO_WORLD_QUERY, { name: 'helloWorld' })(HelloWorld);
+export default graphql(HELLO_WORLD_QUERY)(HelloWorld);
