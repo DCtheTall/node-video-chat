@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const commonPlugins = [
   new webpack.DefinePlugin({
     'process.env': {
-      APP_URL: JSON.stringify(process.env.APP_URL),
+      GRAPHQL_URI: JSON.stringify(process.env.GRAPHQL_URI),
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
     },
   }),

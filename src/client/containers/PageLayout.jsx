@@ -9,18 +9,6 @@ import HelloWorld from '../components/HelloWorld';
  */
 class PageLayout extends React.Component {
   /**
-   * @constructor
-   * @constructs PageLaout
-   * @param {Object} props for component
-   */
-  constructor(props) {
-    super(props);
-    this.state = { mounted: false };
-  }
-  componentDidMount() {
-    this.setState({ mounted: true });
-  }
-  /**
    * render
    * @returns {JSX.Element} HTML
    */
@@ -28,7 +16,7 @@ class PageLayout extends React.Component {
     return (
       <div className="app-container">
         {renderRoutes(this.props.route.routes)}
-        {this.state.mounted && <HelloWorld />}
+        <HelloWorld />
       </div>
     );
   }
