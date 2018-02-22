@@ -2,8 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import routes from './routes';
-// import PropTypes from 'prop-types';
+
+const link = new HttpLink({ uri: `${process.env.APP_URL}/graphql` });
+const cache = new InMemoryCache();
+const client = new ApolloClient({ link, cache });
 
 /**
  * @class Router
@@ -16,9 +23,11 @@ class Routes extends React.PureComponent {
    */
   render() {
     return (
-      <BrowserRouter>
-        {renderRoutes(routes)}
-      </BrowserRouter>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          {renderRoutes(routes)}
+        </BrowserRouter>
+      </ApolloProvider>
     );
   }
 }

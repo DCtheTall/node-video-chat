@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const render = require('./render');
 const path = require('path');
+const schema = require('./schema');
+const graphqlMiddleware = require('express-graphql');
 
 const app = express();
 
@@ -20,6 +22,9 @@ app.use(express.static(path.join('.', '/public')));
 // Views
 app.set('view engine', 'pug');
 app.set('views', path.join('.', '/views/'));
+
+// GraphQL
+app.use('/graphql', graphqlMiddleware({ schema, graphiql: false }));
 
 app.get('*', render);
 
