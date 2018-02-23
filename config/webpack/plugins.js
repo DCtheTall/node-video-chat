@@ -2,10 +2,7 @@ const webpack = require('webpack');
 
 const commonPlugins = [
   new webpack.DefinePlugin({
-    'process.env': {
-      GRAPHQL_URI: JSON.stringify(process.env.GRAPHQL_URI),
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    },
+    'process.env': JSON.stringify(process.env),
   }),
 ];
 
