@@ -1,3 +1,5 @@
 query helloWorld {
-  hello
+  user: user(id: 1) {
+    email
+  }
 }

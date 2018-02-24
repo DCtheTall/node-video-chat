@@ -15,7 +15,7 @@ class HelloWorld extends React.PureComponent {
   render() {
     return (
       <div>
-        Hello {this.props.data.hello}
+        Hello {this.props.data.user && this.props.data.user.email}
       </div>
     );
   }
@@ -23,7 +23,7 @@ class HelloWorld extends React.PureComponent {
 
 HelloWorld.propTypes = {
   data: PropTypes.shape({
-    hello: PropTypes.string,
+    user: PropTypes.shape(),
   }),
 };
 
