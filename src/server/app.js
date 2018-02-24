@@ -5,6 +5,7 @@ const render = require('./render');
 const path = require('path');
 const schema = require('./schema');
 const graphqlMiddleware = require('express-graphql');
+const models = require('./models');
 
 const app = express();
 
@@ -25,6 +26,9 @@ app.set('views', path.join('.', '/views/'));
 
 // GraphQL
 app.use('/graphql', graphqlMiddleware({ schema, graphiql: false }));
+
+// Models
+global.models = models;
 
 app.get('*', render);
 
