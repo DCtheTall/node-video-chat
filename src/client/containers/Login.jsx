@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import CURRENT_USER_ID_QUERY from '../queries/current-user/current-user-id.graphql';
+import { INDEX_ROUTE } from '../routes/constants';
+import { isLoggedIn } from '../helpers/auth-helpers';
 
 /**
  * @class Login
@@ -22,6 +24,14 @@ class Login extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
   }
   /**
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    if (isLoggedIn(this.props.data.user)) {
+      this.context.router.history.replace(INDEX_ROUTE);
+    }
+  }
+  /**
    * @param {Object} event the change event
    * @returns {undefined}
    */
@@ -33,13 +43,6 @@ class Login extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
-    // if (this.props.data.loading) {
-    //   return (
-    //     <div>
-    //       Loading...
-    //     </div>
-    //   );
-    // }
     return (
       <div>
         Log in:
@@ -65,9 +68,14 @@ class Login extends React.PureComponent {
   }
 }
 
+Login.contextTypes = {
+  router: PropTypes.shape(),
+};
+
 Login.propTypes = {
   data: PropTypes.shape({
     loading: PropTypes.bool,
+    user: PropTypes.shape(),
   }),
 };
 

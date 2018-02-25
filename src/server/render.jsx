@@ -34,7 +34,7 @@ function createApp(client) {
  * @returns {undefined}
  */
 async function render(req, res) {
-  const link = new SchemaLink({ schema });
+  const link = new SchemaLink({ schema, context: req });
   const cache = new InMemoryCache();
   const client = new ApolloClient({ link, cache, ssrMode: true });
   const App = createApp(client);

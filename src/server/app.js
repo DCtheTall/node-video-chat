@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const render = require('./render');
 const path = require('path');
 const schema = require('./schema');
-const graphqlMiddleware = require('express-graphql');
+const graphqlExpress = require('express-graphql');
 const models = require('./models');
 
 const app = express();
@@ -25,9 +25,7 @@ app.set('view engine', 'pug');
 app.set('views', path.join('.', '/views/'));
 
 // GraphQL
-app.use('/graphql', graphqlMiddleware(
-  req => ({ schema, graphiql: false, rootValue: { req } })
-));
+app.use('/graphql', graphqlExpress({ schema, graphiql: false }));
 
 // Models
 global.models = models;
