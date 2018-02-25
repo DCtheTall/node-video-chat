@@ -1,54 +1,46 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { renderToString } = require('react-dom/server');
+// const { renderToString } = require('react-dom/server');
 const StaticRouter = require('react-router-dom/StaticRouter').default;
 const { renderRoutes } = require('react-router-config');
-const { createHttpLink } = require('apollo-link-http');
+const { SchemaLink } = require('apollo-link-schema');
 const { InMemoryCache } = require('apollo-cache-inmemory');
 const { ApolloClient } = require('apollo-client');
-const { ApolloProvider } = require('react-apollo');
-const fetch = require('node-fetch');
+const { ApolloProvider, renderToStringWithData } = require('react-apollo');
+const schema = require('./schema');
 const routes = require('../client/routes').default;
 
 const context = {};
 
 /**
- * @param {Object} props for app
- * @returns {JSX.Element} React app
+ * @param {ApolloClient} client for GraphQL
+ * @returns {function} React.Component app
  */
-function App(props) {
-  return (
-    <StaticRouter location={props.location} context={context}>
-      {renderRoutes(routes)}
-    </StaticRouter>
+function createApp(client) {
+  const App = ({ location }) => (
+    <ApolloProvider client={client}>
+      <StaticRouter location={location} context={context}>
+        {renderRoutes(routes)}
+      </StaticRouter>
+    </ApolloProvider>
   );
+  App.propTypes = { location: PropTypes.string };
+  return App;
 }
-
-App.propTypes = {
-  location: PropTypes.string,
-};
 
 /**
  * @param {Express.Request} req HTTP request
  * @param {Express.Response} res HTTP response
  * @returns {undefined}
  */
-function render(req, res) {
-  const link = createHttpLink({
-    fetch,
-    uri: process.env.GRAPHQL_URI,
-    headers: {
-      cookie: req.header('Cookie'),
-    },
-  });
+async function render(req, res) {
+  const link = new SchemaLink({ schema });
   const cache = new InMemoryCache();
   const client = new ApolloClient({ link, cache, ssrMode: true });
-  const html = renderToString((
-    <ApolloProvider client={client}>
-      <App location={req.url} />
-    </ApolloProvider>
-  ));
-  res.render('index', { html });
+  const App = createApp(client);
+  const html = await renderToStringWithData(<App location={req.url} />);
+  const initialState = client.extract(); console.log(client.extract());
+  res.render('index', { html, state: JSON.stringify(initialState) });
 }
 
 module.exports = render;

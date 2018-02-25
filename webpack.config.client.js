@@ -9,8 +9,9 @@ module.exports = {
   name: 'browser',
   entry: {
     vendor,
-    app: './src/client/index.jsx',
+    app: ['babel-polyfill', './src/client/index.jsx'],
   },
+  devtool: 'cheap-eval-source-map',
   target: 'web',
   output: {
     publicPath,

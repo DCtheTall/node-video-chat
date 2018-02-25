@@ -1,15 +1,10 @@
-const {
-  GraphQLNonNull,
-  GraphQLInt,
-} = require('graphql');
 const User = require('../../types/user');
+const { GraphQLInt } = require('graphql');
 
 module.exports = {
   type: User,
   args: {
-    id: {
-      type: new GraphQLNonNull(GraphQLInt),
-    },
+    id: { type: GraphQLInt },
   },
-  resolve: (root, { id }) => models.user.findById(id),
+  resolve: (_, args) => models.user.findById(args.id),
 };

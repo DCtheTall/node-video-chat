@@ -1,5 +1,5 @@
 query helloWorld {
-  user: user(id: 1) {
-    email
+  currentUser {
+    id
   }
 }

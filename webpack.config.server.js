@@ -7,7 +7,7 @@ const rules = require('./config/webpack/rules');
 
 module.exports = {
   name: 'server',
-  entry: './bin/start.js',
+  entry: ['babel-polyfill', './bin/start.js'],
   target: 'node',
   node: {
     __dirname: false,

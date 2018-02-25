@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { renderRoutes } from 'react-router-config';
-import HelloWorld from '../components/HelloWorld';
 
 /**
  * @class PageLayout
@@ -16,7 +15,6 @@ class PageLayout extends React.Component {
     return (
       <div className="app-container">
         {renderRoutes(this.props.route.routes)}
-        <HelloWorld />
       </div>
     );
   }

@@ -2,6 +2,8 @@ module.exports = [
   'apollo-cache-inmemory',
   'apollo-client',
   'apollo-link-http',
+  'axios',
+  'graphql-tag',
   'prop-types',
   'react',
   'react-apollo',
