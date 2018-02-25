@@ -39,8 +39,8 @@ async function render(req, res) {
   const client = new ApolloClient({ link, cache, ssrMode: true });
   const App = createApp(client);
   const html = await renderToStringWithData(<App location={req.url} />);
-  const initialState = client.extract(); console.log(client.extract());
-  res.render('index', { html, state: JSON.stringify(initialState) });
+  const initialState = client.extract();
+  res.render('index', { html, state: JSON.stringify(initialState).replace(/</g, '\\u003c') });
 }
 
 module.exports = render;

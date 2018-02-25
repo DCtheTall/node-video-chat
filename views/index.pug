@@ -4,6 +4,6 @@ body
   div#entry-point
     !=html
   script(type="text/javascript")
-    | window.__APOLLO_STATE__ = #{state};
+    | window.__APOLLO_STATE__ = !{state};
   script(type="text/javascript" src="/dist/vendor.js")
   script(type="text/javascript" src="/dist/app.js")
