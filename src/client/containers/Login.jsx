@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import CURRENT_USER_ID_QUERY from '../queries/current-user/current-user-id.graphql';
+import CURRENT_USER_ID_QUERY from '../queries/user/user-id.graphql';
 import { INDEX_ROUTE } from '../routes/constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
+import { login } from '../util/api';
 
 /**
  * @class Login
@@ -22,6 +23,7 @@ class Login extends React.PureComponent {
       password: '',
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   /**
    * @returns {undefined}
@@ -32,11 +34,30 @@ class Login extends React.PureComponent {
     }
   }
   /**
+   * @param {Object} props component will receive
+   * @returns {undefined}
+   */
+  componentWillReceiveProps(props) {
+    if (!isLoggedIn(this.props.data.user) && isLoggedIn(props.data.user)) {
+      this.context.router.history.replace(INDEX_ROUTE);
+    }
+  }
+  /**
    * @param {Object} event the change event
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
     this.setState({ [name]: value });
+  }
+  /**
+   * @returns {undefined}
+   */
+  handleSubmit() {
+    return login({
+      refetch: this.props.data.refetch,
+      email: this.state.email,
+      password: this.state.password,
+    });
   }
   /**
    * render
@@ -60,7 +81,7 @@ class Login extends React.PureComponent {
           onChange={this.handleChange}
           value={this.state.password}
         />
-        <button>
+        <button onClick={this.handleSubmit}>
           Submit
         </button>
       </div>
@@ -76,6 +97,7 @@ Login.propTypes = {
   data: PropTypes.shape({
     loading: PropTypes.bool,
     user: PropTypes.shape(),
+    refetch: PropTypes.func,
   }),
 };
 

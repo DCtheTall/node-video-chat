@@ -43,6 +43,11 @@ function linkUser(sequelize, DataTypes) { // eslint-disable-line
       },
     },
   });
+
+  User.prototype.validatePassword = function validatePassword(password) {
+    return bcrypt.compare(password, this.password);
+  };
+
   return User;
 }
 linkUser.toString = () => 'user';

@@ -7,8 +7,8 @@ const { SchemaLink } = require('apollo-link-schema');
 const { InMemoryCache } = require('apollo-cache-inmemory');
 const { ApolloClient } = require('apollo-client');
 const { ApolloProvider, renderToStringWithData } = require('react-apollo');
-const schema = require('./schema');
-const routes = require('../client/routes').default;
+const schema = require('../schema');
+const routes = require('../../client/routes').default;
 
 const context = {};
 

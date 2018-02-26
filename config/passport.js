@@ -9,11 +9,13 @@ function createAuthentication(models) {
   return async function authenticateUser(req, email, password, done) {
     try {
       const user = await models.user.findOne({
-        where: { email: new RegExp(email.trim(), 'i') },
+        where: { email: { $iLike: email.trim() } },
       });
-      if (!user) done(null, false);
+      if (user === null) return done(null, null);
+      if (!(await user.validatePassword(password))) return done(null, {});
+      return done(null, user);
     } catch (err) {
-      done(err, null);
+      return done(err, null);
     }
   };
 }
@@ -25,8 +27,7 @@ module.exports = function configurePassport(models) {
       usernameField: 'email',
       passwordField: 'password',
       passReqToCallback: true,
-    }),
-    createAuthentication(models)
+    }, createAuthentication(models)),
   );
 
   passport.serializeUser((user, done) => {
@@ -41,4 +42,6 @@ module.exports = function configurePassport(models) {
       done(err, null);
     }
   });
+
+  return passport;
 };
