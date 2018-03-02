@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import CURRENT_USER_ID_QUERY from '../queries/user/user-id.graphql';
+import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import { INDEX_ROUTE } from '../routes/constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { login } from '../util/api';
@@ -34,12 +34,11 @@ class Login extends React.PureComponent {
     }
   }
   /**
-   * @param {Object} props component will receive
    * @returns {undefined}
    */
-  componentWillReceiveProps(props) {
-    if (!isLoggedIn(this.props.data.user) && isLoggedIn(props.data.user)) {
-      this.context.router.history.replace(INDEX_ROUTE);
+  componentDidUpdate() {
+    if (isLoggedIn(this.props.data.user)) {
+      this.context.router.history.push(INDEX_ROUTE);
     }
   }
   /**
@@ -96,9 +95,9 @@ Login.contextTypes = {
 Login.propTypes = {
   data: PropTypes.shape({
     loading: PropTypes.bool,
-    user: PropTypes.shape(),
+    user: PropTypes.shape({ isLoggedIn: PropTypes.bool }),
     refetch: PropTypes.func,
   }),
 };
 
-export default graphql(CURRENT_USER_ID_QUERY)(Login);
+export default graphql(QUERY_USER_ID)(Login);
