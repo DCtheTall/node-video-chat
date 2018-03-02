@@ -8,7 +8,12 @@ module.exports = [
   'react',
   'react-apollo',
   'react-dom',
+  'react-redux',
   'react-router',
   'react-router-config',
   'react-router-dom',
+  'redux',
+  'redux-actions',
+  'redux-devtools-extension',
+  'redux-thunk',
 ];

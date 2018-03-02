@@ -6,11 +6,16 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { Provider } from 'react-redux';
 import routes from './routes';
+import configureStore from './store';
 
 const link = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
 const cache = new InMemoryCache().restore(window.__APOLLO_STATE__).restore(window.__APOLLO_STATE__);
 const client = new ApolloClient({ link, cache });
+const store = configureStore();
+
+delete window.__APOLLO_STATE__;
 
 /**
  * @class Router
@@ -23,11 +28,13 @@ class Routes extends React.PureComponent {
    */
   render() {
     return (
-      <ApolloProvider client={client}>
-        <BrowserRouter>
-          {renderRoutes(routes)}
-        </BrowserRouter>
-      </ApolloProvider>
+      <Provider store={store}>
+        <ApolloProvider client={client}>
+          <BrowserRouter>
+            {renderRoutes(routes)}
+          </BrowserRouter>
+        </ApolloProvider>
+      </Provider>
     );
   }
 }

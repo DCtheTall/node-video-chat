@@ -9,6 +9,8 @@ const { ApolloClient } = require('apollo-client');
 const { ApolloProvider, renderToStringWithData } = require('react-apollo');
 const schema = require('../schema');
 const routes = require('../../client/routes').default;
+const { Provider } = require('react-redux');
+const configureStore = require('../../client/store').default;
 
 const context = {};
 
@@ -17,12 +19,15 @@ const context = {};
  * @returns {function} React.Component app
  */
 function createApp(client) {
+  const store = configureStore();
   const App = ({ location }) => (
-    <ApolloProvider client={client}>
-      <StaticRouter location={location} context={context}>
-        {renderRoutes(routes)}
-      </StaticRouter>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <StaticRouter location={location} context={context}>
+          {renderRoutes(routes)}
+        </StaticRouter>
+      </ApolloProvider>
+    </Provider>
   );
   App.propTypes = { location: PropTypes.string };
   return App;
