@@ -1,0 +1,6 @@
+mutation loginUser($loginInput: LoginUserInput) {
+  LoginUser(loginInput: $loginInput) {
+    token
+    message
+  }
+}

@@ -1,5 +1,3 @@
-import { GraphQLBoolean } from 'graphql';
-
 const {
   GraphQLObjectType,
   GraphQLInt,

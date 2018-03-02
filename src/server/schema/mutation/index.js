@@ -1,9 +1,9 @@
 const { GraphQLObjectType } = require('graphql');
-const User = require('./user');
+const LoginUser = require('./user/login-user');
 
 module.exports = new GraphQLObjectType({
-  name: 'RootQuery',
+  name: 'RootMutation',
   fields: {
-    User,
+    LoginUser,
   },
 });

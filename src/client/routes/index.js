@@ -1,7 +1,7 @@
 import PageLayout from '../containers/PageLayout';
 import Login from '../containers/Login';
 import Signup from '../containers/Signup';
-import { LOGIN_ROUTE, SIGNUP_ROUTE } from './constants';
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 
 const routes = [{
   component: PageLayout,

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
-import { INDEX_ROUTE } from '../routes/constants';
+import LOGIN_MUTATION from '../graphql/mutations/user/login.graphql';
+import { INDEX_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
-import { login } from '../actions/user';
+// import { login } from '../actions/user';
 
 /**
  * @class Login
@@ -52,11 +53,11 @@ class Login extends React.PureComponent {
   /**
    * @returns {undefined}
    */
-  handleSubmit() {
-    return this.props.login({
-      refetch: this.props.data.refetch,
-      email: this.state.email,
-      password: this.state.password,
+  async handleSubmit() {
+    await this.props.loginUser({
+      variables: {
+        loginInput: { email: this.state.email, password: this.state.password },
+      },
     });
   }
   /**
@@ -99,7 +100,7 @@ Login.propTypes = {
     user: PropTypes.shape({ isLoggedIn: PropTypes.bool }),
     refetch: PropTypes.func,
   }),
-  login: PropTypes.func,
+  loginUser: PropTypes.func,
 };
 
-export default connect(null, { login })(graphql(QUERY_USER_ID)(Login));
+export default graphql(LOGIN_MUTATION, { name: 'loginUser' })(graphql(QUERY_USER_ID)(Login));

@@ -6,11 +6,8 @@ const path = require('path');
 const schema = require('./schema');
 const graphqlExpress = require('express-graphql');
 const models = require('./models');
-const passport = require('../../config/passport')(models);
-const session = require('express-session');
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const api = require('./routes/api');
+const jwt = require('express-jwt');
 
 const app = express();
 
@@ -24,17 +21,6 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '2mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 
 app.use(compression());
-app.use(cookieParser());
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  maxAge: 86400000,
-  cookie: { secure: false },
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(express.static(path.join('.', '/public')));
 
@@ -46,17 +32,24 @@ app.set('views', path.join('.', '/views/'));
 global.models = models;
 global.successResponse =
   (json = {}, message = 'Success!') =>
-  res => res.set(200).json({ success: true, message, ...json });
+    res => res.set(200).json({ success: true, message, ...json });
 global.failureResponse =
   (json = {}, message = 'Something went wrong...') =>
-  res => res.set(400).json({ succes: false, message, ...json });
+    res => res.set(400).json({ succes: false, message, ...json });
 global.errorResponse =
   (err, message = 'Internal server error') =>
-  res => res.set(500).json({ success: false, message });
+    res => res.set(500).json({ success: false, message });
 
-// GraphQL
-app.use('/api', api);
-app.post('/graphql', (req, res, next) => { console.log(req.user); graphqlExpress({ schema, graphiql: false })(req,res,next) });
+app.use('/graphql', jwt({
+  secret: process.env.JWT_SECRET,
+  requestProperty: 'auth',
+  credentialsRequired: false,
+}));
+app.use('/graphql', (req, res, next) => {
+  next();
+});
+app.post('/graphql', graphqlExpress({ schema, graphiql: false }));
+
 app.use(render);
 
 
