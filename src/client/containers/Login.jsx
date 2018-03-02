@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import LOGIN_MUTATION from '../graphql/mutations/user/login.graphql';
-import { INDEX_ROUTE } from '../constants';
+import { INDEX_ROUTE, AUTH_TOKEN } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
-// import { login } from '../actions/user';
+import { addError } from '../actions/error';
 
 /**
  * @class Login
@@ -31,7 +32,7 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidMount() {
-    if (isLoggedIn(this.props.data.user)) {
+    if (isLoggedIn(this.props.data.User)) {
       this.context.router.history.replace(INDEX_ROUTE);
     }
   }
@@ -39,7 +40,7 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate() {
-    if (isLoggedIn(this.props.data.user)) {
+    if (isLoggedIn(this.props.data.User)) {
       this.context.router.history.push(INDEX_ROUTE);
     }
   }
@@ -54,11 +55,21 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   async handleSubmit() {
-    await this.props.loginUser({
-      variables: {
-        loginInput: { email: this.state.email, password: this.state.password },
-      },
-    });
+    try {
+      const { data } = await this.props.loginUser({
+        variables: {
+          loginInput: { email: this.state.email, password: this.state.password },
+        },
+      });
+      if (!data.LoginUser) return this.props.addError('Something went wrong');
+      const { token, message } = data.LoginUser;
+      if (!token) return this.props.addError(message);
+      localStorage.setItem(AUTH_TOKEN, token);
+      return this.props.data.refetch();
+    } catch (err) {
+      console.log(err);
+      return this.props.addError('Something went wrong');
+    }
   }
   /**
    * render
@@ -97,10 +108,15 @@ Login.contextTypes = {
 Login.propTypes = {
   data: PropTypes.shape({
     loading: PropTypes.bool,
-    user: PropTypes.shape({ isLoggedIn: PropTypes.bool }),
+    User: PropTypes.shape({ isLoggedIn: PropTypes.bool }),
     refetch: PropTypes.func,
   }),
   loginUser: PropTypes.func,
+  addError: PropTypes.func,
 };
 
-export default graphql(LOGIN_MUTATION, { name: 'loginUser' })(graphql(QUERY_USER_ID)(Login));
+export default compose(
+  connect(null, { addError }),
+  graphql(LOGIN_MUTATION, { name: 'loginUser' }),
+  graphql(QUERY_USER_ID),
+)(Login);

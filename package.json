@@ -20,6 +20,7 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.9",
     "apollo-client": "^2.2.5",
+    "apollo-link": "^1.2.1",
     "apollo-link-http": "^1.4.0",
     "apollo-link-schema": "^1.0.6",
     "axios": "^0.18.0",

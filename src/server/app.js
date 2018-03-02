@@ -7,7 +7,7 @@ const schema = require('./schema');
 const graphqlExpress = require('express-graphql');
 const models = require('./models');
 const compression = require('compression');
-const jwt = require('express-jwt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -40,13 +40,13 @@ global.errorResponse =
   (err, message = 'Internal server error') =>
     res => res.set(500).json({ success: false, message });
 
-app.use('/graphql', jwt({
-  secret: process.env.JWT_SECRET,
-  requestProperty: 'auth',
-  credentialsRequired: false,
-}));
-app.use('/graphql', (req, res, next) => {
-  next();
+app.use('/graphql', async (req, res, next) => {
+  const token = req.headers.authorization && req.headers.authorization.split('Bearer ')[1];
+  if (!token) return next();
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const user = await models.user.findById(decoded.id);
+  req.user = user;
+  return next();
 });
 app.post('/graphql', graphqlExpress({ schema, graphiql: false }));
 
