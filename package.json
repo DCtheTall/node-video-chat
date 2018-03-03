@@ -60,6 +60,7 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
     "sequelize": "^4.33.4",
+    "validator": "^9.4.1",
     "webpack": "^3.11.0",
     "webpack-node-externals": "^1.6.0"
   },

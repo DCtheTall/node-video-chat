@@ -26,6 +26,10 @@ function linkUser(sequelize, DataTypes) { // eslint-disable-line
       type: DataTypes.STRING,
       unique: true,
     },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     password: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,

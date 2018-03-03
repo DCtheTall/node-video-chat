@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import LOGIN_MUTATION from '../graphql/mutations/user/login.graphql';
-import { INDEX_ROUTE, AUTH_TOKEN } from '../constants';
+import { INDEX_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
-import { addError } from '../actions/error';
+import { addError, clearError } from '../actions/error';
 
 /**
  * @class Login
@@ -55,13 +55,14 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   async handleSubmit() {
+    this.props.clearError();
     try {
       const { data } = await this.props.loginUser({
         variables: { email: this.state.email, password: this.state.password },
       });
       if (!data.result) return this.props.addError('Something went wrong logging you in');
-      const { token, message } = data.result;
-      if (!token) return this.props.addError(message);
+      const { success, message } = data.result;
+      if (!success) return this.props.addError(message);
       return this.props.data.refetch();
     } catch (err) {
       console.log(err);
@@ -76,8 +77,9 @@ class Login extends React.PureComponent {
     return (
       <div>
         Log in:
+        &nbsp;
         <input
-          placeholder="Email"
+          placeholder="Email or Username"
           type="text"
           name="email"
           onChange={this.handleChange}
@@ -110,10 +112,11 @@ Login.propTypes = {
   }),
   loginUser: PropTypes.func,
   addError: PropTypes.func,
+  clearError: PropTypes.func,
 };
 
 export default compose(
-  connect(null, { addError }),
+  connect(null, { addError, clearError }),
   graphql(LOGIN_MUTATION, { name: 'loginUser' }),
   graphql(QUERY_USER_ID),
 )(Login);
