@@ -1,5 +1,5 @@
-mutation loginUser($loginInput: LoginUserInput) {
-  LoginUser(loginInput: $loginInput) {
+mutation loginUser($email: String, $password: String) {
+  result: LoginUser(email: $email, password: $password) {
     token
     message
   }

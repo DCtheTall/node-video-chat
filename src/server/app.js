@@ -8,6 +8,7 @@ const graphqlExpress = require('express-graphql');
 const models = require('./models');
 const compression = require('compression');
 const jwt = require('jsonwebtoken');
+const Cookies = require('cookies');
 
 const app = express();
 
@@ -40,17 +41,25 @@ global.errorResponse =
   (err, message = 'Internal server error') =>
     res => res.set(500).json({ success: false, message });
 
-app.use('/graphql', async (req, res, next) => {
-  const token = req.headers.authorization && req.headers.authorization.split('Bearer ')[1];
-  if (!token) return next();
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const user = await models.user.findById(decoded.id);
-  req.user = user;
+app.use((req, res, next) => {
+  req.cookies = new Cookies(req, res, { keys: [new Buffer(process.env.COOKIE_SECRET, 'utf-8')] });
+  next();
+});
+app.use(async (req, res, next) => {
+  try {
+    const token = req.cookies.get(process.env.COOKIE_KEY, { signed: true }) || '';
+    if (!token) return next();
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const user = await models.user.findById(decoded.id);
+    req.user = user;
+  } catch (err) {
+    console.log(err);
+  }
   return next();
 });
+
 app.post('/graphql', graphqlExpress({ schema, graphiql: false }));
 
 app.use(render);
-
 
 module.exports = app;

@@ -57,12 +57,10 @@ class Login extends React.PureComponent {
   async handleSubmit() {
     try {
       const { data } = await this.props.loginUser({
-        variables: {
-          loginInput: { email: this.state.email, password: this.state.password },
-        },
+        variables: { email: this.state.email, password: this.state.password },
       });
-      if (!data.LoginUser) return this.props.addError('Something went wrong');
-      const { token, message } = data.LoginUser;
+      if (!data.result) return this.props.addError('Something went wrong');
+      const { token, message } = data.result;
       if (!token) return this.props.addError(message);
       localStorage.setItem(AUTH_TOKEN, token);
       return this.props.data.refetch();
