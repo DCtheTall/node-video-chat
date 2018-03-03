@@ -1,7 +1,7 @@
-const { GraphQLObjectType } = require('graphql');
-const LoginUser = require('./user/login-user');
+import { GraphQLObjectType } from 'graphql';
+import LoginUser from './user/LoginUser';
 
-module.exports = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: 'RootMutation',
   fields: {
     LoginUser,

@@ -1,8 +1,9 @@
 if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line global-require
 
-const http = require('http');
-const app = require('../src/server/app');
-const debug = require('debug');
+/* eslint-disable import/first */
+import http from 'http';
+import debug from 'debug';
+import app from '../src/server/app';
 
 /**
  * normalizePort

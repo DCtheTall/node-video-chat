@@ -1,6 +1,6 @@
-const User = require('../../types/user');
+import User from '../../types/user';
 
-module.exports = {
+export default {
   type: User,
   resolve: (_, args, req) => req.user,
 };

@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
 /**
  * @param {string} plaintext to create hash
@@ -52,4 +52,4 @@ function linkUser(sequelize, DataTypes) { // eslint-disable-line
 }
 linkUser.toString = () => 'user';
 
-module.exports = linkUser;
+export default linkUser;

@@ -1,7 +1,7 @@
-const { GraphQLSchema } = require('graphql');
-const query = require('./query');
-const mutation = require('./mutation');
+import { GraphQLSchema } from 'graphql';
+import query from './query';
+import mutation from './mutation';
 
 const schema = new GraphQLSchema({ query, mutation });
 
-module.exports = schema;
+export default schema;

@@ -1,16 +1,15 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-// const { renderToString } = require('react-dom/server');
-const StaticRouter = require('react-router-dom/StaticRouter').default;
-const { renderRoutes } = require('react-router-config');
-const { SchemaLink } = require('apollo-link-schema');
-const { InMemoryCache } = require('apollo-cache-inmemory');
-const { ApolloClient } = require('apollo-client');
-const { ApolloProvider, renderToStringWithData } = require('react-apollo');
-const schema = require('../schema');
-const routes = require('../../client/routes').default;
-const { Provider } = require('react-redux');
-const configureStore = require('../../client/store').default;
+import React from 'react';
+import PropTypes from 'prop-types';
+import StaticRouter from 'react-router-dom/StaticRouter';
+import { renderRoutes } from 'react-router-config';
+import { SchemaLink } from 'apollo-link-schema';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider, renderToStringWithData } from 'react-apollo';
+import { Provider } from 'react-redux';
+import schema from '../schema';
+import routes from '../../client/routes';
+import configureStore from '../../client/store';
 
 const context = {};
 
@@ -48,4 +47,4 @@ async function render(req, res) {
   res.render('index', { html, state: JSON.stringify(initialState).replace(/</g, '\\u003c') });
 }
 
-module.exports = render;
+export default render;

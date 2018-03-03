@@ -1,11 +1,12 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
+import sequelize from '../../../config/sequelize';
 
-const sequelize = require('../../../config/sequelize');
+import linkUser from './user';
 
 const db = {};
 
-[ /* eslint-disable global-require */
-  require('./user'),
+[
+  linkUser,
 ].forEach((linkModel) => {
   const model = sequelize.import(linkModel.toString(), linkModel);
   db[model.name] = model;
@@ -20,4 +21,4 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+export default db;

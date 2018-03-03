@@ -1,14 +1,14 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const render = require('./routes/render');
-const path = require('path');
-const schema = require('./schema');
-const graphqlExpress = require('express-graphql');
-const models = require('./models');
-const compression = require('compression');
-const jwt = require('jsonwebtoken');
-const Cookies = require('cookies');
+import express from 'express';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import graphqlExpress from 'express-graphql';
+import path from 'path';
+import compression from 'compression';
+import jwt from 'jsonwebtoken';
+import Cookies from 'cookies';
+import render from './routes/render';
+import schema from './schema';
+import models from './models';
 
 const app = express();
 
@@ -62,4 +62,4 @@ app.post('/graphql', graphqlExpress({ schema, graphiql: false }));
 
 app.use(render);
 
-module.exports = app;
+export default app;

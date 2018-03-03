@@ -1,10 +1,10 @@
-const {
+import {
   GraphQLString,
   GraphQLObjectType,
-} = require('graphql');
-const jwt = require('jsonwebtoken');
+} from 'graphql';
+import jwt from 'jsonwebtoken';
 
-const LoginUserOutputTypes = new GraphQLObjectType({
+const LoginUserOutputType = new GraphQLObjectType({
   name: 'LoginUserResult',
   fields: {
     token: {
@@ -18,14 +18,14 @@ const LoginUserOutputTypes = new GraphQLObjectType({
   },
 });
 
-module.exports = {
-  type: LoginUserOutputTypes,
+export default {
+  type: LoginUserOutputType,
   name: 'LoginUser',
   args: {
     email: { type: GraphQLString },
     password: { type: GraphQLString },
   },
-  async resolve(_, { email, password }, req) {
+  async resolve(parent, { email, password }, req) {
     try {
       const user = await models.user.findOne({ where: { email: { $iLike: email.trim() } } });
       if (!user) return { token: null, message: 'No user with that email' };
