@@ -1,16 +1,18 @@
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const commonPlugins = [];
+const commonPlugins = [
+  new ExtractTextPlugin('[name].css'),
+];
 
 const serverPlugins = [
-  ...commonPlugins,
   new webpack.DefinePlugin({
     'process.env': JSON.stringify(process.env),
   }),
+  ...commonPlugins,
 ];
 
 const clientPlugins = [
-  ...commonPlugins,
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
@@ -22,6 +24,7 @@ const clientPlugins = [
     minChunks: Infinity,
   }),
   new webpack.optimize.ModuleConcatenationPlugin(),
+  ...commonPlugins,
 ];
 
 module.exports = { serverPlugins, clientPlugins };

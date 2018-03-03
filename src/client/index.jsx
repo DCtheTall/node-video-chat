@@ -7,6 +7,7 @@ import { ApolloProvider } from 'react-apollo';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { Provider } from 'react-redux';
+import './styles/index.scss';
 import routes from './routes';
 import configureStore from './store';
 

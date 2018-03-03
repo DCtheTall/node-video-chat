@@ -31,7 +31,7 @@ export default {
     try {
       let [user, created] = await models.user.findOrInitialize({ // eslint-disable-line prefer-const
         where: {
-          username: username.replace(/\s/i, ''),
+          username: { $iLike: username.replace(/\s/i, '') },
           email: email.trim().toLowerCase(),
         },
         defaults: { password },
