@@ -32,7 +32,7 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidMount() {
-    if (isLoggedIn(this.props.data.User)) {
+    if (isLoggedIn(this.props.data.user)) {
       this.context.router.history.replace(INDEX_ROUTE);
     }
   }
@@ -40,7 +40,7 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate() {
-    if (isLoggedIn(this.props.data.User)) {
+    if (isLoggedIn(this.props.data.user)) {
       this.context.router.history.push(INDEX_ROUTE);
     }
   }
@@ -59,14 +59,13 @@ class Login extends React.PureComponent {
       const { data } = await this.props.loginUser({
         variables: { email: this.state.email, password: this.state.password },
       });
-      if (!data.result) return this.props.addError('Something went wrong');
+      if (!data.result) return this.props.addError('Something went wrong logging you in');
       const { token, message } = data.result;
       if (!token) return this.props.addError(message);
-      localStorage.setItem(AUTH_TOKEN, token);
       return this.props.data.refetch();
     } catch (err) {
       console.log(err);
-      return this.props.addError('Something went wrong');
+      return this.props.addError('Something went wrong logging you in');
     }
   }
   /**
@@ -106,7 +105,7 @@ Login.contextTypes = {
 Login.propTypes = {
   data: PropTypes.shape({
     loading: PropTypes.bool,
-    User: PropTypes.shape({ isLoggedIn: PropTypes.bool }),
+    user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),
   loginUser: PropTypes.func,
