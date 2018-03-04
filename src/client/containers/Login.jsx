@@ -61,7 +61,7 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
-    this.setState({ [name]: value.trim() });
+    this.setState({ [name]: value });
   }
   /**
    * @param {string} error message
@@ -79,7 +79,7 @@ class Login extends React.PureComponent {
     await new Promise(resolve => this.setState({ loading: true }, resolve));
     try {
       const { data } = await this.props.loginUser({
-        variables: { email: this.state.email, password: this.state.password },
+        variables: { email: this.state.email.trim(), password: this.state.password },
       });
       if (!data.result) return this.handleError('Something went wrong logging you in');
       const { success, message } = data.result;

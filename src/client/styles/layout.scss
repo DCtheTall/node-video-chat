@@ -1,0 +1,18 @@
+@import './base';
+
+.app-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  .flex-center {
+    height: unquote('calc(100% - #{$top-bar-height})');
+  }
+
+  .mobile-text {
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+}

@@ -14,16 +14,17 @@ import configureStore from '../../client/store';
 const context = {};
 
 /**
+ * @param {Express.Request} req the request
  * @param {ApolloClient} client for GraphQL
  * @returns {function} React.Component app
  */
-function createApp(client) {
+function createApp(req, client) {
   const store = configureStore();
   const App = ({ location }) => (
     <Provider store={store}>
       <ApolloProvider client={client}>
         <StaticRouter location={location} context={context}>
-          {renderRoutes(routes)}
+          {renderRoutes(routes, { userAgent: req.headers['user-agent'] })}
         </StaticRouter>
       </ApolloProvider>
     </Provider>
@@ -41,7 +42,7 @@ async function render(req, res) {
   const link = new SchemaLink({ schema, context: req });
   const cache = new InMemoryCache();
   const client = new ApolloClient({ link, cache, ssrMode: true });
-  const App = createApp(client);
+  const App = createApp(req, client);
   const html = await renderToStringWithData(<App location={req.url} />);
   const initialState = client.extract();
   res.render('index', { html, state: JSON.stringify(initialState).replace(/</g, '\\u003c') });

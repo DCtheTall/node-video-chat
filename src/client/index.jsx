@@ -32,7 +32,7 @@ class Routes extends React.PureComponent {
       <Provider store={store}>
         <ApolloProvider client={client}>
           <BrowserRouter>
-            {renderRoutes(routes)}
+            {renderRoutes(routes, { userAgent: navigator.userAgent })}
           </BrowserRouter>
         </ApolloProvider>
       </Provider>

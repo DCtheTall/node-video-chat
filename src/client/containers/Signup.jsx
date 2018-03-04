@@ -62,7 +62,7 @@ class Signup extends React.PureComponent {
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
-    this.setState({ [name]: value.trim() });
+    this.setState({ [name]: value });
   }
   /**
    * @param {string} error message
@@ -107,8 +107,8 @@ class Signup extends React.PureComponent {
       await new Promise(resolve => this.setState({ loading: true }, resolve));
       const { data } = await this.props.signupUser({
         variables: {
-          email: this.state.email,
-          username: this.state.username,
+          email: this.state.email.trim(),
+          username: this.state.username.trim(),
           password: this.state.password,
         },
       });
