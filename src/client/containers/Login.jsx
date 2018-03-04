@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { Link } from 'react-router-dom';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import LOGIN_MUTATION from '../graphql/mutations/user/login.graphql';
-import { INDEX_ROUTE } from '../constants';
+import { INDEX_ROUTE, SIGNUP_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError, clearError } from '../actions/error';
+import AuthTopBar from '../components/Auth/AuthTopbar';
+import '../styles/login.scss';
 
 /**
  * @class Login
@@ -49,7 +52,7 @@ class Login extends React.PureComponent {
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
-    this.setState({ [name]: value });
+    this.setState({ [name]: value.trim() });
   }
   /**
    * @returns {undefined}
@@ -75,26 +78,39 @@ class Login extends React.PureComponent {
    */
   render() {
     return (
-      <div>
-        Log in:
-        &nbsp;
-        <input
-          placeholder="Email or Username"
-          type="text"
-          name="email"
-          onChange={this.handleChange}
-          value={this.state.email}
-        />
-        <input
-          placeholder="Password"
-          type="password"
-          name="password"
-          onChange={this.handleChange}
-          value={this.state.password}
-        />
-        <button onClick={this.handleSubmit}>
-          Submit
-        </button>
+      <div className="login-container flex-column">
+        <AuthTopBar />
+        <div className="login-wrapper flex-center">
+          <div className="login flex-column align-items-center">
+            <span className="webchat-text login-heading">
+              Welcome back!
+            </span>
+            <span className="sub-heading text-center">
+              Don&apos;t have an account?
+              <br />
+              <Link className="webchat-text" to={SIGNUP_ROUTE}>
+                Create one here
+              </Link>
+            </span>
+            <input
+              placeholder="Email or Username"
+              type="text"
+              name="email"
+              onChange={this.handleChange}
+              value={this.state.email}
+            />
+            <input
+              placeholder="Password"
+              type="password"
+              name="password"
+              onChange={this.handleChange}
+              value={this.state.password}
+            />
+            <button className="webchat-button" onClick={this.handleSubmit}>
+              Submit
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

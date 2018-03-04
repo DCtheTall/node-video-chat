@@ -1,0 +1,5 @@
+@import './vars';
+
+@mixin webchat-gradient($property, $deg) {
+  #{$property}: linear-gradient($deg, $webchat-orange, $webchat-magenta);
+}

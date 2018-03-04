@@ -1,0 +1,55 @@
+@import './base';
+
+.align-items-center {
+  align-items: center;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.flex-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.webchat-button {
+  @include webchat-gradient('background', 15deg);
+  border-radius: 21px;
+  color: $white;
+  text-transform: uppercase;
+  font-size: 14px;
+  height: 35px;
+  width: 120px;
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: 0 1px 3px fade-out($grey, .5);
+    }
+  }
+
+  &:active {
+    box-shadow: inset 0px 2px 3px fade-out($grey, .9);
+  }
+}
+
+.webchat-text {
+  @include webchat-gradient('background', 0deg);
+  -webkit-text-fill-color: transparent;
+  font-family: $kanit;
+  -webkit-background-clip: text;
+}
+
+.text-center {
+  text-align: center;
+}

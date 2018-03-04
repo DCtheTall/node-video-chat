@@ -23,13 +23,14 @@ class PageLayout extends React.PureComponent {
    */
   constructor(props) {
     super(props);
-    this.logout = this.logout.bind(this);
+    this.isAuthRoute = this.isAuthRoute.bind(this);
+    // this.logout = this.logout.bind(this);
   }
   /**
    * @returns {undefined}
    */
   componentDidMount() {
-    if (!isLoggedIn(this.props.data.user) && this.props.location.pathname !== SIGNUP_ROUTE) {
+    if (!isLoggedIn(this.props.data.user) && !this.isAuthRoute()) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
   }
@@ -43,18 +44,27 @@ class PageLayout extends React.PureComponent {
     }
   }
   /**
-   * @returns {Promise<undefined>} logs user out
+   * @returns {boolean} true if on the login/signup page
    */
-  async logout() {
-    try {
-      const { data } = await this.props.logoutUser();
-      if (!data.result || !data.result.success) return this.props.addError('Something went wrong logging you out');
-      return this.props.data.refetch();
-    } catch (err) {
-      console.log(err);
-      return this.props.addError('Something went wrong logging you out');
-    }
+  isAuthRoute() {
+    return (
+      this.props.location.pathname === SIGNUP_ROUTE
+      || this.props.location.pathname === LOGIN_ROUTE
+    );
   }
+  // /**
+  //  * @returns {Promise<undefined>} logs user out
+  //  */
+  // async logout() {
+  //   try {
+  //     const { data } = await this.props.logoutUser();
+  //     if (!data.result || !data.result.success) return this.props.addError('Something went wrong logging you out');
+  //     return this.props.data.refetch();
+  //   } catch (err) {
+  //     console.log(err);
+  //     return this.props.addError('Something went wrong logging you out');
+  //   }
+  // }
   /**
    * render
    * @returns {JSX.Element} HTML
@@ -63,11 +73,11 @@ class PageLayout extends React.PureComponent {
     return (
       <div className="app-container">
         {renderRoutes(this.props.route.routes)}
-        {isLoggedIn(this.props.data.user) && (
+        {/* isLoggedIn(this.props.data.user) && (
           <button onClick={this.logout}>
             Log Out
           </button>
-        )}
+        ) */}
       </div>
     );
   }

@@ -1,4 +1,95 @@
+@import './base';
+@import './helpers';
+
+a {
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+a,
+button {
+  @media (hover: hover) {
+    &:hover {
+      cursor: pointer;
+      &:not(:active) {
+        filter: brightness(115%);
+      }
+    }
+  }
+
+  &:active {
+    filter: brightness(99%);
+  }
+}
+
 body {
-  background: #333;
-  color: #eee;
+  background: $background-grey;
+  margin: 0;
+
+  * {
+    color: $grey;
+    font: {
+      family: $roboto;
+      size: 12px;
+    }
+  }
+}
+
+button {
+  background: none;
+  border: none;
+
+  &:hover,
+  &:active,
+  &:active {
+    outline: none;
+  }
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: fade-out($grey, .25);
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: fade-out($grey, .25);
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: fade-out($grey, .25);
+}
+
+input {
+  background: $background-grey;
+  border: none;
+  border-radius: 8px;
+  border-top: 1px solid fade-out($light-grey, .5);
+  box-shadow: 0px 0px 2px fade-out($light-grey, .3);
+  color: $input-grey;
+  outline: none;
+  padding: 10px;
+  width: 160px;
+
+  @media #{$small-device} {
+    font-size: 16px  !important;
+  }
+
+  &:focus {
+    filter: brightness(102%);
+    border-bottom: 1px solid fade-out($light-grey, .5);
+    border-top: none;
+  }
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+
+  &:active {
+    filter: brightness(97.5%);
+  }
 }

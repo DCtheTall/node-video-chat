@@ -4,11 +4,14 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { isEmail } from 'validator';
 import { graphql } from 'react-apollo';
-import { INDEX_ROUTE } from '../constants';
+import { Link } from 'react-router-dom';
+import { INDEX_ROUTE, LOGIN_ROUTE } from '../constants';
 import SIGNUP_MUTATION from '../graphql/mutations/user/signup.graphql';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError, clearError } from '../actions/error';
+import AuthTopBar from '../components/Auth/AuthTopbar';
+import '../styles/signup.scss';
 
 /**
  * @class Signup
@@ -52,7 +55,7 @@ class Signup extends React.PureComponent {
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
-    this.setState({ [name]: value });
+    this.setState({ [name]: value.trim() });
   }
   /**
    * @returns {Promise<undefined>} attempts to register new user
@@ -108,44 +111,57 @@ class Signup extends React.PureComponent {
    */
   render() {
     return (
-      <div>
-        Sign up:
-        &nbsp;
-        <input
-          ref={node => this.emailInput = node}
-          placeholder="Email"
-          type="text"
-          name="email"
-          onChange={this.handleChange}
-          value={this.state.email}
-        />
-        <input
-          ref={node => this.usernameInput = node}
-          placeholder="Username"
-          type="text"
-          name="username"
-          onChange={this.handleChange}
-          value={this.state.username}
-        />
-        <input
-          ref={node => this.passwordInput = node}
-          placeholder="Password"
-          type="password"
-          name="password"
-          onChange={this.handleChange}
-          value={this.state.password}
-        />
-        <input
-          ref={node => this.confirmPasswordInput = node}
-          placeholder="Confirm Password"
-          type="password"
-          name="confirmPassword"
-          onChange={this.handleChange}
-          value={this.state.confirmPassword}
-        />
-        <button onClick={this.handleSubmit}>
-          Sign Up
-        </button>
+      <div className="signup-container">
+        <AuthTopBar />
+        <div className="signup-wrapper flex-center">
+          <div className="signup flex-column align-items-center">
+            <span className="webchat-text signup-heading">
+              Hey there!
+            </span>
+            <span className="sub-heading text-center">
+              Already have an account?
+              <br />
+              <Link className="webchat-text" to={LOGIN_ROUTE}>
+                Sign in here
+              </Link>
+            </span>
+            <input
+              ref={node => this.emailInput = node}
+              placeholder="Email"
+              type="text"
+              name="email"
+              onChange={this.handleChange}
+              value={this.state.email}
+            />
+            <input
+              ref={node => this.usernameInput = node}
+              placeholder="Username"
+              type="text"
+              name="username"
+              onChange={this.handleChange}
+              value={this.state.username}
+            />
+            <input
+              ref={node => this.passwordInput = node}
+              placeholder="Password"
+              type="password"
+              name="password"
+              onChange={this.handleChange}
+              value={this.state.password}
+            />
+            <input
+              ref={node => this.confirmPasswordInput = node}
+              placeholder="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              onChange={this.handleChange}
+              value={this.state.confirmPassword}
+            />
+            <button className="webchat-button" onClick={this.handleSubmit}>
+              Sign Up
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

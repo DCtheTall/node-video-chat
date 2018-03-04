@@ -1,9 +1,15 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 const commonPlugins = [
   new ExtractTextPlugin('[name].css'),
+  new OptimizeCSSPlugin({ canPrint: true }),
 ];
+
+if (process.env.NODE_ENV === 'production') {
+  commonPlugins.push(new webpack.optimize.UglifyJSPlugin());
+}
 
 const serverPlugins = [
   new webpack.DefinePlugin({
