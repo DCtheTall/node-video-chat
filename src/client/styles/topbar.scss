@@ -4,10 +4,28 @@
   background: $white;
   box-shadow: 0px 1px 2px fade-out($light-grey, .5);
   height: $top-bar-height;
-  padding-left: 10px;
-  width: 100%;
+  justify-content: space-between;
+  padding: 0 10px;
 
   .webchat-text {
-    font-size: 22px;
+    font-size: 14px;
+
+    &.not-logged-in {
+      font-size: 22px;
+    }
+  }
+
+  .user-picture-container {
+    border: 1.2px solid $webchat-orange;
+    border-radius: 50%;
+    height: 30px;
+    margin-right: 10px;
+    overflow: hidden;
+    width: 30px;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
   }
 }

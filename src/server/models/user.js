@@ -31,6 +31,10 @@ function linkUser(sequelize, DataTypes) { // eslint-disable-line
       unique: true,
     },
     password: DataTypes.STRING,
+    pictureUrl: {
+      type: DataTypes.STRING,
+      defaultValue: '/images/placeholder.jpg',
+    },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,

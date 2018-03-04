@@ -1,0 +1,7 @@
+query userNameAndPicture {
+  user: User {
+    id
+    username
+    pictureUrl
+  }
+}

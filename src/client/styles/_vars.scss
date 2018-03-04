@@ -1,10 +1,12 @@
 $background-grey: #f9f9f9;
 $black: #000;
 $dark-text: #333;
+$desktop: (min-width: 768px);
 $grey: #999;
 $input-grey: #666;
 $kanit: 'Montserrat';
 $light-grey: #ddd;
+$mobile: (max-width: 767px);
 $roboto: 'Open Sans';
 $small-device: (max-device-width: 767px);
 $top-bar-height: 40px;

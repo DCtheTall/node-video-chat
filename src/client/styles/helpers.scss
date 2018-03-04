@@ -8,6 +8,18 @@
   display: flex;
 }
 
+.hide-on-desktop {
+  @media #{$desktop} {
+    display: none;
+  }
+}
+
+.hide-on-mobile {
+  @media #{$mobile} {
+    display: none;
+  }
+}
+
 .flex-center {
   align-items: center;
   display: flex;

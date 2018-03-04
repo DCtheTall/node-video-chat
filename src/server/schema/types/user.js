@@ -17,5 +17,15 @@ export default new GraphQLObjectType({
       description: 'the user\'s email',
       resolve: user => user.email,
     },
+    username: {
+      type: GraphQLString,
+      description: 'the username',
+      resolve: user => user.username,
+    },
+    pictureUrl: {
+      type: GraphQLString,
+      description: 'the username',
+      resolve: user => user.pictureUrl,
+    },
   },
 });
