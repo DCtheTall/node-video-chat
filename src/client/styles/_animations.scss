@@ -1,0 +1,15 @@
+@import './mixins';
+
+@keyframes loader-animation {
+  0% {
+    background: $webchat-orange;
+  }
+
+  #{100% * (1 / 6)} {
+    background: none;
+  }
+
+  100% {
+    background: none;
+  }
+}

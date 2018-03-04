@@ -10,7 +10,7 @@ import SIGNUP_MUTATION from '../graphql/mutations/user/signup.graphql';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError, clearError } from '../actions/error';
-import AuthTopBar from '../components/Auth/AuthTopbar';
+import Loader from '../components/Layout/Loader';
 import '../styles/signup.scss';
 
 /**
@@ -26,6 +26,7 @@ class Signup extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       email: '',
       username: '',
       password: '',
@@ -51,11 +52,25 @@ class Signup extends React.PureComponent {
     }
   }
   /**
+   * @returns {boolean} if the component is requesting data from the server
+   */
+  isLoading() {
+    return this.props.data.loading || this.state.loading;
+  }
+  /**
    * @param {Object} event the change event
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
     this.setState({ [name]: value.trim() });
+  }
+  /**
+   * @param {string} error message
+   * @returns {undefined}
+   */
+  async handleError(error) {
+    await new Promise(resolve => this.setState({ loading: false }, resolve));
+    return this.props.addError(error);
   }
   /**
    * @returns {Promise<undefined>} attempts to register new user
@@ -89,6 +104,7 @@ class Signup extends React.PureComponent {
     }
 
     try {
+      await new Promise(resolve => this.setState({ loading: true }, resolve));
       const { data } = await this.props.signupUser({
         variables: {
           email: this.state.email,
@@ -96,13 +112,13 @@ class Signup extends React.PureComponent {
           password: this.state.password,
         },
       });
-      if (!data.result) return this.props.addError('Something went wrong signing you up');
+      if (!data.result) return this.handleError('Something went wrong signing you up');
       const { success, message } = data.result;
       if (success) return this.props.data.refetch();
-      return this.props.addError(message);
+      return this.handleError(message);
     } catch (err) {
       console.log(err);
-      return this.props.addError('Something went wrong signing you up');
+      return this.handleError('Something went wrong signing you up');
     }
   }
   /**
@@ -111,56 +127,61 @@ class Signup extends React.PureComponent {
    */
   render() {
     return (
-      <div className="signup-container">
-        <AuthTopBar />
-        <div className="signup-wrapper flex-center">
-          <div className="signup flex-column align-items-center">
-            <span className="webchat-text signup-heading">
-              Hey there!
-            </span>
-            <span className="sub-heading text-center">
-              Already have an account?
-              <br />
-              <Link className="webchat-text" to={LOGIN_ROUTE}>
-                Sign in here
-              </Link>
-            </span>
-            <input
-              ref={node => this.emailInput = node}
-              placeholder="Email"
-              type="text"
-              name="email"
-              onChange={this.handleChange}
-              value={this.state.email}
-            />
-            <input
-              ref={node => this.usernameInput = node}
-              placeholder="Username"
-              type="text"
-              name="username"
-              onChange={this.handleChange}
-              value={this.state.username}
-            />
-            <input
-              ref={node => this.passwordInput = node}
-              placeholder="Password"
-              type="password"
-              name="password"
-              onChange={this.handleChange}
-              value={this.state.password}
-            />
-            <input
-              ref={node => this.confirmPasswordInput = node}
-              placeholder="Confirm Password"
-              type="password"
-              name="confirmPassword"
-              onChange={this.handleChange}
-              value={this.state.confirmPassword}
-            />
-            <button className="webchat-button" onClick={this.handleSubmit}>
-              Sign Up
-            </button>
-          </div>
+      <div className="signup-container flex-center">
+        <div className="signup flex-column align-items-center">
+          <span className="webchat-text signup-heading">
+            Hey there!
+          </span>
+          <span className="sub-heading text-center">
+            Create your account below
+            <br />
+            Already have an account?
+            <br />
+            <Link className="webchat-text" to={LOGIN_ROUTE}>
+              Sign in here
+            </Link>
+          </span>
+          {this.isLoading() ? (
+            <Loader />
+          ) : (
+            <div className="flex-column align-items-center">
+              <input
+                ref={node => this.emailInput = node}
+                placeholder="Email"
+                type="text"
+                name="email"
+                onChange={this.handleChange}
+                value={this.state.email}
+              />
+              <input
+                ref={node => this.usernameInput = node}
+                placeholder="Username"
+                type="text"
+                name="username"
+                onChange={this.handleChange}
+                value={this.state.username}
+              />
+              <input
+                ref={node => this.passwordInput = node}
+                placeholder="Password"
+                type="password"
+                name="password"
+                onChange={this.handleChange}
+                value={this.state.password}
+              />
+              <input
+                ref={node => this.confirmPasswordInput = node}
+                placeholder="Confirm Password"
+                type="password"
+                name="confirmPassword"
+                onChange={this.handleChange}
+                value={this.state.confirmPassword}
+              />
+              <button className="webchat-button" onClick={this.handleSubmit}>
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -173,6 +194,7 @@ Signup.contextTypes = {
 
 Signup.propTypes = {
   data: PropTypes.shape({
+    loading: PropTypes.bool,
     user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),

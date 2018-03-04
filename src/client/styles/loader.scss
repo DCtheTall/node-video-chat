@@ -1,0 +1,27 @@
+@import './base';
+
+.loader-container {
+  height: 100px;
+
+  .loader {
+    animation: loader-animation linear 6s infinite;
+    height: 50px;
+    position: relative;
+
+    .loader-circle {
+      border: 1px solid $webchat-orange;
+      border-radius: 50%;
+      height: 8px;
+      position: absolute;
+      width: 8px;
+    }
+
+    @for $i from 0 through 5 {
+      .loader-circle-#{$i} {
+        animation: loader-animation 4s linear infinite #{$i * (2s / 3)};
+        top: 20px - (cos(2 * pi() * ($i / 6)) * 20px);
+        left: sin(2 * pi() * ($i / 6)) * 20px;
+      }
+    }
+  }
+}

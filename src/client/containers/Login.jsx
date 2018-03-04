@@ -9,7 +9,7 @@ import LOGIN_MUTATION from '../graphql/mutations/user/login.graphql';
 import { INDEX_ROUTE, SIGNUP_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError, clearError } from '../actions/error';
-import AuthTopBar from '../components/Auth/AuthTopbar';
+import Loader from '../components/Layout/Loader';
 import '../styles/login.scss';
 
 /**
@@ -25,10 +25,13 @@ class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       email: '',
       password: '',
     };
+    this.isLoading = this.isLoading.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleError = this.handleError.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   /**
@@ -48,6 +51,12 @@ class Login extends React.PureComponent {
     }
   }
   /**
+   * @returns {boolean} if the component is requesting data from the server
+   */
+  isLoading() {
+    return this.props.data.loading || this.state.loading;
+  }
+  /**
    * @param {Object} event the change event
    * @returns {undefined}
    */
@@ -55,21 +64,31 @@ class Login extends React.PureComponent {
     this.setState({ [name]: value.trim() });
   }
   /**
+   * @param {string} error message
+   * @returns {undefined}
+   */
+  async handleError(error) {
+    await new Promise(resolve => this.setState({ loading: false }, resolve));
+    return this.props.addError(error);
+  }
+  /**
    * @returns {undefined}
    */
   async handleSubmit() {
     this.props.clearError();
+    await new Promise(resolve => this.setState({ loading: true }, resolve));
     try {
       const { data } = await this.props.loginUser({
         variables: { email: this.state.email, password: this.state.password },
       });
-      if (!data.result) return this.props.addError('Something went wrong logging you in');
+      if (!data.result) return this.handleError('Something went wrong logging you in');
       const { success, message } = data.result;
-      if (!success) return this.props.addError(message);
+      if (!success) return this.handleError(message);
+      await new Promise(resolve => this.setState({ loading: false }, resolve));
       return this.props.data.refetch();
     } catch (err) {
       console.log(err);
-      return this.props.addError('Something went wrong logging you in');
+      return this.handleError('Something went wrong logging you in');
     }
   }
   /**
@@ -78,38 +97,41 @@ class Login extends React.PureComponent {
    */
   render() {
     return (
-      <div className="login-container flex-column">
-        <AuthTopBar />
-        <div className="login-wrapper flex-center">
-          <div className="login flex-column align-items-center">
-            <span className="webchat-text login-heading">
-              Welcome back!
-            </span>
-            <span className="sub-heading text-center">
-              Don&apos;t have an account?
-              <br />
-              <Link className="webchat-text" to={SIGNUP_ROUTE}>
-                Create one here
-              </Link>
-            </span>
-            <input
-              placeholder="Email or Username"
-              type="text"
-              name="email"
-              onChange={this.handleChange}
-              value={this.state.email}
-            />
-            <input
-              placeholder="Password"
-              type="password"
-              name="password"
-              onChange={this.handleChange}
-              value={this.state.password}
-            />
-            <button className="webchat-button" onClick={this.handleSubmit}>
-              Submit
-            </button>
-          </div>
+      <div className="login-container flex-center">
+        <div className="login flex-column align-items-center">
+          <span className="webchat-text login-heading">
+            Welcome back!
+          </span>
+          <span className="sub-heading text-center">
+            Don&apos;t have an account?
+            <br />
+            <Link className="webchat-text" to={SIGNUP_ROUTE}>
+              Create one here
+            </Link>
+          </span>
+          {this.isLoading() ? (
+            <Loader />
+          ) : (
+            <div className="flex-column align-items-center">
+              <input
+                placeholder="Email or Username"
+                type="text"
+                name="email"
+                onChange={this.handleChange}
+                value={this.state.email}
+              />
+              <input
+                placeholder="Password"
+                type="password"
+                name="password"
+                onChange={this.handleChange}
+                value={this.state.password}
+              />
+              <button className="webchat-button" onClick={this.handleSubmit}>
+                Submit
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

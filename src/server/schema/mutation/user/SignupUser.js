@@ -34,7 +34,10 @@ export default {
           username: { $iLike: username.replace(/\s/i, '') },
           email: email.trim().toLowerCase(),
         },
-        defaults: { password },
+        defaults: {
+          username,
+          password,
+        },
       });
       if (!created) return { success: false, message: 'There is already an account with that email/username' };
       user = await user.save();

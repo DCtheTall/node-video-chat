@@ -1,18 +1,19 @@
 import React from 'react';
-import '../../styles/auth-top-bar.scss';
+import { withRouter } from 'react-router';
+import '../../styles/topbar.scss';
 
 /**
  * @class AuthTopbar
  * @extends {React.PureComponent}
  */
-class AuthTopbar extends React.PureComponent {
+class Topbar extends React.PureComponent {
   /**
    * render
    * @returns {JSX.Element} HTML
    */
   render() {
     return (
-      <div className="auth-top-bar display-flex align-items-center">
+      <div className="topbar display-flex align-items-center">
         <span className="webchat-text">
           WebChat
         </span>
@@ -21,4 +22,4 @@ class AuthTopbar extends React.PureComponent {
   }
 }
 
-export default AuthTopbar;
+export default withRouter(Topbar);

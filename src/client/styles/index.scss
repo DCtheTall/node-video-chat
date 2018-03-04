@@ -45,7 +45,7 @@ button {
 
   &:hover,
   &:active,
-  &:active {
+  &:focus {
     outline: none;
   }
 }
@@ -64,11 +64,11 @@ button {
 }
 
 input {
-  background: $background-grey;
+  background: darken($background-grey, 2%);
   border: none;
   border-radius: 8px;
   border-top: 1px solid fade-out($light-grey, .5);
-  box-shadow: 0px 0px 2px fade-out($light-grey, .3);
+  box-shadow: 0px 0px 1px fade-out($light-grey, .3);
   color: $input-grey;
   outline: none;
   padding: 10px;
@@ -80,7 +80,7 @@ input {
 
   &:focus {
     filter: brightness(102%);
-    border-bottom: 1px solid fade-out($light-grey, .5);
+    border-bottom: 1px solid $light-grey;
     border-top: none;
   }
 
