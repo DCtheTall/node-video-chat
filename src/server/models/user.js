@@ -15,7 +15,7 @@ async function generateHash(plaintext) {
  * @param {Object} DataTypes for Sequelize
  * @returns {Object} user model
  */
-function linkUser(sequelize, DataTypes) { // eslint-disable-line
+function linkUser(sequelize, DataTypes) {
   const User = sequelize.define('user', {
     id: {
       type: DataTypes.INTEGER,
@@ -39,7 +39,9 @@ function linkUser(sequelize, DataTypes) { // eslint-disable-line
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,
   }, {
-    classMethods: { generateHash },
+    classMethods: {
+      generateHash,
+    },
     hooks: {
       async beforeCreate(user) {
         user.email = user.email.toLowerCase();
@@ -54,6 +56,17 @@ function linkUser(sequelize, DataTypes) { // eslint-disable-line
 
   User.prototype.validatePassword = function validatePassword(password) {
     return bcrypt.compare(password, this.password);
+  };
+
+  User.associate = function addUserAssociations(models) {
+    User.hasMany(models.contact_request, {
+      foreignKey: 'sender_id',
+      as: 'contactRequestsSent',
+    });
+    User.hasMany(models.contact_request, {
+      foreignKey: 'recipient_id',
+      as: 'contactRequestsReceived',
+    });
   };
 
   return User;

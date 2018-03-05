@@ -22,7 +22,7 @@ class Navbar extends React.PureComponent {
     return (
       <div className="navbar display-flex">
         {linkProps.map(props => (
-          <NavLink {...props} />
+          <NavLink {...props} key={props.to} />
         ))}
       </div>
     );

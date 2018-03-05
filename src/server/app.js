@@ -9,6 +9,7 @@ import Cookies from 'cookies';
 import render from './routes/render';
 import schema from './schema';
 import models from './models';
+import userIncludeConfig from './lib/user/include-config';
 
 const app = express();
 
@@ -50,7 +51,13 @@ app.use(async (req, res, next) => {
     const token = req.cookies.get(process.env.COOKIE_KEY, { signed: true }) || '';
     if (!token) return next();
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-    const user = await models.user.findById(decoded.id);
+    const user = await models.user.findById(decoded.id, {
+      order: [
+        [{ model: models.contact_request, as: 'contactRequestsSent' }, 'createdAt', 'DESC'],
+        [{ model: models.contact_request, as: 'contactRequestsReceived' }, 'createdAt', 'DESC'],
+      ],
+      include: userIncludeConfig(models),
+    });
     req.user = user;
   } catch (err) {
     console.log(err);

@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
+import ContactRequestSearch from '../components/ContactRequests/ContactRequestSearch';
+import '../styles/contact-requests.scss';
 
 /**
  * @class ContactRequests
@@ -16,7 +17,14 @@ class ContactRequests extends React.PureComponent {
     return (
       <div className="app-content display-flex">
         <ChatContainer />
-        <Sidebar />
+        <Sidebar>
+          <div className="contact-request-headroom flex-column align-items-center">
+            <div className="contact-request-heading webchat-text text-center">
+              Contact Requests
+            </div>
+            <ContactRequestSearch />
+          </div>
+        </Sidebar>
       </div>
     );
   }

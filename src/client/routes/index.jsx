@@ -15,7 +15,7 @@ import Contacts from '../containers/Contacts';
 import Messages from '../containers/Messages';
 import ContactRequests from '../containers/ContactRequests';
 
-const routes = [{
+export default [{
   component: PageLayout,
   routes: [
     { path: INDEX_ROUTE, exact: true, component: () => <Redirect to={CONTACTS_ROUTE} /> },
@@ -26,5 +26,3 @@ const routes = [{
     { path: CONTACT_REQUESTS_ROUTE, component: ContactRequests },
   ],
 }];
-
-export default routes;

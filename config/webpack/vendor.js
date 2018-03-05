@@ -3,6 +3,7 @@ module.exports = [
   'apollo-client',
   'apollo-link-http',
   'axios',
+  'classnames',
   'graphql-tag',
   'prop-types',
   'react',

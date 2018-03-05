@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Navbar from '../../components/Sidebar/Navbar';
 import '../../styles/sidebar.scss';
 
@@ -13,13 +13,21 @@ class Sidebar extends React.PureComponent {
    */
   render() {
     return (
-      <div className="sidebar-container">
+      <div className="sidebar-container flex-column">
         <Navbar />
+        <div className="sidebar-children-container">
+          {this.props.children}
+        </div>
       </div>
     );
   }
 }
 
-Sidebar.propTypes = {};
+Sidebar.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]),
+};
 
 export default Sidebar;

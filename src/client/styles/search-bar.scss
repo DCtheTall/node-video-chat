@@ -1,0 +1,26 @@
+@import './base';
+
+.search-bar {
+  border-bottom: 1.2px solid $webchat-magenta;
+
+  i {
+    color: $light-grey;
+    margin-right: 7px;
+  }
+
+  input {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 3px;
+    width: 100%;
+  }
+
+  &.is-focused {
+    border-bottom: 1.5px solid $webchat-orange;
+
+    i {
+      color: $webchat-orange;
+    }
+  }
+}
