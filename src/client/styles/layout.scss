@@ -7,7 +7,7 @@
   top: 0;
   bottom: 0;
 
-  .flex-center {
+  > .flex-center {
     height: unquote('calc(100% - #{$top-bar-height})');
   }
 

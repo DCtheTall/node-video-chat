@@ -10,6 +10,7 @@ import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError } from '../actions/error';
 import Topbar from '../components/Layout/Topbar';
+import ErrorBar from '../components/Layout/ErrorBar';
 import '../styles/layout.scss';
 
 /**
@@ -82,6 +83,7 @@ class PageLayout extends React.PureComponent {
     return (
       <div className="app-container">
         <Topbar />
+        <ErrorBar />
         {renderRoutes(this.props.route.routes)}
       </div>
     );

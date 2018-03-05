@@ -1,0 +1,30 @@
+@import './base';
+
+.error-bar {
+  background: #f76a82;
+  box-shadow: 0px 0px 3px $light-grey;
+  left: 0;
+  right: 0;
+  padding: 5px 0;
+  position: absolute;
+  top: 41px;
+  z-index: 5000;
+
+  .error {
+    flex-basis: 100%;
+    margin-left: 40px;
+
+    span {
+      color: lighten(#f76a82, 30%);
+    }
+  }
+
+  .clear-error {
+    width: 40px;
+
+    button {
+      color: lighten(#f76a82, 30%);
+      font-size: 18px;
+    }
+  }
+}

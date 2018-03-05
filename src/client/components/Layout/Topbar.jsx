@@ -24,6 +24,12 @@ class Topbar extends React.PureComponent {
     this.logout = this.logout.bind(this);
   }
   /**
+   * @returns {undefined}
+   */
+  componentDidUpdate() {
+    if (!this.props.data.loading) this.props.data.refetch();
+  }
+  /**
    * @returns {Promise<undefined>} logs user out
    */
   async logout() {
@@ -76,6 +82,7 @@ class Topbar extends React.PureComponent {
 
 Topbar.propTypes = {
   data: PropTypes.shape({
+    loading: PropTypes.bool,
     refetch: PropTypes.func,
     user: PropTypes.shape({
       username: PropTypes.string,
