@@ -1,0 +1,11 @@
+@import './base';
+
+.navbar {
+  background: $white;
+  border: {
+    top: 1px solid fade-out($light-grey, .6);
+    bottom: 4px solid $light-grey;
+  }
+  height: 40px;
+  width: 100%;
+}

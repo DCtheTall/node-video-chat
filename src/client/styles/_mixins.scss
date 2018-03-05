@@ -3,3 +3,10 @@
 @mixin webchat-gradient($property, $deg) {
   #{$property}: linear-gradient($deg, $webchat-orange, $webchat-magenta);
 }
+
+@mixin webchat-text {
+  @include webchat-gradient('background', 0deg);
+  -webkit-text-fill-color: transparent;
+  font-family: $kanit;
+  -webkit-background-clip: text;
+}

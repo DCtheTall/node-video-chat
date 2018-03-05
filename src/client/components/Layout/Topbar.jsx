@@ -59,7 +59,7 @@ class Topbar extends React.PureComponent {
     }
     return (
       <div className="topbar display-flex align-items-center">
-        <div className="hide-on-mobile display-flex align-items-center">
+        <div className="display-flex align-items-center">
           <div className="user-picture-container">
             <img
               alt={this.props.data.user.username}
@@ -70,7 +70,7 @@ class Topbar extends React.PureComponent {
             {this.props.data.user.username}
           </span>
         </div>
-        <button onClick={this.logout} className="hide-on-mobile">
+        <button onClick={this.logout}>
           <span className="webchat-text">
             Log Out
           </span>

@@ -13,3 +13,5 @@ $top-bar-height: 40px;
 $webchat-orange: #f1ba4a;
 $webchat-magenta: #e984bc;
 $white: #fff;
+
+$app-content-height: unquote('calc(100% - #{$top-bar-height})');

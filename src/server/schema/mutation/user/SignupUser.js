@@ -38,7 +38,7 @@ export default {
         },
       });
       if (!created) return { success: false, message: 'There is already an account with that email/username' };
-      user.email = email;
+      user.email = email.trim().toLowerCase();
       user.username = username.trim();
       user.password = password;
       user = await user.save();

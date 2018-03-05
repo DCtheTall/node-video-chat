@@ -62,7 +62,8 @@ class Signup extends React.PureComponent {
    * @returns {undefined}
    */
   handleChange({ target: { name, value } }) {
-    this.setState({ [name]: value });
+    const val = name === 'username' ? value.slice(0, 16) : value;
+    this.setState({ [name]: val });
   }
   /**
    * @param {string} error message

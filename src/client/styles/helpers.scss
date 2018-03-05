@@ -13,6 +13,17 @@
   display: flex;
 }
 
+.flex-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .hide-on-desktop {
   @media #{$desktop} {
     display: none;
@@ -23,17 +34,6 @@
   @media #{$mobile} {
     display: none;
   }
-}
-
-.flex-center {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
 }
 
 .justify-content-center {
