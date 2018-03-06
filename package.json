@@ -47,6 +47,7 @@
     "graphql": "^0.13.1",
     "graphql-tag": "^2.8.0",
     "jsonwebtoken": "^8.1.1",
+    "lodash.debounce": "^4.0.8",
     "morgan": "^1.9.0",
     "node-fetch": "^2.0.0",
     "node-sass": "^4.7.2",

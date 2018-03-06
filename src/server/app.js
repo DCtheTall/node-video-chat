@@ -53,10 +53,9 @@ app.use(async (req, res, next) => {
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
     const user = await models.user.findById(decoded.id, {
       order: [
-        [{ model: models.contact_request, as: 'contactRequestsSent' }, 'createdAt', 'DESC'],
         [{ model: models.contact_request, as: 'contactRequestsReceived' }, 'createdAt', 'DESC'],
       ],
-      include: userIncludeConfig(models),
+      include: userIncludeConfig,
     });
     req.user = user;
   } catch (err) {

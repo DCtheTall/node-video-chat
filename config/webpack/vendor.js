@@ -5,6 +5,7 @@ module.exports = [
   'axios',
   'classnames',
   'graphql-tag',
+  'lodash.debounce',
   'prop-types',
   'react',
   'react-apollo',

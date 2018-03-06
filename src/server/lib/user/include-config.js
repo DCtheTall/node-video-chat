@@ -1,12 +1,6 @@
-export default models => [
-  {
-    model: models.contact_request,
-    as: 'contactRequestsSent',
-    include: [{
-      model: models.user,
-      as: 'recipient',
-    }],
-  },
+import models from '../../models';
+
+export default [
   {
     model: models.contact_request,
     as: 'contactRequestsReceived',

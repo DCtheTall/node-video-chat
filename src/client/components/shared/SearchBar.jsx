@@ -50,7 +50,7 @@ class SearchBar extends React.PureComponent {
           type="text"
           placeholder={this.props.placeholder}
           value={this.props.value}
-          onChange={this.props.handleChange}
+          onChange={this.props.onChange}
         />
       </div>
     );
@@ -60,7 +60,7 @@ class SearchBar extends React.PureComponent {
 SearchBar.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
-  handleChange: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 export default SearchBar;
