@@ -1,7 +1,7 @@
 import React from 'react';
 import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
-import ContactRequestSearch from '../components/ContactRequests/ContactRequestSearch';
+import UserSearch from '../components/ContactRequests/UserSearch';
 import '../styles/contact-requests.scss';
 
 /**
@@ -22,8 +22,9 @@ class ContactRequests extends React.PureComponent {
             <div className="contact-request-heading webchat-text text-center">
               Contact Requests
             </div>
-            <ContactRequestSearch />
+            <UserSearch />
           </div>
+          test
         </Sidebar>
       </div>
     );

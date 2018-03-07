@@ -1,0 +1,26 @@
+@import './base';
+
+.user-search {
+  padding-top: 5px;
+  position: relative;
+  width: 100%;
+
+  .user-search-bar {
+    margin-bottom: 10px;
+    width: 75%;
+  }
+
+  .user-search-results {
+    background: $white;
+    border-bottom: 1px solid $light-grey;
+    box-shadow: 0px 2px 2px $light-grey;
+    position: absolute;
+    top: 48px;
+    width: 100%;
+
+    div {
+      bottom: auto;
+      position: relative;
+    }
+  }
+}

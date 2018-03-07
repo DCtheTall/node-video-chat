@@ -1,11 +1,11 @@
 import { GraphQLObjectType } from 'graphql';
 import User from './User';
-import UserSearch from './UserSearch';
+import Users from './Users';
 
 export default new GraphQLObjectType({
   name: 'QueryRoot',
   fields: {
     User,
-    UserSearch,
+    Users,
   },
 });

@@ -2,15 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import debounce from 'lodash.debounce';
-import USER_SEARCH_QUERY from '../../graphql/queries/user/search-users.graphql';
+import USER_SEARCH_QUERY from '../../graphql/queries/contact-requests/user-search.graphql';
 import SearchBar from '../shared/SearchBar';
-import '../../styles/contact-request-search.scss';
+import SearchResult from './UserSearch/SearchResult';
+import '../../styles/user-search.scss';
 
 /**
  * @class ContactRequestSearch
  * @extends {React.PureComponent}
  */
-class ContactRequestSearch extends React.PureComponent {
+class UserSearch extends React.PureComponent {
   /**
    * @constructor
    * @constructs ContactRequestSearch
@@ -23,16 +24,11 @@ class ContactRequestSearch extends React.PureComponent {
     this.submitSearch = debounce(this.submitSearch.bind(this), 300, { leading: false, tailing: true });
   }
   /**
-   * temp
-   */
-  componentDidUpdate() {
-    console.log(this.props.data.users);
-  }
-  /**
+   * @param {string} query new query value
    * @returns {undefined}
    */
-  handleSearchChange({ target: { value } }) {
-    this.setState({ query: value });
+  handleSearchChange(query) {
+    this.setState({ query });
     this.submitSearch();
   }
   /**
@@ -41,7 +37,6 @@ class ContactRequestSearch extends React.PureComponent {
   submitSearch() {
     this.props.data.refetch({
       query: this.state.query,
-      searchType: 'NEW_CONTACT_REQUEST',
     });
   }
   /**
@@ -50,20 +45,28 @@ class ContactRequestSearch extends React.PureComponent {
    */
   render() {
     return (
-      <div className="contact-request-search">
-        <SearchBar
-          placeholder="Search users to add contacts"
-          value={this.state.query}
-          onChange={this.handleSearchChange}
-        />
+      <div className="user-search flex-column align-items-center">
+        <div className="user-search-bar">
+          <SearchBar
+            placeholder="Search users to add contacts"
+            value={this.state.query}
+            onChange={this.handleSearchChange}
+          />
+        </div>
+        <div className="user-search-results">
+          {this.props.data.users && this.props.data.users.map(user => (
+            <SearchResult key={user.username} {...user} />
+          ))}
+        </div>
       </div>
     );
   }
 }
 
-ContactRequestSearch.propTypes = {
+UserSearch.propTypes = {
   data: PropTypes.shape({
     refetch: PropTypes.func,
+    users: PropTypes.arrayOf(PropTypes.shape()),
   }),
 };
 
@@ -71,7 +74,7 @@ export default graphql(
   USER_SEARCH_QUERY,
   {
     options: {
-      variables: { query: '', searchType: 'NEW_CONTACT_REQUEST' },
+      variables: { query: '' },
     },
   },
-)(ContactRequestSearch);
+)(UserSearch);

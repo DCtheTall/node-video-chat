@@ -1,0 +1,33 @@
+@import './base';
+
+.contact-request-search-result {
+  border-top: 1px solid $light-grey;
+  justify-content: space-between;
+  padding: 8px 5px;
+  width: unquote('calc(100% - 10px)');
+
+  .user {
+    img {
+      border-radius: 50%;
+      height: 40px;
+      margin-right: 10px;
+      width: 40px;
+    }
+
+    .user-info {
+      .username {
+        color: $dark-text;
+      }
+
+      .email {
+        color: $grey;
+        font-size: 10px;
+      }
+    }
+  }
+
+  button {
+    margin-right: 5px;
+    width: 35px;
+  }
+}

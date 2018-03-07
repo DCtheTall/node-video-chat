@@ -3,6 +3,10 @@
 .search-bar {
   border-bottom: 1.2px solid $webchat-magenta;
 
+  .clear-search-button {
+    font-size: 14px;
+  }
+
   i {
     color: $light-grey;
     margin-right: 7px;

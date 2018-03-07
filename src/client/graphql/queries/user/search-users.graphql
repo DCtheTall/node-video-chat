@@ -1,8 +1,0 @@
-query searchUsers($query: String, $searchType: String) {
-  users: UserSearch(query: $query, searchType: $searchType) {
-    id
-    email
-    username
-    pictureUrl
-  }
-}

@@ -18,6 +18,8 @@ class SearchBar extends React.PureComponent {
     this.state = { isFocused: false };
     this.onFocus = this.onFocus.bind(this);
     this.onBlur = this.onBlur.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
   }
   /**
    * @returns {undefined}
@@ -30,6 +32,19 @@ class SearchBar extends React.PureComponent {
    */
   onBlur() {
     this.setState({ isFocused: false });
+  }
+  /**
+   * @param {Object} event the event
+   * @returns {undefined}
+   */
+  onChange({ target: { value } }) {
+    this.props.onChange(value);
+  }
+  /**
+   * @returns {undefined}
+   */
+  clearSearch() {
+    this.props.onChange('');
   }
   /**
    * render
@@ -50,8 +65,16 @@ class SearchBar extends React.PureComponent {
           type="text"
           placeholder={this.props.placeholder}
           value={this.props.value}
-          onChange={this.props.onChange}
+          onChange={this.onChange}
         />
+        {this.props.value && (
+          <button
+            className="clear-search-button"
+            onClick={this.clearSearch}
+          >
+            &times;
+          </button>
+        )}
       </div>
     );
   }

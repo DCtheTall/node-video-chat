@@ -49,6 +49,10 @@
   height: 35px;
   width: 120px;
 
+  * {
+    color: $white;
+  }
+
   @media (hover: hover) {
     &:hover {
       box-shadow: 0 0px 3px fade-out($grey, .5);
