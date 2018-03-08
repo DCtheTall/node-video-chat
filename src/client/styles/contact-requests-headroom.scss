@@ -1,0 +1,21 @@
+@import './base';
+
+.contact-requests-headroom {
+  background: $white;
+  border-bottom: 1px solid $light-grey;
+  box-shadow: 0px 0px 2px $light-grey;
+  padding: 5px 0 12px;
+  width: 100%;
+
+  .contact-requests-heading {
+    font-size: 14px;
+  }
+
+  .contact-requests-search {
+    width: 100%;
+
+    .user-search-bar {
+      width: 75%;
+    }
+  }
+}

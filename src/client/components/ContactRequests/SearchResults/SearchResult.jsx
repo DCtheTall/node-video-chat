@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../../../styles/user-search-result.scss';
+import '../../../styles/contact-requests-search-result.scss';
 
 /**
  * @class SearchResult

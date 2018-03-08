@@ -1,14 +1,16 @@
 @import './base';
 
 .contact-request-search-result {
-  border-top: 1px solid $light-grey;
+  border-bottom: 1px solid $light-grey;
   justify-content: space-between;
-  padding: 8px 5px;
+  min-height: 56px;
+  padding: 0 5px;
   width: unquote('calc(100% - 10px)');
 
   .user {
     img {
       border-radius: 50%;
+      border: 1px solid $webchat-magenta;
       height: 40px;
       margin-right: 10px;
       width: 40px;

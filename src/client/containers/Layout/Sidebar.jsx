@@ -13,7 +13,7 @@ class Sidebar extends React.PureComponent {
    */
   render() {
     return (
-      <div className="sidebar-container flex-column">
+      <div className="sidebar-container">
         <Navbar />
         <div className="sidebar-children-container">
           {this.props.children}

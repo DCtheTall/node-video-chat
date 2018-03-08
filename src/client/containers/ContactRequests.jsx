@@ -1,8 +1,8 @@
 import React from 'react';
 import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
-import UserSearch from '../components/ContactRequests/UserSearch';
-import '../styles/contact-requests.scss';
+import Headroom from '../components/ContactRequests/Headroom';
+import SearchResults from '../components/ContactRequests/SearchResults';
 
 /**
  * @class ContactRequests
@@ -18,13 +18,10 @@ class ContactRequests extends React.PureComponent {
       <div className="app-content display-flex">
         <ChatContainer />
         <Sidebar>
-          <div className="contact-request-headroom flex-column align-items-center">
-            <div className="contact-request-heading webchat-text text-center">
-              Contact Requests
-            </div>
-            <UserSearch />
+          <div>
+            <Headroom />
+            <SearchResults />
           </div>
-          test
         </Sidebar>
       </div>
     );
