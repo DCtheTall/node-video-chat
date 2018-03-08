@@ -49,7 +49,7 @@ class SearchResults extends React.PureComponent {
     if (!this.props.data.users.length) return null;
     return (
       <div className="contact-requests-search-results flex-column">
-        {[...this.props.data.users, ...this.props.data.users, ...this.props.data.users].map(user => (
+        {this.props.data.users.map(user => (
           <SearchResult key={user.username} {...user} />
         ))}
       </div>

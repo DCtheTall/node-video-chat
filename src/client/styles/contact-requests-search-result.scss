@@ -29,7 +29,16 @@
   }
 
   button {
+    @include webchat-gradient('background', 15deg);
+    border-radius: 50%;
+    height: 35px;
     margin-right: 5px;
     width: 35px;
+
+    i {
+      color: $white;
+      font-size: 24px;
+      margin-top: 2px;
+    }
   }
 }

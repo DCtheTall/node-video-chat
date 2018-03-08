@@ -28,8 +28,8 @@ class SearchResult extends React.PureComponent {
             </span>
           </div>
         </div>
-        <button className="webchat-button">
-          <i className="fa fa-send" />
+        <button>
+          <i className="fa fa-plus" />
         </button>
       </div>
     );
