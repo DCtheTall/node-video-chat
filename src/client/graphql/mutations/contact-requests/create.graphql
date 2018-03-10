@@ -1,0 +1,6 @@
+mutation createContactRequest($userid: Int) {
+  result: CreateContactRequest(userid: $userid) {
+    success
+    message
+  }
+}

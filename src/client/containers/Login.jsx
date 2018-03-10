@@ -67,7 +67,7 @@ class Login extends React.PureComponent {
    * @param {string} error message
    * @returns {undefined}
    */
-  async handleError(error) {
+  async handleError(error = 'Something went wrong logging you in') {
     await new Promise(resolve => this.setState({ loading: false }, resolve));
     return this.props.addError(error);
   }
@@ -81,14 +81,14 @@ class Login extends React.PureComponent {
       const { data } = await this.props.loginUser({
         variables: { email: this.state.email.trim(), password: this.state.password },
       });
-      if (!data.result) return this.handleError('Something went wrong logging you in');
+      if (!data.result) return this.handleError();
       const { success, message } = data.result;
       if (!success) return this.handleError(message);
       await new Promise(resolve => this.setState({ loading: false }, resolve));
       return this.props.data.refetch();
     } catch (err) {
       console.log(err);
-      return this.handleError('Something went wrong logging you in');
+      return this.handleError();
     }
   }
   /**

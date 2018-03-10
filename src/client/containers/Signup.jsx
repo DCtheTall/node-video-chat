@@ -69,7 +69,7 @@ class Signup extends React.PureComponent {
    * @param {string} error message
    * @returns {undefined}
    */
-  async handleError(error) {
+  async handleError(error = 'Something went wrong signing you up') {
     await new Promise(resolve => this.setState({ loading: false }, resolve));
     return this.props.addError(error);
   }
@@ -113,13 +113,13 @@ class Signup extends React.PureComponent {
           password: this.state.password,
         },
       });
-      if (!data.result) return this.handleError('Something went wrong signing you up');
+      if (!data.result) return this.handleError();
       const { success, message } = data.result;
       if (success) return this.props.data.refetch();
       return this.handleError(message);
     } catch (err) {
       console.log(err);
-      return this.handleError('Something went wrong signing you up');
+      return this.handleError();
     }
   }
   /**

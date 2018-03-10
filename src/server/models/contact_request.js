@@ -37,6 +37,8 @@ function linkContactRequest(sequelize, DataTypes) {
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,
+  }, {
+    paranoid: true,
   });
 
   ContactRequest.associate = function addContactRequestAssociations(models) {

@@ -28,6 +28,12 @@
     }
   }
 
+  .loader-container {
+    height: 50px;
+    margin-right: 27px;
+    transform: scale(.75);
+  }
+
   button {
     @include webchat-gradient('background', 15deg);
     border-radius: 50%;

@@ -1,4 +1,5 @@
 import { GraphQLList, GraphQLString } from 'graphql';
+import Sequelize, { Op } from 'sequelize';
 import User from '../../types/User';
 
 export default {
@@ -9,21 +10,36 @@ export default {
   },
   async resolve(parent, { query }, req) {
     if (!query) return [];
-    const iLikeQuery = { $iLike: `%${query}%` };
-    const users = await models.user.findAll({
-      where: {
-        id: { $not: req.user.id },
-        $or: [
-          { email: iLikeQuery },
-          { username: iLikeQuery },
-        ],
-      },
-      limit: 25,
-      include: [{
-        model: models.contact_request,
-        as: 'contactRequestsSent',
-      }],
-    });
-    return users;
+    try {
+      const iLikeQuery = { $iLike: `%${query}%` };
+      const users = await models.user.findAll({
+        where: {
+          id: { [Op.not]: req.user.id },
+          [Op.or]: [
+            { email: iLikeQuery },
+            { username: iLikeQuery },
+          ],
+          [Op.and]: {
+            [Op.or]: [
+              Sequelize.literal('"contactRequestsReceived".status IS NULL'),
+              Sequelize.literal('"contactRequestsReceived".status = \'expired\''),
+            ],
+          },
+        },
+        include: [{
+          model: models.contact_request,
+          as: 'contactRequestsReceived',
+          required: false,
+          where: {
+            sender_id: req.user.id,
+          },
+        }],
+        order: [['username', 'ASC']],
+      });
+      return users;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
   },
 };

@@ -39,6 +39,7 @@ function linkUser(sequelize, DataTypes) {
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,
   }, {
+    paranoid: true,
     classMethods: {
       generateHash,
     },

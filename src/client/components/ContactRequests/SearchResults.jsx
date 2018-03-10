@@ -46,7 +46,7 @@ class SearchResults extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
-    if (!this.props.data.users.length) return null;
+    if (!this.props.data.users || !this.props.data.users.length) return null;
     return (
       <div className="contact-requests-search-results flex-column">
         {this.props.data.users.map(user => (

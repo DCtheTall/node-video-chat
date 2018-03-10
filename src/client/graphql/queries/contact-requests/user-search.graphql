@@ -1,6 +1,6 @@
 query contactRequestUsers($query: String) {
   users: Users(query: $query) {
-    id
+    userid: id
     username
     email
     pictureUrl
