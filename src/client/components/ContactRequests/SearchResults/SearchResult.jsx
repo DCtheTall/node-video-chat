@@ -6,6 +6,7 @@ import { graphql } from 'react-apollo';
 import CREATE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/create.graphql';
 import USER_SEARCH_QUERY from '../../../graphql/queries/contact-requests/user-search.graphql';
 import { addError, clearError } from '../../../actions/error';
+import { addNotice } from '../../../actions/notice';
 import Loader from '../../Layout/Loader';
 import '../../../styles/contact-requests-search-result.scss';
 
@@ -39,7 +40,8 @@ class SearchResult extends React.PureComponent {
       if (!data.result) return this.handleError();
       const { success, message } = data.result;
       if (!success) return this.handleError(message);
-      return new Promise(resolve => this.setState({ submitting: false }, resolve));
+      await new Promise(resolve => this.setState({ submitting: false }, resolve));
+      return this.props.addNotice('Contact request sent!');
     } catch (err) {
       console.log(err);
       return this.handleError();
@@ -94,13 +96,14 @@ SearchResult.propTypes = {
   query: PropTypes.string,
   addError: PropTypes.func,
   clearError: PropTypes.func,
+  addNotice: PropTypes.func,
   createContactRequest: PropTypes.func,
 };
 
 export default compose(
   connect(
     state => ({ query: state.contactRequests.query }),
-    { addError, clearError },
+    { addError, clearError, addNotice },
   ),
   graphql(CREATE_CONTACT_REQUEST, { name: 'createContactRequest' }),
 )(SearchResult);

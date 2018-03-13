@@ -7,6 +7,6 @@
 @mixin webchat-text {
   @include webchat-gradient('background', 0deg);
   -webkit-text-fill-color: transparent;
-  font-family: $kanit;
+  font-family: $montserrat;
   -webkit-background-clip: text;
 }

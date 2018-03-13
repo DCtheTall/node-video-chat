@@ -13,13 +13,12 @@ class ErrorBar extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate() {
-    if (this.props.error) {
-      this.errorTimeout = setTimeout(this.props.clearError, 5000);
-      return;
-    }
     if (this.errorTimeout) {
       clearTimeout(this.errorTimeout);
       this.errorTimeout = null;
+    }
+    if (this.props.error) {
+      this.errorTimeout = setTimeout(this.props.clearError, 5000);
     }
   }
   /**
@@ -51,8 +50,6 @@ ErrorBar.propTypes = {
 };
 
 const mapStateToProps = state => ({ error: state.error });
-const mapDispatchToProps = {
-  clearError,
-};
+const mapDispatchToProps = { clearError };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ErrorBar);

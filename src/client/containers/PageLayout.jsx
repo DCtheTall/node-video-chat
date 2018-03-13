@@ -11,6 +11,7 @@ import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError } from '../actions/error';
 import Topbar from '../components/Layout/Topbar';
 import ErrorBar from '../components/Layout/ErrorBar';
+import NoticeBar from '../components/Layout/NoticeBar';
 import '../styles/layout.scss';
 
 /**
@@ -83,7 +84,12 @@ class PageLayout extends React.PureComponent {
     return (
       <div className="app-container">
         <Topbar />
-        <ErrorBar />
+        {Boolean(this.props.error || this.props.notice) && (
+          <div className="banner-container">
+            <NoticeBar />
+            <ErrorBar />
+          </div>
+        )}
         {renderRoutes(this.props.route.routes)}
       </div>
     );
@@ -102,10 +108,15 @@ PageLayout.propTypes = {
     user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),
+  error: PropTypes.string,
+  notice: PropTypes.string,
 };
 
 export default compose(
   withRouter,
-  connect(null, { addError }),
+  connect(
+    state => ({ error: state.error, notice: state.notice }),
+    { addError },
+  ),
   graphql(QUERY_USER_ID),
 )(PageLayout);
