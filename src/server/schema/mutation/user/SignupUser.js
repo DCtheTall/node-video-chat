@@ -4,6 +4,7 @@ import {
   GraphQLString,
 } from 'graphql';
 import jwt from 'jsonwebtoken';
+import { Op } from 'sequelize';
 
 const SignupUserOutputType = new GraphQLObjectType({
   name: 'SignupUserResult',
@@ -31,8 +32,8 @@ export default {
     try {
       let [user, created] = await models.user.findOrInitialize({ // eslint-disable-line prefer-const
         where: {
-          $or: [
-            { username: { $iLike: username.trim() } },
+          [Op.or]: [
+            { username: { [Op.iLike]: username.trim() } },
             { email: email.trim().toLowerCase() },
           ],
         },

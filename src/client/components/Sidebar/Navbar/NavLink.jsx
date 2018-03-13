@@ -20,6 +20,11 @@ class NavLink extends React.PureComponent {
         activeClassName="active"
       >
         <i className={`fa fa-${this.props.icon}`} />
+        {Boolean(this.props.notifs) && (
+          <div className="notifs">
+            {this.props.notifs}
+          </div>
+        )}
       </Link>
     );
   }
@@ -28,6 +33,7 @@ class NavLink extends React.PureComponent {
 NavLink.propTypes = {
   to: PropTypes.string,
   icon: PropTypes.string,
+  notifs: PropTypes.string,
 };
 
 export default NavLink;

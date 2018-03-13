@@ -4,6 +4,7 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 import jwt from 'jsonwebtoken';
+import { Op } from 'sequelize';
 
 const LoginUserOutputType = new GraphQLObjectType({
   name: 'LoginUserResult',
@@ -30,7 +31,7 @@ export default {
     try {
       const user = await models.user.findOne({
         where: {
-          $or: [
+          [Op.or]: [
             { email: { $iLike: email.trim() } },
             { username: { $iLike: email.trim() } },
           ],
