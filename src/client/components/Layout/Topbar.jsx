@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import QUERY_TOPBAR_DATA from '../../graphql/queries/user/topbar.graphql';
 import LOGOUT_MUTATION from '../../graphql/mutations/user/logout.graphql';
@@ -27,7 +27,9 @@ class Topbar extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate() {
-    if (!this.props.data.loading) this.props.data.refetch();
+    if (!this.props.topbarData.loading) {
+      this.props.topbarData.refetch();
+    }
   }
   /**
    * @returns {Promise<undefined>} logs user out
@@ -37,7 +39,7 @@ class Topbar extends React.PureComponent {
     try {
       const { data } = await this.props.logoutUser();
       if (!data.result || !data.result.success) return this.props.addError('Something went wrong logging you out');
-      return this.props.data.refetch();
+      return this.props.client.resetStore();
     } catch (err) {
       console.log(err);
       return this.props.addError('Something went wrong logging you out');
@@ -48,7 +50,7 @@ class Topbar extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
-    if (!isLoggedIn(this.props.data.user)) {
+    if (!isLoggedIn(this.props.topbarData.user)) {
       return (
         <div className="topbar display-flex align-items-center">
           <span className="webchat-text not-logged-in">
@@ -62,12 +64,12 @@ class Topbar extends React.PureComponent {
         <div className="display-flex align-items-center">
           <div className="user-picture-container">
             <img
-              alt={this.props.data.user.username}
-              src={this.props.data.user.pictureUrl}
+              alt={this.props.topbarData.user.username}
+              src={this.props.topbarData.user.pictureUrl}
             />
           </div>
           <span className="webchat-text">
-            {this.props.data.user.username}
+            {this.props.topbarData.user.username}
           </span>
         </div>
         <button onClick={this.logout}>
@@ -81,7 +83,7 @@ class Topbar extends React.PureComponent {
 }
 
 Topbar.propTypes = {
-  data: PropTypes.shape({
+  topbarData: PropTypes.shape({
     loading: PropTypes.bool,
     refetch: PropTypes.func,
     user: PropTypes.shape({
@@ -89,13 +91,17 @@ Topbar.propTypes = {
       pictureUrl: PropTypes.string,
     }),
   }),
+  client: PropTypes.shape({
+    resetStore: PropTypes.func,
+  }),
   logoutUser: PropTypes.func,
   addError: PropTypes.func,
   clearError: PropTypes.func,
 };
 
 export default compose(
+  withApollo,
   connect(null, { addError, clearError }),
-  graphql(QUERY_TOPBAR_DATA),
+  graphql(QUERY_TOPBAR_DATA, { name: 'topbarData' }),
   graphql(LOGOUT_MUTATION, { name: 'logoutUser' }),
 )(Topbar);

@@ -18,46 +18,56 @@ class Navbar extends React.PureComponent {
    */
   constructor(props) {
     super(props);
-    this.linkProps = [
-      {
-        to: CONTACTS_ROUTE,
-        icon: 'address-book-o',
-        dataKey: '',
-        notifs: null,
-      },
-      {
-        to: MESSAGES_ROUTE,
-        icon: 'comments-o',
-        dataKey: '',
-        notifs: null,
-      },
-      {
-        to: CONTACT_REQUESTS_ROUTE,
-        icon: 'user-plus',
-        dataKey: 'pendingRequests',
-        notifs: null,
-      },
-    ];
-    this.setNotifCounts();
+    this.state = {
+      linkProps: [
+        {
+          to: CONTACTS_ROUTE,
+          icon: 'address-book-o',
+          dataKey: '',
+          notifs: null,
+        },
+        {
+          to: MESSAGES_ROUTE,
+          icon: 'comments-o',
+          dataKey: '',
+          notifs: null,
+        },
+        {
+          to: CONTACT_REQUESTS_ROUTE,
+          icon: 'user-plus',
+          dataKey: 'pendingRequests',
+          notifs: null,
+        },
+      ],
+    };
   }
   /**
    * @returns {undefined}
    */
-  componentDidUpdate() {
+  componentDidMount() {
     return this.setNotifCounts();
+  }
+  /**
+   * @param {Object} props sent to component
+   * @returns {undefined}
+   */
+  componentDidUpdate(props) {
+    if (props !== this.props) this.setNotifCounts();
   }
   /**
    * @returns {undefined}
    */
   setNotifCounts() {
-    this.linkProps = this.linkProps.map(({ dataKey, ...linkProps }) => {
-      let notifs = this.props[dataKey] && this.props[dataKey].data && this.props[dataKey].data.length;
-      notifs = (notifs >= 99 && '99+') || (notifs && String(+notifs)) || '';
-      return {
-        ...linkProps,
-        dataKey,
-        notifs,
-      };
+    this.setState({
+      linkProps: this.state.linkProps.map(({ dataKey, ...linkProps }) => {
+        let notifs = this.props[dataKey] && this.props[dataKey].data && this.props[dataKey].data.length;
+        notifs = (notifs >= 99 && '99+') || (notifs && String(+notifs)) || '';
+        return {
+          ...linkProps,
+          dataKey,
+          notifs,
+        };
+      }),
     });
   }
   /**
@@ -67,7 +77,7 @@ class Navbar extends React.PureComponent {
   render() {
     return (
       <div className="navbar display-flex">
-        {this.linkProps.map(props => (
+        {this.state.linkProps.map(props => (
           <NavLink key={props.to} {...props} />
         ))}
       </div>
@@ -76,7 +86,8 @@ class Navbar extends React.PureComponent {
 }
 
 Navbar.propTypes = {
-  pendingRequestIds: PropTypes.shape({
+  pendingRequests: PropTypes.shape({
+    refetch: PropTypes.func,
     data: PropTypes.arrayOf(PropTypes.shape()),
   }),
 };

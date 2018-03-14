@@ -14,7 +14,7 @@ export default {
       const iLikeQuery = { $iLike: `%${query}%` };
       const users = await models.user.findAll({
         where: {
-          id: { [Op.not]: req.user.id },
+          id: { [Op.not]: req.user && req.user.id },
           [Op.or]: [
             { email: iLikeQuery },
             { username: iLikeQuery },
@@ -40,7 +40,7 @@ export default {
             as: 'contactRequestsReceived',
             required: false,
             where: {
-              sender_id: req.user.id,
+              sender_id: req.user && req.user.id,
             },
           },
           {
@@ -48,7 +48,7 @@ export default {
             as: 'contactRequestsSent',
             required: false,
             where: {
-              recipient_id: req.user.id,
+              recipient_id: req.user && req.user.id,
             },
           },
         ],

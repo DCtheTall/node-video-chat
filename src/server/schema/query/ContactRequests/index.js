@@ -10,7 +10,7 @@ export default {
     try {
       const pendingRequests = await models.contact_request.findAll({
         where: {
-          recipient_id: req.user.id,
+          recipient_id: req.user && req.user.id,
           status: 'pending',
         },
         include: [{
