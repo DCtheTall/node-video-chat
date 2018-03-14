@@ -24,6 +24,14 @@
   flex-direction: column;
 }
 
+.full-height {
+  height: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
 .hide-on-desktop {
   @media #{$desktop} {
     display: none;
@@ -38,6 +46,10 @@
 
 .justify-content-center {
   justify-content: center;
+}
+
+.position-relative {
+  position: relative;
 }
 
 .webchat-button {

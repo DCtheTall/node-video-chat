@@ -19,7 +19,7 @@ class ContactRequests extends React.PureComponent {
       <div className="app-content display-flex">
         <ChatContainer />
         <Sidebar>
-          <div>
+          <div className="position-relative full-height">
             <Headroom />
             <SearchResults />
             <PendingContactRequests />

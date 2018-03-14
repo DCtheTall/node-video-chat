@@ -3,6 +3,9 @@
 .contact-requests-search-results {
   background: $white;
   border-bottom: 1px solid $light-grey;
-  max-height: unquote('calc(100% - 110px)');
+  height: unquote('calc(100% - 107px)');
+  left: 0;
   overflow-y: scroll;
+  position: absolute;
+  right: 0;
 }
