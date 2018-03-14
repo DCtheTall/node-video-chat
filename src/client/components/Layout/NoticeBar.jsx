@@ -25,6 +25,7 @@ class NoticeBar extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
+    if (!this.props.notice) return null;
     return (
       <div className="notice-bar display-flex align-items-center">
         <div className="notice text-center">
@@ -44,7 +45,7 @@ class NoticeBar extends React.PureComponent {
 
 NoticeBar.propTypes = {
   notice: PropTypes.string,
-  clearNotice: PropTypes.string,
+  clearNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({ notice: state.notice });

@@ -3,8 +3,8 @@
 .contact-requests-search-results {
   background: $white;
   border-bottom: 1px solid $light-grey;
-  height: unquote('calc(100% - 107px)');
   left: 0;
+  max-height: unquote('calc(100% - 107px)');
   overflow-y: scroll;
   position: absolute;
   right: 0;
