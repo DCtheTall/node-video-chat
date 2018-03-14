@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
@@ -85,7 +85,7 @@ class Login extends React.PureComponent {
       const { success, message } = data.result;
       if (!success) return this.handleError(message);
       await new Promise(resolve => this.setState({ loading: false }, resolve));
-      return this.props.data.refetch();
+      return this.props.client.resetStore();
     } catch (err) {
       console.log(err);
       return this.handleError();
@@ -148,12 +148,16 @@ Login.propTypes = {
     user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),
+  client: PropTypes.shape({
+    resetStore: PropTypes.func,
+  }),
   loginUser: PropTypes.func,
   addError: PropTypes.func,
   clearError: PropTypes.func,
 };
 
 export default compose(
+  withApollo,
   connect(null, { addError, clearError }),
   graphql(LOGIN_MUTATION, { name: 'loginUser' }),
   graphql(QUERY_USER_ID),

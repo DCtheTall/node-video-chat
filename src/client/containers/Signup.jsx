@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { isEmail } from 'validator';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import { INDEX_ROUTE, LOGIN_ROUTE } from '../constants';
 import SIGNUP_MUTATION from '../graphql/mutations/user/signup.graphql';
@@ -115,7 +115,7 @@ class Signup extends React.PureComponent {
       });
       if (!data.result) return this.handleError();
       const { success, message } = data.result;
-      if (success) return this.props.data.refetch();
+      if (success) return this.props.client.resetStore();
       return this.handleError(message);
     } catch (err) {
       console.log(err);
@@ -199,12 +199,16 @@ Signup.propTypes = {
     user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),
+  client: PropTypes.shape({
+    resetStore: PropTypes.func,
+  }),
   addError: PropTypes.func,
   clearError: PropTypes.func,
   signupUser: PropTypes.func,
 };
 
 export default compose(
+  withApollo,
   connect(null, { addError, clearError }),
   graphql(QUERY_USER_ID),
   graphql(SIGNUP_MUTATION, { name: 'signupUser' }),

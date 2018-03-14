@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../graphql/queries/contact-requests/pending-requests.graphql';
 import PendingContactRequest from './PendingContactRequests/PendingContactRequest';
+import Loader from '../Layout/Loader';
 import '../../styles/pending-contact-requests.scss';
 
 /**
@@ -18,7 +19,9 @@ class PendingContactRequests extends React.PureComponent {
     if (!this.props.pendingRequests.data || !this.props.pendingRequests.data.length) return null;
     return (
       <div className="pending-contact-requests flex-column">
-        {this.props.pendingRequests.data.map(request => (
+        {this.props.pendingRequests.loading ? (
+          <Loader />
+        ) : this.props.pendingRequests.data.map(request => (
           <PendingContactRequest key={request.id} {...request} />
         ))}
       </div>
@@ -28,6 +31,7 @@ class PendingContactRequests extends React.PureComponent {
 
 PendingContactRequests.propTypes = {
   pendingRequests: PropTypes.shape({
+    loading: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape()),
   }),
 };
