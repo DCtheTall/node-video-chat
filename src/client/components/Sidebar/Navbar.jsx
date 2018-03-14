@@ -2,15 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import NavLink from '../../components/Sidebar/Navbar/NavLink';
-import QUERY_PENDING_CONTACT_REQUEST_IDS from '../../graphql/queries/contact-requests/pending-request-ids.graphql';
+import QUERY_PENDING_CONTACT_REQUESTS from '../../graphql/queries/contact-requests/pending-requests.graphql';
 import { CONTACTS_ROUTE, MESSAGES_ROUTE, CONTACT_REQUESTS_ROUTE } from '../../constants';
 import '../../styles/navbar.scss';
-
-const linkProps = [
-  { to: CONTACTS_ROUTE, icon: 'address-book-o' },
-  { to: MESSAGES_ROUTE, icon: 'comments-o' },
-  { to: CONTACT_REQUESTS_ROUTE, icon: 'user-plus' },
-];
 
 /**
  * @class Navbar
@@ -24,24 +18,47 @@ class Navbar extends React.PureComponent {
    */
   constructor(props) {
     super(props);
+    this.linkProps = [
+      {
+        to: CONTACTS_ROUTE,
+        icon: 'address-book-o',
+        dataKey: '',
+        notifs: null,
+      },
+      {
+        to: MESSAGES_ROUTE,
+        icon: 'comments-o',
+        dataKey: '',
+        notifs: null,
+      },
+      {
+        to: CONTACT_REQUESTS_ROUTE,
+        icon: 'user-plus',
+        dataKey: 'pendingRequests',
+        notifs: null,
+      },
+    ];
     this.setNotifCounts();
   }
   /**
    * @returns {undefined}
    */
   componentDidUpdate() {
-    this.setNotifCounts();
+    return this.setNotifCounts();
   }
   /**
    * @returns {undefined}
    */
   setNotifCounts() {
-    this.notifCounts = [
-      0,
-      0,
-      this.props.pendingRequestIds,
-    ].map(({ data }) => Number(data && data.length))
-     .map(n => ((n > 99 && '99+') || (n && String(n)) || ''));
+    this.linkProps = this.linkProps.map(({ dataKey, ...linkProps }) => {
+      let notifs = this.props[dataKey] && this.props[dataKey].data && this.props[dataKey].data.length;
+      notifs = (notifs >= 99 && '99+') || (notifs && String(+notifs)) || '';
+      return {
+        ...linkProps,
+        dataKey,
+        notifs,
+      };
+    });
   }
   /**
    * render
@@ -50,12 +67,8 @@ class Navbar extends React.PureComponent {
   render() {
     return (
       <div className="navbar display-flex">
-        {linkProps.map((props, i) => (
-          <NavLink
-            {...props}
-            key={props.to}
-            notifs={this.notifCounts[i]}
-          />
+        {this.linkProps.map(props => (
+          <NavLink key={props.to} {...props} />
         ))}
       </div>
     );
@@ -69,6 +82,9 @@ Navbar.propTypes = {
 };
 
 export default graphql(
-  QUERY_PENDING_CONTACT_REQUEST_IDS,
-  { name: 'pendingRequestIds' },
+  QUERY_PENDING_CONTACT_REQUESTS,
+  {
+    name: 'pendingRequests',
+    options: { pollInterval: 5000 },
+  },
 )(Navbar);

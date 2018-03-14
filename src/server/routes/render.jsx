@@ -15,14 +15,14 @@ const context = {};
 
 /**
  * @param {Express.Request} req the request
- * @param {ApolloClient} client for GraphQL
+ * @param {ApolloClient} apolloClient for GraphQL
  * @returns {function} React.Component app
  */
-function createApp(req, client) {
+function createApp(req, apolloClient) {
   const store = configureStore();
   const App = ({ location }) => (
     <Provider store={store}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={apolloClient}>
         <StaticRouter location={location} context={context}>
           {renderRoutes(routes, { userAgent: req.headers['user-agent'] })}
         </StaticRouter>
@@ -41,11 +41,14 @@ function createApp(req, client) {
 async function render(req, res) {
   const link = new SchemaLink({ schema, context: req });
   const cache = new InMemoryCache();
-  const client = new ApolloClient({ link, cache, ssrMode: true });
-  const App = createApp(req, client);
+  const apolloClient = new ApolloClient({ link, cache, ssrMode: true });
+  const App = createApp(req, apolloClient);
   const html = await renderToStringWithData(<App location={req.url} />);
-  const initialState = client.extract();
-  res.render('index', { html, state: JSON.stringify(initialState).replace(/</g, '\\u003c') });
+  const initialState = apolloClient.extract();
+  res.render('index', {
+    html,
+    state: JSON.stringify(initialState).replace(/</g, '\\u003c'),
+  });
 }
 
 export default render;

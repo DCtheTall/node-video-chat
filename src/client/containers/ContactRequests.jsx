@@ -3,6 +3,7 @@ import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
 import Headroom from '../components/ContactRequests/Headroom';
 import SearchResults from '../components/ContactRequests/SearchResults';
+import PendingContactRequests from '../components/ContactRequests/PendingContactRequests';
 
 /**
  * @class ContactRequests
@@ -21,6 +22,7 @@ class ContactRequests extends React.PureComponent {
           <div>
             <Headroom />
             <SearchResults />
+            <PendingContactRequests />
           </div>
         </Sidebar>
       </div>

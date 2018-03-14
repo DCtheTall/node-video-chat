@@ -1,7 +1,9 @@
 import {
   GraphQLObjectType,
   GraphQLInt,
+  GraphQLString,
 } from 'graphql';
+import moment from 'moment';
 import User from './User';
 
 export default new GraphQLObjectType({
@@ -11,6 +13,11 @@ export default new GraphQLObjectType({
       type: GraphQLInt,
       description: 'the request\'s unique ID',
       resolve: request => request.id,
+    },
+    createdAt: {
+      type: GraphQLString,
+      description: 'when the request was created',
+      resolve: request => moment(request.createdAt).toISOString(),
     },
     sender: {
       type: User,

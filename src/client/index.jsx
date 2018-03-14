@@ -12,8 +12,8 @@ import routes from './routes';
 import configureStore from './store';
 
 const link = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
-const cache = new InMemoryCache().restore(window.__APOLLO_STATE__).restore(window.__APOLLO_STATE__);
-const client = new ApolloClient({ link, cache });
+const cache = new InMemoryCache().restore(window.__APOLLO_STATE__);
+const client = new ApolloClient({ link, cache, connectToDevTools: true });
 const store = configureStore();
 
 delete window.__APOLLO_STATE__;

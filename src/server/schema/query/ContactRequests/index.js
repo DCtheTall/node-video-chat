@@ -18,6 +18,7 @@ export default {
           as: 'sender',
         }],
         order: [['createdAt', 'DESC']],
+        limit: 100,
       });
       await Promise.map(pendingRequests, async (request) => {
         if (moment(request.createdAt) < moment().startOf('day').subtract(1, 'month')) {

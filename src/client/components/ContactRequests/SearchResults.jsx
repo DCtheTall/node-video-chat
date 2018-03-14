@@ -39,7 +39,9 @@ class SearchResults extends React.PureComponent {
    * @returns {undefined}
    */
   debouncedRefetch() {
-    if (!this.props.data.loading) this.props.data.refetch({ query: this.props.query });
+    if (!this.props.data.loading) {
+      this.props.data.refetch({ query: this.props.query });
+    }
   }
   /**
    * render

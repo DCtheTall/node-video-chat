@@ -1,0 +1,10 @@
+query pendingContactRequests {
+  data: ContactRequests {
+    id
+    sender {
+      email
+      username
+      pictureUrl
+    }
+  }
+}
