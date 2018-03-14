@@ -19,21 +19,39 @@ export default {
             { email: iLikeQuery },
             { username: iLikeQuery },
           ],
-          [Op.and]: {
-            [Op.or]: [
-              Sequelize.literal('"contactRequestsReceived".status IS NULL'),
-              Sequelize.literal('"contactRequestsReceived".status = \'expired\''),
-            ],
-          },
+          [Op.and]: [
+            {
+              [Op.or]: [
+                Sequelize.literal('"contactRequestsReceived".status IS NULL'),
+                Sequelize.literal('"contactRequestsReceived".status = \'expired\''),
+              ],
+            },
+            {
+              [Op.or]: [
+                Sequelize.literal('"contactRequestsSent".status IS NULL'),
+                Sequelize.literal('"contactRequestsSent".status = \'expired\''),
+              ],
+            },
+          ],
         },
-        include: [{
-          model: models.contact_request,
-          as: 'contactRequestsReceived',
-          required: false,
-          where: {
-            sender_id: req.user.id,
+        include: [
+          {
+            model: models.contact_request,
+            as: 'contactRequestsReceived',
+            required: false,
+            where: {
+              sender_id: req.user.id,
+            },
           },
-        }],
+          {
+            model: models.contact_request,
+            as: 'contactRequestsSent',
+            required: false,
+            where: {
+              recipient_id: req.user.id,
+            },
+          },
+        ],
         order: [['username', 'ASC']],
       });
       return users;
