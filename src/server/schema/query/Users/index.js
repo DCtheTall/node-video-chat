@@ -30,6 +30,7 @@ export default {
               [Op.or]: [
                 Sequelize.literal('"contactRequestsSent".status IS NULL'),
                 Sequelize.literal('"contactRequestsSent".status = \'expired\''),
+                Sequelize.literal('"contactRequestsSent".status = \'ignored\''),
               ],
             },
           ],

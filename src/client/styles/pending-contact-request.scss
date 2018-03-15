@@ -1,0 +1,51 @@
+@import './base';
+
+.pending-contact-request {
+  border-bottom: 1px solid $light-grey;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 0 12px 0 8px;
+  width: unquote('calc(100% - 20px)');
+
+  .user-info {
+    img {
+      border-radius: 50%;
+      border: 1px solid $webchat-magenta;
+      height: 40px;
+      margin-right: 10px;
+      width: 40px;
+    }
+
+    .username {
+      color: $dark-text;
+    }
+
+    .email {
+      color: $grey;
+      font-size: 10px;
+    }
+  }
+
+  .responding-buttons {
+    align-items: flex-end;
+
+    .accept {
+      @include webchat-gradient('background', 10deg);
+      border-radius: 6px;
+      padding: 2px 6px;
+
+      * {
+        color: $white;
+      }
+    }
+  }
+
+  .loader-container {
+    height: 50px;
+    margin: {
+      right: 27px;
+      top: 4px;
+    }
+    transform: scale(.75);
+  }
+}

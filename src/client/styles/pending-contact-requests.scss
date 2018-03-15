@@ -1,5 +1,18 @@
 @import './base';
 
 .pending-contact-requests {
-  overflow-y: scroll;
+  .pending-contact-requests-heading {
+    border-bottom: 1px solid $light-grey;
+    box-shadow: 0px 0px 2px $light-grey;
+    color: $grey;
+    font-size: 14px;
+    padding: 5px;
+    text-align: center;
+    width: unquote('calc(100% - 10px)');
+  }
+
+  .pending-contact-requests-list {
+    max-height: unquote('calc(100% - 138px)');
+    overflow-y: scroll;
+  }
 }

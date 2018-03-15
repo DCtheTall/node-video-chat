@@ -6,6 +6,8 @@ import { graphql } from 'react-apollo';
 import IGNORE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/ignore.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../../graphql/queries/contact-requests/pending-requests.graphql';
 import { addError, clearError } from '../../../actions/error';
+import Loader from '../../Layout/Loader';
+import '../../../styles/pending-contact-request.scss';
 
 /**
  * @class PendingContactRequest
@@ -72,18 +74,22 @@ class PendingContactRequest extends React.PureComponent {
             </span>
           </div>
         </div>
-        <div className="responding-buttons flex-column align-items-center">
-          <button>
-            <i className="fa fa-plus" />
-            &nbsp;
-            <span className="webchat-text">
-              Accept
-            </span>
-          </button>
-          <button onClick={this.handleIgnore}>
-            &times;&nbsp;Ignore
-          </button>
-        </div>
+        {this.state.submitting ? (
+          <Loader />
+        ) : (
+          <div className="responding-buttons flex-column justify-content-center">
+            <button className="accept">
+              <i className="fa fa-plus" />
+              &nbsp;
+              <span>
+                Accept
+              </span>
+            </button>
+            <button onClick={this.handleIgnore}>
+              &times;&nbsp;Ignore
+            </button>
+          </div>
+        )}
       </div>
     );
   }

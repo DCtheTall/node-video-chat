@@ -19,11 +19,16 @@ class PendingContactRequests extends React.PureComponent {
     if (!this.props.pendingRequests.data || !this.props.pendingRequests.data.length) return null;
     return (
       <div className="pending-contact-requests flex-column">
-        {this.props.pendingRequests.loading ? (
-          <Loader />
-        ) : this.props.pendingRequests.data.map(request => (
-          <PendingContactRequest key={request.id} {...request} />
-        ))}
+        <div className="pending-contact-requests-heading">
+          Pending Contact Requests
+        </div>
+        <div className="pending-contact-requests-list">
+          {this.props.pendingRequests.loading ? (
+            <Loader />
+          ) : this.props.pendingRequests.data.map(request => (
+            <PendingContactRequest key={request.id} {...request} />
+          ))}
+        </div>
       </div>
     );
   }

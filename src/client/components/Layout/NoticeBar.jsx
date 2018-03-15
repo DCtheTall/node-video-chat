@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import { clearNotice } from '../../actions/notice';
 import '../../styles/notice-bar.scss';
 
@@ -27,7 +28,14 @@ class NoticeBar extends React.PureComponent {
   render() {
     if (!this.props.notice) return null;
     return (
-      <div className="notice-bar display-flex align-items-center">
+      <div
+        className={classNames(
+          'notice-bar',
+          'display-flex',
+          'align-items-center',
+          !this.props.errorShowing && 'shadow',
+        )}
+      >
         <div className="notice text-center">
           <span>
             {this.props.notice}
@@ -44,11 +52,15 @@ class NoticeBar extends React.PureComponent {
 }
 
 NoticeBar.propTypes = {
+  errorShowing: PropTypes.bool,
   notice: PropTypes.string,
   clearNotice: PropTypes.func,
 };
 
-const mapStateToProps = state => ({ notice: state.notice });
+const mapStateToProps = state => ({
+  errorShowing: Boolean(state.error),
+  notice: state.notice,
+});
 const mapDispatchToProps = { clearNotice };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoticeBar);
