@@ -24,11 +24,11 @@ export default {
       const contactRequest = await models.contact_request.findOne({
         where: {
           id: requestId,
-          status: 'pending',
+          status: models.contact_request.statuses.PENDING,
         },
       });
       if (!contactRequest) return { success: false, message: 'No such contact request' };
-      contactRequest.status = 'ignored';
+      contactRequest.status = models.contact_request.statuses.IGNORED;
       await contactRequest.save();
       return { success: true, message: 'Successfully ignored the contact request' };
     } catch (err) {

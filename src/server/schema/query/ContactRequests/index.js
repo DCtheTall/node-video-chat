@@ -11,7 +11,7 @@ export default {
       const pendingRequests = await models.contact_request.findAll({
         where: {
           recipient_id: req.user && req.user.id,
-          status: 'pending',
+          status: models.contact_request.statuses.PENDING,
         },
         include: [{
           model: models.user,
@@ -22,7 +22,7 @@ export default {
       });
       await Promise.map(pendingRequests, async (request) => {
         if (moment(request.createdAt) < moment().startOf('day').subtract(1, 'month')) {
-          request.status = 'expired';
+          request.status = models.contact_request.statuses.EXPIRED;
           await request.save();
         }
       });

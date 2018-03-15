@@ -4,6 +4,12 @@
  * @returns {Object} user model
  */
 function linkContactRequest(sequelize, DataTypes) {
+  const STATUSES = [
+    'pending',
+    'accepted',
+    'ignored',
+    'expired',
+  ];
   const ContactRequest = sequelize.define('contact_request', {
     id: {
       primaryKey: true,
@@ -27,12 +33,7 @@ function linkContactRequest(sequelize, DataTypes) {
     status: {
       allowNull: false,
       defaultValue: 'pending',
-      type: DataTypes.ENUM(
-        'pending',
-        'accepted',
-        'ignored',
-        'expired',
-      ),
+      type: DataTypes.ENUM(...STATUSES),
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
@@ -51,6 +52,11 @@ function linkContactRequest(sequelize, DataTypes) {
       foreignKey: 'recipient_id',
     });
   };
+
+  ContactRequest.statuses = {};
+  STATUSES.forEach(status => (
+    ContactRequest.statuses[status.toUpperCase()] = status
+  ));
 
   return ContactRequest;
 }
