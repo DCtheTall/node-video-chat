@@ -1,0 +1,6 @@
+mutation ignoreContactRequest($requestId: Int) {
+  result: IgnoreContactRequest(requestId: $requestId) {
+    success
+    message
+  }
+}

@@ -1,11 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { graphql } from 'react-apollo';
+import IGNORE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/ignore.graphql';
+import QUERY_PENDING_CONTACT_REQUESTS from '../../../graphql/queries/contact-requests/pending-requests.graphql';
+import { addError, clearError } from '../../../actions/error';
 
 /**
  * @class PendingContactRequest
  * @extends {React.PureComponent}
  */
 class PendingContactRequest extends React.PureComponent {
+  /**
+   * @constructor
+   * @constructs PendingContactRequest
+   * @param {Object} props for component
+   */
+  constructor(props) {
+    super(props);
+    this.state = { submitting: false };
+    this.handleIgnore = this.handleIgnore.bind(this);
+    this.handleError = this.handleError.bind(this);
+  }
+  /**
+   * @returns {undefined}
+   */
+  async handleIgnore() {
+    this.props.clearError();
+    await new Promise(resolve => this.setState({ submitting: true }, resolve));
+    try {
+      const { data } = await this.props.ignoreContactRequest({
+        variables: { requestId: this.props.id },
+        refetchQueries: [{ query: QUERY_PENDING_CONTACT_REQUESTS }],
+      });
+      if (!data.result) return this.handleError();
+      const { success, message } = data.result;
+      if (!success) return this.handleError(message);
+      return new Promise(resolve => this.setState({ submitting: false }, resolve));
+    } catch (err) {
+      console.log(err);
+      return this.handleError();
+    }
+  }
+  /**
+   * @param {string} error message to display
+   * @returns {Promise<undefined>} sets state and displays error
+   */
+  async handleError(error = 'Something went wrong responding to the contact request') {
+    await new Promise(resolve => this.setState({ submitting: false }, resolve));
+    return this.props.addError(error);
+  }
   /**
    * render
    * @returns {JSX.Element} HTML
@@ -35,7 +80,7 @@ class PendingContactRequest extends React.PureComponent {
               Accept
             </span>
           </button>
-          <button>
+          <button onClick={this.handleIgnore}>
             &times;&nbsp;Ignore
           </button>
         </div>
@@ -51,6 +96,12 @@ PendingContactRequest.propTypes = {
     username: PropTypes.string,
     email: PropTypes.string,
   }),
+  addError: PropTypes.func,
+  clearError: PropTypes.func,
+  ignoreContactRequest: PropTypes.func,
 };
 
-export default PendingContactRequest;
+export default compose(
+  connect(null, { addError, clearError }),
+  graphql(IGNORE_CONTACT_REQUEST, { name: 'ignoreContactRequest' }),
+)(PendingContactRequest);
