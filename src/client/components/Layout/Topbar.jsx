@@ -7,6 +7,7 @@ import QUERY_TOPBAR_DATA from '../../graphql/queries/user/topbar.graphql';
 import LOGOUT_MUTATION from '../../graphql/mutations/user/logout.graphql';
 import { isLoggedIn } from '../../helpers/auth-helpers';
 import { addError, clearError } from '../../actions/error';
+import { resetStore } from '../../actions/store';
 import '../../styles/topbar.scss';
 
 /**
@@ -39,6 +40,7 @@ class Topbar extends React.PureComponent {
     try {
       const { data } = await this.props.logoutUser();
       if (!data.result || !data.result.success) return this.props.addError('Something went wrong logging you out');
+      this.props.resetStore();
       return this.props.client.resetStore();
     } catch (err) {
       console.log(err);
@@ -97,11 +99,12 @@ Topbar.propTypes = {
   logoutUser: PropTypes.func,
   addError: PropTypes.func,
   clearError: PropTypes.func,
+  resetStore: PropTypes.func,
 };
 
 export default compose(
   withApollo,
-  connect(null, { addError, clearError }),
+  connect(null, { addError, clearError, resetStore }),
   graphql(QUERY_TOPBAR_DATA, { name: 'topbarData' }),
   graphql(LOGOUT_MUTATION, { name: 'logoutUser' }),
 )(Topbar);
