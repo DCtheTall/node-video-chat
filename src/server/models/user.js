@@ -72,6 +72,7 @@ function linkUser(sequelize, DataTypes) {
 
   return User;
 }
+
 linkUser.toString = () => 'user';
 
 export default linkUser;

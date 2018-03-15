@@ -1,7 +1,7 @@
 /**
  * @param {Object} sequelize instance
  * @param {Object} DataTypes for Sequelize
- * @returns {Object} user model
+ * @returns {Object} contact_request model
  */
 function linkContactRequest(sequelize, DataTypes) {
   const STATUSES = [
@@ -60,6 +60,7 @@ function linkContactRequest(sequelize, DataTypes) {
 
   return ContactRequest;
 }
+
 linkContactRequest.toString = () => 'contact_request';
 
 export default linkContactRequest;
