@@ -7,6 +7,7 @@ import CREATE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/
 import USER_SEARCH_QUERY from '../../../graphql/queries/contact-requests/user-search.graphql';
 import { addError, clearError } from '../../../actions/error';
 import { addNotice } from '../../../actions/notice';
+import { setContactRequestSearchQuery } from '../../../actions/contact-requests';
 import Loader from '../../Layout/Loader';
 import '../../../styles/contact-requests-search-result.scss';
 
@@ -41,6 +42,7 @@ class SearchResult extends React.PureComponent {
       const { success, message } = data.result;
       if (!success) return this.handleError(message);
       await new Promise(resolve => this.setState({ submitting: false }, resolve));
+      this.props.setContactRequestSearchQuery('');
       return this.props.addNotice('Contact request sent!');
     } catch (err) {
       console.log(err);
@@ -97,13 +99,14 @@ SearchResult.propTypes = {
   addError: PropTypes.func,
   clearError: PropTypes.func,
   addNotice: PropTypes.func,
+  setContactRequestSearchQuery: PropTypes.func,
   createContactRequest: PropTypes.func,
 };
 
 export default compose(
   connect(
     state => ({ query: state.contactRequests.query }),
-    { addError, clearError, addNotice },
+    { addError, clearError, addNotice, setContactRequestSearchQuery },
   ),
   graphql(CREATE_CONTACT_REQUEST, { name: 'createContactRequest' }),
 )(SearchResult);
