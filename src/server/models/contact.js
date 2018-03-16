@@ -31,6 +31,7 @@ function linkContact(sequelize, DataTypes) {
         key: 'id',
       },
     },
+    lastInteractedAt: DataTypes.DATE,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,

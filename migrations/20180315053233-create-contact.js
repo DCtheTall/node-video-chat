@@ -29,6 +29,7 @@ module.exports = {
           key: 'id',
         },
       },
+      lastInteractedAt: Sequelize.DATE,
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
       deletedAt: Sequelize.DATE,
