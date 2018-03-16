@@ -1,27 +1,10 @@
-import {
-  GraphQLObjectType,
-  GraphQLBoolean,
-  GraphQLString,
-} from 'graphql';
+import { GraphQLString } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-
-const SignupUserOutputType = new GraphQLObjectType({
-  name: 'SignupUserResult',
-  fields: {
-    success: {
-      type: GraphQLBoolean,
-      resolve: obj => obj.success,
-    },
-    message: {
-      type: GraphQLString,
-      resolve: obj => obj.message,
-    },
-  },
-});
+import { MutationResponse } from '../../types';
 
 export default {
-  type: SignupUserOutputType,
+  type: MutationResponse,
   name: 'SignupUser',
   args: {
     username: { type: GraphQLString },

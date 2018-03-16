@@ -1,20 +1,8 @@
-import {
-  GraphQLObjectType,
-  GraphQLBoolean,
-  GraphQLString,
-  GraphQLInt,
-} from 'graphql';
-
-const IgnoreContactOutputType = new GraphQLObjectType({
-  name: 'IgnoreContactRequestOutput',
-  fields: {
-    success: { type: GraphQLBoolean },
-    message: { type: GraphQLString },
-  },
-});
+import { GraphQLInt } from 'graphql';
+import { MutationResponse } from '../../types';
 
 export default {
-  type: IgnoreContactOutputType,
+  type: MutationResponse,
   name: 'IgnoreContactRequest',
   args: {
     requestId: { type: GraphQLInt },

@@ -1,20 +1,8 @@
-import {
-  GraphQLString,
-  GraphQLObjectType,
-  GraphQLBoolean,
-  GraphQLInt,
-} from 'graphql';
-
-const CreateContactRequestOutputType = new GraphQLObjectType({
-  name: 'CreateContactRequestOutput',
-  fields: {
-    success: { type: GraphQLBoolean },
-    message: { type: GraphQLString },
-  },
-});
+import { GraphQLInt } from 'graphql';
+import { MutationResponse } from '../../types';
 
 export default {
-  type: CreateContactRequestOutputType,
+  type: MutationResponse,
   name: 'CreateContactRequest',
   args: {
     userid: { type: GraphQLInt },

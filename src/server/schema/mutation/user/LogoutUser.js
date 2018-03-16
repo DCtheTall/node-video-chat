@@ -1,20 +1,7 @@
-import {
-  GraphQLBoolean,
-  GraphQLObjectType,
-} from 'graphql';
-
-const LogoutUserOutputType = new GraphQLObjectType({
-  name: 'LogoutUserResult',
-  fields: {
-    success: {
-      type: GraphQLBoolean,
-      resolve: obj => obj.success,
-    },
-  },
-});
+import { MutationResponse } from '../../types';
 
 export default {
-  type: LogoutUserOutputType,
+  type: MutationResponse,
   name: 'LogoutUser',
   resolve(parent, args, req) {
     try {
