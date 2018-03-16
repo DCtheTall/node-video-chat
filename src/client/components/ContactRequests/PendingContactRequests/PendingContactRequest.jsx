@@ -7,6 +7,7 @@ import IGNORE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/
 import ACCEPT_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/accept.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../../graphql/queries/contact-requests/pending-requests.graphql';
 import { addError, clearError } from '../../../actions/error';
+import { addNotice, clearNotice } from '../../../actions/notice';
 import Loader from '../../Layout/Loader';
 import '../../../styles/pending-contact-request.scss';
 
@@ -52,6 +53,7 @@ class PendingContactRequest extends React.PureComponent {
    */
   async handleAccept() {
     this.props.clearError();
+    this.props.clearNotice();
     await new Promise(resolve => this.setState({ submitting: true }, resolve));
     try {
       const { data } = await this.props.acceptContactRequest({
@@ -59,9 +61,10 @@ class PendingContactRequest extends React.PureComponent {
         refetchQueries: [{ query: QUERY_PENDING_CONTACT_REQUESTS }],
       });
       if (!data.result) return this.handleError();
-      const { success, message } = data.result;
+      const { success, message, username } = data.result;
       if (!success) return this.handleError(message);
-      return new Promise(resolve => this.setState({ submitting: false }, resolve));
+      await new Promise(resolve => this.setState({ submitting: false }, resolve));
+      return this.props.addNotice(`Added ${username} to your contacts`);
     } catch (err) {
       console.log(err);
       return this.handleError();
@@ -126,12 +129,14 @@ PendingContactRequest.propTypes = {
   }),
   addError: PropTypes.func,
   clearError: PropTypes.func,
+  addNotice: PropTypes.func,
+  clearNotice: PropTypes.func,
   ignoreContactRequest: PropTypes.func,
   acceptContactRequest: PropTypes.func,
 };
 
 export default compose(
-  connect(null, { addError, clearError }),
+  connect(null, { addError, clearError, addNotice, clearNotice }),
   graphql(IGNORE_CONTACT_REQUEST, { name: 'ignoreContactRequest' }),
   graphql(ACCEPT_CONTACT_REQUEST, { name: 'acceptContactRequest' }),
 )(PendingContactRequest);
