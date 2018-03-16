@@ -7,11 +7,12 @@ export default {
   args: {
     requestId: { type: GraphQLInt },
   },
-  async resolve(parent, { requestId }) {
+  async resolve(parent, { requestId }, req) {
     try {
       const contactRequest = await models.contact_request.findOne({
         where: {
           id: requestId,
+          recipient_id: req.user && req.user.id,
           status: models.contact_request.statuses.PENDING,
         },
       });

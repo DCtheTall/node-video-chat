@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import IGNORE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/ignore.graphql';
+import ACCEPT_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/accept.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../../graphql/queries/contact-requests/pending-requests.graphql';
 import { addError, clearError } from '../../../actions/error';
 import Loader from '../../Layout/Loader';
@@ -23,16 +24,37 @@ class PendingContactRequest extends React.PureComponent {
     super(props);
     this.state = { submitting: false };
     this.handleIgnore = this.handleIgnore.bind(this);
+    this.handleAccept = this.handleAccept.bind(this);
     this.handleError = this.handleError.bind(this);
   }
   /**
-   * @returns {undefined}
+   * @returns {Promise<undefined>} ignores contact request w GraphQL API
    */
   async handleIgnore() {
     this.props.clearError();
     await new Promise(resolve => this.setState({ submitting: true }, resolve));
     try {
       const { data } = await this.props.ignoreContactRequest({
+        variables: { requestId: this.props.id },
+        refetchQueries: [{ query: QUERY_PENDING_CONTACT_REQUESTS }],
+      });
+      if (!data.result) return this.handleError();
+      const { success, message } = data.result;
+      if (!success) return this.handleError(message);
+      return new Promise(resolve => this.setState({ submitting: false }, resolve));
+    } catch (err) {
+      console.log(err);
+      return this.handleError();
+    }
+  }
+  /**
+   * @returns {Promise<undefined>} accepts contact request w GraphQL API
+   */
+  async handleAccept() {
+    this.props.clearError();
+    await new Promise(resolve => this.setState({ submitting: true }, resolve));
+    try {
+      const { data } = await this.props.acceptContactRequest({
         variables: { requestId: this.props.id },
         refetchQueries: [{ query: QUERY_PENDING_CONTACT_REQUESTS }],
       });
@@ -78,7 +100,7 @@ class PendingContactRequest extends React.PureComponent {
           <Loader />
         ) : (
           <div className="responding-buttons flex-column justify-content-center">
-            <button className="accept">
+            <button className="accept" onClick={this.handleAccept}>
               <i className="fa fa-plus" />
               &nbsp;
               <span>
@@ -105,9 +127,11 @@ PendingContactRequest.propTypes = {
   addError: PropTypes.func,
   clearError: PropTypes.func,
   ignoreContactRequest: PropTypes.func,
+  acceptContactRequest: PropTypes.func,
 };
 
 export default compose(
   connect(null, { addError, clearError }),
   graphql(IGNORE_CONTACT_REQUEST, { name: 'ignoreContactRequest' }),
+  graphql(ACCEPT_CONTACT_REQUEST, { name: 'acceptContactRequest' }),
 )(PendingContactRequest);

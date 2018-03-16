@@ -6,6 +6,7 @@ import SignupUser from './user/SignupUser';
 
 import CreateContactRequest from './contact-requests/CreateContactRequest';
 import IgnoreContactRequest from './contact-requests/IgnoreContactRequest';
+import AcceptContactRequest from './contact-requests/AcceptContactRequest';
 
 export default new GraphQLObjectType({
   name: 'MutationRoot',
@@ -15,5 +16,6 @@ export default new GraphQLObjectType({
     SignupUser,
     CreateContactRequest,
     IgnoreContactRequest,
+    AcceptContactRequest,
   },
 });
