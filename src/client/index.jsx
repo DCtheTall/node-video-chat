@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import './styles/index.scss';
 import routes from './routes';
 import configureStore from './store';
+import socket from './socket';
 
 const link = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
 const cache = new InMemoryCache().restore(window.__APOLLO_STATE__);

@@ -23,6 +23,7 @@ const clientPlugins = [
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       GRAPHQL_URI: JSON.stringify(process.env.GRAPHQL_URI),
+      APP_URL: JSON.stringify(process.env.APP_URL),
     },
   }),
   new webpack.optimize.CommonsChunkPlugin({
