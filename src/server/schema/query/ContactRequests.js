@@ -1,7 +1,7 @@
 import { GraphQLList } from 'graphql';
 import Promise from 'bluebird';
 import moment from 'moment';
-import ContactRequest from '../../types/ContactRequest';
+import ContactRequest from '../types/ContactRequest';
 
 export default {
   type: new GraphQLList(ContactRequest),

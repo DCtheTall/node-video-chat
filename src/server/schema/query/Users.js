@@ -1,6 +1,6 @@
 import { GraphQLList, GraphQLString } from 'graphql';
 import Sequelize, { Op } from 'sequelize';
-import User from '../../types/User';
+import User from '../types/User';
 
 export default {
   type: new GraphQLList(User),
