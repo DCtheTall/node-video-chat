@@ -13,15 +13,10 @@ function connectSocket(store) {
   store.subscribe(() => {
     const { token: newToken } = store.getState();
     if (newToken === token) return;
-    if (!newToken) {
-      if (socket) socket.disconnect();
-      socket = null;
-    }
+    if (socket) socket.disconnect();
+    socket = null;
     if (newToken) {
-      if (socket) socket.disconnect();
-      socket = io.connect(process.env.APP_URL, {
-        query: `token=${newToken}`,
-      });
+      socket = io.connect(process.env.APP_URL, { query: `token=${newToken}` });
     }
     token = newToken;
   });
