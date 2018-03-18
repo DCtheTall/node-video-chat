@@ -3,7 +3,6 @@ if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line glob
 /* eslint-disable import/first */
 import debug from 'debug';
 import server from '../src/server';
-import init from 'socket.io';
 
 /**
  * normalizePort

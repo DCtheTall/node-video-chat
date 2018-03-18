@@ -1,7 +1,10 @@
 module.exports = [
   'apollo-cache-inmemory',
   'apollo-client',
+  'apollo-client-preset',
   'apollo-link-http',
+  'apollo-link-ws',
+  'apollo-utilities',
   'axios',
   'classnames',
   'graphql-tag',

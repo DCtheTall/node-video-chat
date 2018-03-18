@@ -20,8 +20,11 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.9",
     "apollo-client": "^2.2.5",
+    "apollo-client-preset": "^1.0.8",
     "apollo-link-http": "^1.4.0",
     "apollo-link-schema": "^1.0.6",
+    "apollo-link-ws": "^1.0.7",
+    "apollo-utilities": "^1.0.10",
     "autoprefixer": "^8.1.0",
     "axios": "^0.18.0",
     "babel-core": "^6.26.0",
@@ -75,6 +78,7 @@
     "socket.io-client": "^2.0.4",
     "socketio-jwt": "^4.5.0",
     "style-loader": "^0.20.2",
+    "subscriptions-transport-ws": "^0.9.6",
     "validator": "^9.4.1",
     "webpack": "^3.11.0",
     "webpack-node-externals": "^1.6.0"

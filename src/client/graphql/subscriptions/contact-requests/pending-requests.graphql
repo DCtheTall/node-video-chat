@@ -1,0 +1,10 @@
+subscription pendingRequests {
+  newContactRequest {
+    id
+    sender {
+      email
+      username
+      pictureUrl
+    }
+  }
+}

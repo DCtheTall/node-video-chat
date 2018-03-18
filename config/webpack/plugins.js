@@ -24,6 +24,7 @@ const clientPlugins = [
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       GRAPHQL_URI: JSON.stringify(process.env.GRAPHQL_URI),
       APP_URL: JSON.stringify(process.env.APP_URL),
+      APP_WS_URI: JSON.stringify(process.env.APP_WS_URI),
     },
   }),
   new webpack.optimize.CommonsChunkPlugin({
