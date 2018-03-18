@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 
 export const { addError, clearError } = createActions({
-  ADD_ERROR: error => String(error),
+  ADD_ERROR: String,
   CLEAR_ERROR: () => '',
 });
