@@ -6,5 +6,6 @@ mutation signupUser($email: String, $username: String, $password: String) {
   ) {
     success
     message
+    token
   }
 }

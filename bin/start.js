@@ -1,9 +1,8 @@
 if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line global-require
 
 /* eslint-disable import/first */
-import http from 'http';
 import debug from 'debug';
-import app from '../src/server/app';
+import server from '../src/server';
 import init from 'socket.io';
 
 /**
@@ -18,13 +17,6 @@ function normalizePort(val) {
 }
 
 const port = normalizePort(process.env.PORT || 4000);
-const server = http.createServer(app);
-
-app.io = init(server);
-
-app.io.on('connection', () => {
-  console.log('socket connected');
-});
 
 /**
  * onListen callback for server

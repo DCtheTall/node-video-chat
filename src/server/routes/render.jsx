@@ -42,11 +42,16 @@ async function render(req, res) {
   const link = new SchemaLink({ schema, context: req });
   const cache = new InMemoryCache();
   const apolloClient = new ApolloClient({ link, cache, ssrMode: true });
+  const initialState = apolloClient.extract();
+
   const App = createApp(req, apolloClient);
   const html = await renderToStringWithData(<App location={req.url} />);
-  const initialState = apolloClient.extract();
+
+  const token = req.cookies.get(process.env.COOKIE_KEY, { signed: true }) || '';
+
   res.render('index', {
     html,
+    token: JSON.stringify(token),
     state: JSON.stringify(initialState).replace(/</g, '\\u003c'),
   });
 }

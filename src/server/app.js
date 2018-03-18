@@ -42,10 +42,13 @@ global.errorResponse =
   (err, message = 'Internal server error') =>
     res => res.set(500).json({ success: false, message });
 
+// Set req.cookies
 app.use((req, res, next) => {
   req.cookies = new Cookies(req, res, { keys: [new Buffer(process.env.COOKIE_SECRET, 'utf-8')] });
   next();
 });
+
+// Deserializes the user session if there is one
 app.use(async (req, res, next) => {
   try {
     const token = req.cookies.get(process.env.COOKIE_KEY, { signed: true }) || '';

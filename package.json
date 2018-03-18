@@ -73,6 +73,7 @@
     "sequelize": "^4.33.4",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
+    "socketio-jwt": "^4.5.0",
     "style-loader": "^0.20.2",
     "validator": "^9.4.1",
     "webpack": "^3.11.0",

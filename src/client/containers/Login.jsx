@@ -9,6 +9,7 @@ import LOGIN_MUTATION from '../graphql/mutations/user/login.graphql';
 import { INDEX_ROUTE, SIGNUP_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError, clearError } from '../actions/error';
+import { setToken } from '../actions/token';
 import Loader from '../components/Layout/Loader';
 import '../styles/login.scss';
 
@@ -82,9 +83,10 @@ class Login extends React.PureComponent {
         variables: { email: this.state.email.trim(), password: this.state.password },
       });
       if (!data.result) return this.handleError();
-      const { success, message } = data.result;
+      const { success, message, token } = data.result;
       if (!success) return this.handleError(message);
       await new Promise(resolve => this.setState({ loading: false }, resolve));
+      this.props.setToken(token);
       return this.props.client.resetStore();
     } catch (err) {
       console.log(err);
@@ -154,11 +156,12 @@ Login.propTypes = {
   loginUser: PropTypes.func,
   addError: PropTypes.func,
   clearError: PropTypes.func,
+  setToken: PropTypes.func,
 };
 
 export default compose(
   withApollo,
-  connect(null, { addError, clearError }),
+  connect(null, { addError, clearError, setToken }),
   graphql(LOGIN_MUTATION, { name: 'loginUser' }),
   graphql(QUERY_USER_ID),
 )(Login);

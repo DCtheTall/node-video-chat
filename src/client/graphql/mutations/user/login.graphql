@@ -2,5 +2,6 @@ mutation loginUser($email: String, $password: String) {
   result: LoginUser(email: $email, password: $password) {
     success
     message
+    token
   }
 }

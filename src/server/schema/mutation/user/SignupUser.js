@@ -1,10 +1,22 @@
-import { GraphQLString } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLBoolean,
+} from 'graphql';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-import { MutationResponse } from '../../types';
+
+const SignupResponse = new GraphQLObjectType({
+  name: 'SignupResponse',
+  fields: {
+    success: { type: GraphQLBoolean },
+    message: { type: GraphQLString },
+    token: { type: GraphQLString },
+  },
+});
 
 export default {
-  type: MutationResponse,
+  type: SignupResponse,
   name: 'SignupUser',
   args: {
     username: { type: GraphQLString },
@@ -28,7 +40,11 @@ export default {
       user = await user.save();
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 24 * 60 * 60 });
       req.cookies.set(process.env.COOKIE_KEY, token, { signed: true, maxAge: Date.now() + (24 * 60 * 60 * 1e3) });
-      return { success: true, message: 'success' };
+      return {
+        success: true,
+        message: 'success',
+        token,
+      };
     } catch (err) {
       console.log(err);
       return { success: false, message: 'Something went wrong signing you up' };

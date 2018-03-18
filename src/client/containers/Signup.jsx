@@ -10,6 +10,7 @@ import SIGNUP_MUTATION from '../graphql/mutations/user/signup.graphql';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError, clearError } from '../actions/error';
+import { setToken } from '../actions/token';
 import Loader from '../components/Layout/Loader';
 import '../styles/signup.scss';
 
@@ -114,9 +115,10 @@ class Signup extends React.PureComponent {
         },
       });
       if (!data.result) return this.handleError();
-      const { success, message } = data.result;
-      if (success) return this.props.client.resetStore();
-      return this.handleError(message);
+      const { success, message, token } = data.result;
+      if (!success) return this.handleError(message);
+      this.props.setToken(token);
+      return this.props.client.resetStore();
     } catch (err) {
       console.log(err);
       return this.handleError();
@@ -205,11 +207,12 @@ Signup.propTypes = {
   addError: PropTypes.func,
   clearError: PropTypes.func,
   signupUser: PropTypes.func,
+  setToken: PropTypes.func,
 };
 
 export default compose(
   withApollo,
-  connect(null, { addError, clearError }),
+  connect(null, { addError, clearError, setToken }),
   graphql(QUERY_USER_ID),
   graphql(SIGNUP_MUTATION, { name: 'signupUser' }),
 )(Signup);
