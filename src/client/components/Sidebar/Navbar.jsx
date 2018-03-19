@@ -78,9 +78,15 @@ class Navbar extends React.PureComponent {
   subscribeToNewContactRequests() {
     this.props.pendingRequests.subscribeToMore({
       document: SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED,
-      updateQuery(prev) {
-        console.log('triggered');
-        return prev;
+      updateQuery(prev, { subscriptionData: { data } }) {
+        if (!data || !data.requestReceived) return prev;
+        return {
+          ...prev,
+          data: [
+            data.requestReceived,
+            ...prev.data,
+          ],
+        };
       },
     });
   }
@@ -111,6 +117,6 @@ export default graphql(
   QUERY_PENDING_CONTACT_REQUESTS,
   {
     name: 'pendingRequests',
-    options: { pollInterval: 5000 },
+    options: { pollInterval: 6e4 },
   },
 )(Navbar);

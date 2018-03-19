@@ -45,6 +45,6 @@ export default graphql(
   QUERY_PENDING_CONTACT_REQUESTS,
   {
     name: 'pendingRequests',
-    options: { pollInterval: 5000 },
+    options: { pollInterval: 6e4 },
   },
 )(PendingContactRequests);
