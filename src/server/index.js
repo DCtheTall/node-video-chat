@@ -1,7 +1,10 @@
 import { createServer } from 'http';
 import io from 'socket.io';
 import { authorize } from 'socketio-jwt';
+import { execute, subscribe } from 'graphql';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import app from './app';
+import schema from './schema';
 
 const server = createServer(app);
 
@@ -13,8 +16,27 @@ app.io.use(authorize({
 }));
 
 app.io.on('connection', (socket) => {
-  console.log(`\n\n\n\n\nsocket connected to user ${socket.decoded_token.id}\n\n\n\n\n`);
-  socket.on('disconnect', () => console.log('\n\n\n\n\n\nsocket disconnected\n\n\n\n\n'));
+  console.log(`socket connected to user ${socket.decoded_token.id}`);
+  socket.on('disconnect', () => console.log(`socket disconnected from user ${socket.decoded_token.i}`));
 });
+
+const websocketServer = createServer((req, res) => {
+  res.writeHead(404);
+  res.end();
+});
+
+websocketServer.listen(process.env.GRAPHQL_WS_PORT);
+
+(() => new SubscriptionServer(
+  {
+    schema,
+    execute,
+    subscribe,
+  },
+  {
+    server: websocketServer,
+    path: '/',
+  },
+))();
 
 export default server;

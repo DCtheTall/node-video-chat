@@ -1,5 +1,7 @@
 import { GraphQLInt } from 'graphql';
+import { CONTACT_REQUEST_CREATED } from '../../subscription/pubsub/constants';
 import { MutationResponse } from '../../types';
+import pubsub from '../../subscription/pubsub';
 
 export default {
   type: MutationResponse,
@@ -25,6 +27,10 @@ export default {
           recipient_id: userid,
         });
       }
+      pubsub.publish(CONTACT_REQUEST_CREATED, {
+        senderId: req.user.id,
+        recipientId: userid,
+      });
       return { success: true, message: 'Contact request sent!' };
     } catch (err) {
       console.log(err);

@@ -18,13 +18,26 @@ import configureStore from './store';
 import { setToken } from './actions/token';
 import connectSocket from './socket';
 
+const store = configureStore();
+
+store.dispatch(setToken(window.__JWT_TOKEN__));
+connectSocket(store);
+
 const httpLink = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
 const wsLink = new WebSocketLink({
-  uri: process.env.APP_WS_URI,
+  uri: process.env.GRAPHQL_WS_URI,
   options: {
     reconnect: true,
   },
 });
+const subscriptionMiddleware = {
+  applyMiddleware(options, next) {
+    const { token } = store.getState();
+    options.connectionParams = { authToken: token };
+    next();
+  },
+};
+wsLink.subscriptionClient.use([subscriptionMiddleware]);
 const link = split(
   ({ query }) => {
     const { kind, operation } = getMainDefinition(query);
@@ -36,10 +49,6 @@ const link = split(
 
 const cache = new InMemoryCache().restore(window.__APOLLO_STATE__);
 const client = new ApolloClient({ link, cache, connectToDevTools: true });
-const store = configureStore();
-
-store.dispatch(setToken(window.__JWT_TOKEN__));
-connectSocket(store);
 
 delete window.__APOLLO_STATE__;
 delete window.__JWT_TOKEN__;

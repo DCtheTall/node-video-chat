@@ -1,3 +1,10 @@
 import { GraphQLObjectType } from 'graphql';
 
-export default new GraphQLObjectType({});
+import ContactRequestReceived from './contact-requests/ContactRequestReceived';
+
+export default new GraphQLObjectType({
+  name: 'SubscriptionRoot',
+  fields: {
+    ContactRequestReceived,
+  },
+});

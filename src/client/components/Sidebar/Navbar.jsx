@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import NavLink from '../../components/Sidebar/Navbar/NavLink';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../graphql/queries/contact-requests/pending-requests.graphql';
+import SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED from '../../graphql/subscriptions/contact-requests/contact-request-received.graphql';
 import { CONTACTS_ROUTE, MESSAGES_ROUTE, CONTACT_REQUESTS_ROUTE } from '../../constants';
 import '../../styles/navbar.scss';
 
@@ -45,7 +46,8 @@ class Navbar extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidMount() {
-    return this.setNotifCounts();
+    this.setNotifCounts();
+    this.subscribeToNewContactRequests();
   }
   /**
    * @param {Object} props sent to component
@@ -71,6 +73,18 @@ class Navbar extends React.PureComponent {
     });
   }
   /**
+   * @returns {undefined}
+   */
+  subscribeToNewContactRequests() {
+    this.props.pendingRequests.subscribeToMore({
+      document: SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED,
+      updateQuery(prev) {
+        console.log('triggered');
+        return prev;
+      },
+    });
+  }
+  /**
    * render
    * @returns {JSX.Element} HTML
    */
@@ -89,6 +103,7 @@ Navbar.propTypes = {
   pendingRequests: PropTypes.shape({
     refetch: PropTypes.func,
     data: PropTypes.arrayOf(PropTypes.shape()),
+    subscribeToMore: PropTypes.func,
   }),
 };
 

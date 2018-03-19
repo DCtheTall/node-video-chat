@@ -21,10 +21,10 @@ const serverPlugins = [
 const clientPlugins = [
   new webpack.DefinePlugin({
     'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      GRAPHQL_URI: JSON.stringify(process.env.GRAPHQL_URI),
       APP_URL: JSON.stringify(process.env.APP_URL),
-      APP_WS_URI: JSON.stringify(process.env.APP_WS_URI),
+      GRAPHQL_URI: JSON.stringify(process.env.GRAPHQL_URI),
+      GRAPHQL_WS_URI: JSON.stringify(process.env.GRAPHQL_WS_URI),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
     },
   }),
   new webpack.optimize.CommonsChunkPlugin({
