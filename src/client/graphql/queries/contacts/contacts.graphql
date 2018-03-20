@@ -1,0 +1,10 @@
+query contacts {
+  data: Contacts {
+    id
+    user {
+      id
+      username
+      email
+    }
+  }
+}

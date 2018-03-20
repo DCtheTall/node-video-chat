@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
+import ContactList from '../components/Contacts/ContactList';
 
 /**
  * @class Contacts
@@ -16,7 +17,9 @@ class Contacts extends React.PureComponent {
     return (
       <div className="app-content display-flex">
         <ChatContainer />
-        <Sidebar />
+        <Sidebar>
+          <ContactList />
+        </Sidebar>
       </div>
     );
   }

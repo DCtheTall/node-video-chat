@@ -11,13 +11,9 @@ export default new GraphQLObjectType({
       type: GraphQLInt,
       resolve: contact => contact.id,
     },
-    user1: {
+    user: {
       type: User,
-      resolve: contact => contact.user1,
-    },
-    user2: {
-      type: User,
-      resolve: contact => contact.user2,
+      resolve: contact => contact.user,
     },
   },
 });
