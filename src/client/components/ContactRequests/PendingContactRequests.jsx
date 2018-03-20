@@ -43,8 +43,5 @@ PendingContactRequests.propTypes = {
 
 export default graphql(
   QUERY_PENDING_CONTACT_REQUESTS,
-  {
-    name: 'pendingRequests',
-    options: { pollInterval: 6e4 },
-  },
+  { name: 'pendingRequests' },
 )(PendingContactRequests);

@@ -1,3 +1,5 @@
+import { GraphQLInt } from 'graphql';
+import { withFilter } from 'graphql-subscriptions';
 import { CONTACT_REQUEST_CREATED } from '../pubsub/constants';
 import pubsub from '../pubsub';
 import { ContactRequest } from '../../types';
@@ -5,6 +7,9 @@ import { ContactRequest } from '../../types';
 export default {
   type: ContactRequest,
   name: 'ContactRequestReceived',
+  args: {
+    userId: { type: GraphQLInt },
+  },
   async resolve({ senderId, recipientId }) {
     try {
       const contactRequest = await models.contact_request.findOne({
@@ -23,5 +28,8 @@ export default {
       return null;
     }
   },
-  subscribe: () => pubsub.asyncIterator(CONTACT_REQUEST_CREATED),
+  subscribe: withFilter(
+    () => pubsub.asyncIterator(CONTACT_REQUEST_CREATED),
+    ({ recipientId }, { userId }) => userId === recipientId,
+  ),
 };
