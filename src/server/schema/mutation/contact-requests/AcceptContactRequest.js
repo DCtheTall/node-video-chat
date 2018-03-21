@@ -4,6 +4,8 @@ import {
   GraphQLString,
   GraphQLInt,
 } from 'graphql';
+import { CONTACT_REQUEST_ACCEPTED } from '../../subscription/pubsub/constants';
+import pubsub from '../../subscription/pubsub';
 
 const AcceptContactRequestResponse = new GraphQLObjectType({
   name: 'AcceptContactRequestResponse',
@@ -49,6 +51,11 @@ export default {
           { model: models.user, as: 'user1' },
           { model: models.user, as: 'user2' },
         ],
+      });
+
+      pubsub.publish(CONTACT_REQUEST_ACCEPTED, {
+        user1: req.user.id,
+        user2: contactRequest.sender_id,
       });
 
       return {

@@ -27,10 +27,12 @@ export default {
           recipient_id: userid,
         });
       }
+
       pubsub.publish(CONTACT_REQUEST_CREATED, {
         senderId: req.user.id,
         recipientId: userid,
       });
+
       return { success: true, message: 'Contact request sent!' };
     } catch (err) {
       console.log(err);

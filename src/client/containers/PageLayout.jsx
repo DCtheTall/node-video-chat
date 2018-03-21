@@ -6,12 +6,17 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
+import QUERY_PENDING_CONTACT_REQUESTS from '../graphql/queries/contact-requests/pending-requests.graphql';
+import QUERY_CONTACTS from '../graphql/queries/contacts/contacts.graphql';
+import SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED from '../graphql/subscriptions/contact-requests/contact-request-received.graphql';
+import SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED from '../graphql/subscriptions/contact-requests/contact-request-accepted.graphql';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError } from '../actions/error';
 import Topbar from '../components/Layout/Topbar';
 import ErrorBar from '../components/Layout/ErrorBar';
 import NoticeBar from '../components/Layout/NoticeBar';
+import { addNotice } from '../actions/notice';
 import '../styles/layout.scss';
 
 /**
@@ -37,6 +42,8 @@ class PageLayout extends React.PureComponent {
     if (!isLoggedIn(this.props.data.user) && !this.isAuthRoute()) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
+    this.subscribeToNewContactRequests();
+    this.subscribeToAcceptedContactRequests();
   }
   /**
    * @param {Object} props before update
@@ -62,6 +69,50 @@ class PageLayout extends React.PureComponent {
   isMobileDevice() {
     const mobileDeviceRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
     return mobileDeviceRegex.test(this.props.userAgent);
+  }
+  /**
+   * @returns {undefined}
+   */
+  subscribeToNewContactRequests() {
+    this.props.pendingRequests.subscribeToMore({
+      document: SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED,
+      variables: {
+        userId: this.props.data.user && this.props.data.user.id,
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        if (!data || !data.requestReceived) return prev;
+        this.props.addNotice(`${data.requestReceived.sender.username} sent you a contact request!`);
+        return {
+          ...prev,
+          data: [
+            data.requestReceived,
+            ...prev.data,
+          ],
+        };
+      },
+    });
+  }
+  /**
+   * @returns {undefined}
+   */
+  subscribeToAcceptedContactRequests() {
+    this.props.contacts.subscribeToMore({
+      document: SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED,
+      variables: {
+        userId: this.props.data.user && this.props.data.user.id,
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        if (!data || !data.newContact) return prev;
+        this.props.addNotice(`${data.newContact.user.username} accepted your contact request!`);
+        return {
+          ...prev,
+          data: [
+            data.newContact,
+            ...prev.data,
+          ],
+        };
+      },
+    });
   }
   /**
    * render
@@ -110,13 +161,30 @@ PageLayout.propTypes = {
   }),
   error: PropTypes.string,
   notice: PropTypes.string,
+  pendingRequests: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.shape()),
+    subscribeToMore: PropTypes.func,
+  }),
+  contacts: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.shape()),
+    subscribeToMore: PropTypes.func,
+  }),
+  addNotice: PropTypes.func,
 };
 
 export default compose(
   withRouter,
   connect(
     state => ({ error: state.error, notice: state.notice }),
-    { addError },
+    { addError, addNotice },
   ),
   graphql(QUERY_USER_ID),
+  graphql(
+    QUERY_PENDING_CONTACT_REQUESTS,
+    { name: 'pendingRequests' },
+  ),
+  graphql(
+    QUERY_CONTACTS,
+    { name: 'contacts' },
+  ),
 )(PageLayout);

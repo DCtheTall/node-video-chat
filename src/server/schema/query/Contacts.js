@@ -19,13 +19,13 @@ export default {
           model: models.user,
           as: 'user1',
           required: false,
-          where: { id: req.user && { $ne: req.user.id } },
+          where: { id: req.user && { [Op.ne]: req.user.id } },
         },
         {
           model: models.user,
           as: 'user2',
           required: false,
-          where: { id: req.user && { $ne: req.user.id } },
+          where: { id: req.user && { [Op.ne]: req.user.id } },
         },
       ],
     });

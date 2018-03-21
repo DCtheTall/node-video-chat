@@ -6,6 +6,7 @@ import { graphql } from 'react-apollo';
 import IGNORE_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/ignore.graphql';
 import ACCEPT_CONTACT_REQUEST from '../../../graphql/mutations/contact-requests/accept.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../../graphql/queries/contact-requests/pending-requests.graphql';
+import QUERY_CONTACTS from '../../../graphql/queries/contacts/contacts.graphql';
 import { addError, clearError } from '../../../actions/error';
 import { addNotice, clearNotice } from '../../../actions/notice';
 import Loader from '../../Layout/Loader';
@@ -58,7 +59,10 @@ class PendingContactRequest extends React.PureComponent {
     try {
       const { data } = await this.props.acceptContactRequest({
         variables: { requestId: this.props.id },
-        refetchQueries: [{ query: QUERY_PENDING_CONTACT_REQUESTS }],
+        refetchQueries: [
+          { query: QUERY_PENDING_CONTACT_REQUESTS },
+          { query: QUERY_CONTACTS },
+        ],
       });
       if (!data.result) return this.handleError();
       const { success, message, username } = data.result;

@@ -1,0 +1,11 @@
+subscription($userId: Int) {
+  newContact: ContactRequestAccepted(userId: $userId) {
+    id
+    user {
+      id
+      username
+      email
+      pictureUrl
+    }
+  }
+}
