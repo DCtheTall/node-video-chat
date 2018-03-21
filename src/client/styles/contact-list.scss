@@ -1,0 +1,12 @@
+@import './base';
+
+.contact-list-container {
+  .contact-list-heading {
+    border-bottom: 1px solid $light-grey;
+    padding: 4px 0;
+
+    .webchat-text {
+      font-size: 14px;
+    }
+  }
+}

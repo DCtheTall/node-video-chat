@@ -5,6 +5,7 @@ query contacts {
       id
       username
       email
+      pictureUrl
     }
   }
 }

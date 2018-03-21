@@ -1,6 +1,6 @@
 @import './base';
 
-.contact-request-search-result {
+.contact-container {
   border-bottom: 1px solid $light-grey;
   justify-content: space-between;
   min-height: 56px;
@@ -30,23 +30,22 @@
     }
   }
 
-  .loader-container {
-    height: 50px;
-    margin-right: 27px;
-    transform: scale(.75);
-  }
+  .controls {
+    button {
+      @include webchat-gradient('background', 10deg);
+      border-radius: 50%;
+      font-size: 16px;
+      height: 30px;
+      margin-left: 10px;
+      width: 30px;
 
-  button {
-    @include webchat-gradient('background', 15deg);
-    border-radius: 50%;
-    height: 35px;
-    margin-right: 5px;
-    width: 35px;
+      &:hover {
+        box-shadow: 0 0 3px $light-grey;
+      }
 
-    i {
-      color: $white;
-      font-size: 24px;
-      margin-top: 2px;
+      i {
+        color: $white;
+      }
     }
   }
 }
