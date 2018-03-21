@@ -1,17 +1,16 @@
 @import './base';
 
-.contact-requests-headroom {
+.contact-list-headroom {
   background: $white;
   border-bottom: 1px solid $light-grey;
-  box-shadow: 0px 0px 2px $light-grey;
+  box-shadow: 0 0 2px $light-grey;
   padding: 5px 0 12px;
-  width: 100%;
 
-  .contact-requests-heading {
+  .webchat-text {
     font-size: 16px;
   }
 
-  .contact-requests-search {
+  .contacts-search {
     width: 100%;
 
     .user-search-bar {
