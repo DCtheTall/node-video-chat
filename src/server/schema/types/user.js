@@ -27,5 +27,16 @@ export default new GraphQLObjectType({
       description: 'the username',
       resolve: user => user.pictureUrl,
     },
+    status: {
+      type: GraphQLString,
+      description: 'the contacts current status: online or offline',
+      resolve(user, args, req) {
+        const { connected } = req.app.io.sockets.clients();
+        const connectedSockets = Object.keys(connected).map(key => connected[key]);
+        const socket = connectedSockets.find(so => so.decoded_token.id === user.id);
+        if (socket) return 'online';
+        return 'offline';
+      },
+    },
   },
 });
