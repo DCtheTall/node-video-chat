@@ -12,6 +12,7 @@ export default {
     userId: { type: GraphQLInt },
   },
   async resolve({ user1, user2 }, { userId }) {
+    console.log('\n\n\n\n\n\n\nhello\n\n\n\n\n\n')
     try {
       const contact = await models.contact.findOne({
         where: {

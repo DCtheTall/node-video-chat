@@ -5,11 +5,13 @@ import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
+import cloneDeep from 'lodash.clonedeep';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../graphql/queries/contact-requests/pending-requests.graphql';
 import QUERY_CONTACTS from '../graphql/queries/contacts/contacts.graphql';
 import SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED from '../graphql/subscriptions/contact-requests/contact-request-received.graphql';
 import SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED from '../graphql/subscriptions/contact-requests/contact-request-accepted.graphql';
+import SUBSCRIBE_TO_USER_STATUS_CHANGE from '../graphql/subscriptions/users/status-change.graphql';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 import { isLoggedIn } from '../helpers/auth-helpers';
 import { addError } from '../actions/error';
@@ -44,6 +46,7 @@ class PageLayout extends React.PureComponent {
     }
     this.subscribeToNewContactRequests();
     this.subscribeToAcceptedContactRequests();
+    this.subscribeToStatusChanges();
   }
   /**
    * @param {Object} props before update
@@ -110,6 +113,27 @@ class PageLayout extends React.PureComponent {
             data.newContact,
             ...prev.data,
           ],
+        };
+      },
+    });
+  }
+  /**
+   * @returns {undefined}
+   */
+  subscribeToStatusChanges() {
+    this.props.contacts.subscribeToMore({
+      document: SUBSCRIBE_TO_USER_STATUS_CHANGE,
+      variables: {
+        userIds: this.props.contacts.data ? this.props.contacts.data.map(contact => contact.user.id) : [],
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        if (!data || !data.user) return prev;
+        const newData = cloneDeep(prev.data).map(contact => (
+          data.user.id === contact.user.id ? { ...contact, user: data.user } : contact
+        ));
+        return {
+          ...prev,
+          data: newData,
         };
       },
     });

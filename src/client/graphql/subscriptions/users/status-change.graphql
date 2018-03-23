@@ -1,0 +1,9 @@
+subscription($userIds: [Int]) {
+  user: UserStatusChange(userIds: $userIds) {
+    id
+    username
+    email
+    pictureUrl
+    status
+  }
+}

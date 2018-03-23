@@ -8,6 +8,7 @@ module.exports = [
   'axios',
   'classnames',
   'graphql-tag',
+  'lodash.clonedeep',
   'lodash.debounce',
   'prop-types',
   'react',
