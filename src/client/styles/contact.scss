@@ -8,6 +8,23 @@
   width: unquote('calc(100% - 16px)');
 
   .user {
+    .status-indicator {
+      border-radius: 50%;
+      height: 7px;
+      margin-right: 10px;
+      width: 7px;
+
+      &.offline {
+        background: none;
+        border: 1px solid $grey;
+      }
+
+      &.available {
+        background: $available-green;
+        border: 1px solid $available-green;
+      }
+    }
+
     img {
       border-radius: 50%;
       border: 1px solid $webchat-magenta;

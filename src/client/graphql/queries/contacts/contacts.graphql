@@ -6,6 +6,7 @@ query contacts {
       username
       email
       pictureUrl
+      status
     }
   }
 }

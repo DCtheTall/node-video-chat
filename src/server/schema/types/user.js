@@ -29,12 +29,12 @@ export default new GraphQLObjectType({
     },
     status: {
       type: GraphQLString,
-      description: 'the contacts current status: online or offline',
+      description: 'the contacts current status: available or offline',
       resolve(user, args, req) {
         const { connected } = req.app.io.sockets.clients();
         const connectedSockets = Object.keys(connected).map(key => connected[key]);
         const socket = connectedSockets.find(so => so.decoded_token.id === user.id);
-        if (socket) return 'online';
+        if (socket) return 'available';
         return 'offline';
       },
     },
