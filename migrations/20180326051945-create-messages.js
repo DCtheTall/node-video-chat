@@ -2,39 +2,39 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => (
-    queryInterface.createTable('message_threads', {
+    queryInterface.createTable('messages', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      user_1: {
+      sender_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
           key: 'id',
         },
       },
-      user_2: {
+      recipient_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
           key: 'id',
         },
       },
-      contact_id: {
+      thread_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'contacts',
+          model: 'message_threads',
           key: 'id',
         },
       },
-      lastMessageAt: Sequelize.DATE,
+      read: Sequelize.BOOLEAN,
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
       deletedAt: Sequelize.DATE,
     })
   ),
 
-  down: queryInterface => queryInterface.dropTable('message_threads'),
+  down: queryInterface => queryInterface.dropTable('messages'),
 };
