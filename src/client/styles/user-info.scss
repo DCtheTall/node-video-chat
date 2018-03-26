@@ -1,0 +1,22 @@
+@import './base';
+
+.user-info {
+  img {
+    border-radius: 50%;
+    border: 1px solid $webchat-magenta;
+    height: 40px;
+    margin-right: 10px;
+    width: 40px;
+  }
+
+  .username {
+    color: $dark-text;
+  }
+
+  .email {
+    color: $grey;
+    font-size: 10px;
+    max-width: 150px;
+    word-wrap: break-word;
+  }
+}

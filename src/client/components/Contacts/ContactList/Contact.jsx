@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import UserInfo from '../../shared/UserInfo';
 import '../../../styles/contact.scss';
 
 /**
@@ -17,21 +17,7 @@ class Contact extends React.PureComponent {
   render() {
     return (
       <div className="contact-container display-flex">
-        <div className="user display-flex align-items-center">
-          <div className={classNames('status-indicator', this.props.user.status)} />
-          <img
-            src={this.props.user.pictureUrl}
-            alt={this.props.user.username}
-          />
-          <div className="user-info flex-column">
-            <span className="username">
-              {this.props.user.username}
-            </span>
-            <span className="email">
-              {this.props.user.email}
-            </span>
-          </div>
-        </div>
+        <UserInfo {...this.props.user} />
         <div className="controls display-flex align-items-center">
           {this.props.user.status === 'available' && (
             <button onClick={this.callContact}>

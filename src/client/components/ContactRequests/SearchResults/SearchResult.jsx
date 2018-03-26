@@ -9,6 +9,7 @@ import { addError, clearError } from '../../../actions/error';
 import { addNotice } from '../../../actions/notice';
 import { setContactRequestSearchQuery } from '../../../actions/contact-requests';
 import Loader from '../../Layout/Loader';
+import UserInfo from '../../shared/UserInfo';
 import '../../../styles/contact-requests-search-result.scss';
 
 /**
@@ -64,20 +65,7 @@ class SearchResult extends React.PureComponent {
   render() {
     return (
       <div className="contact-request-search-result display-flex align-items-center">
-        <div className="user display-flex align-items-center">
-          <img
-            alt={this.props.username}
-            src={this.props.pictureUrl}
-          />
-          <div className="user-info flex-column">
-            <span className="username">
-              {this.props.username}
-            </span>
-            <span className="email">
-              {this.props.email}
-            </span>
-          </div>
-        </div>
+        <UserInfo {...this.props} />
         {this.state.submitting ? (
           <Loader />
         ) : (

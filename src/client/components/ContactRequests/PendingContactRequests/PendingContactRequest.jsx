@@ -10,6 +10,7 @@ import QUERY_CONTACTS from '../../../graphql/queries/contacts/contacts.graphql';
 import { addError, clearError } from '../../../actions/error';
 import { addNotice, clearNotice } from '../../../actions/notice';
 import Loader from '../../Layout/Loader';
+import UserInfo from '../../shared/UserInfo';
 import '../../../styles/pending-contact-request.scss';
 
 /**
@@ -89,20 +90,7 @@ class PendingContactRequest extends React.PureComponent {
   render() {
     return (
       <div className="pending-contact-request display-flex">
-        <div className="user-info display-flex align-items-center">
-          <img
-            src={this.props.sender.pictureUrl}
-            alt={this.props.sender.username}
-          />
-          <div className="flex-column">
-            <span className="username">
-              {this.props.sender.username}
-            </span>
-            <span className="email">
-              {this.props.sender.email}
-            </span>
-          </div>
-        </div>
+        <UserInfo {...this.props.sender} />
         {this.state.submitting ? (
           <Loader />
         ) : (
