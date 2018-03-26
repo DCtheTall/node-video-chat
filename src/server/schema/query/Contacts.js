@@ -28,16 +28,13 @@ export default {
           where: { id: req.user && { [Op.ne]: req.user.id } },
         },
       ],
+      order: [
+        ['lastInteractedAt', 'DESC'],
+        ['createdAt', 'DESC'],
+      ],
     });
-    contacts = contacts.map((contact) => {
-      contact.user = contact.user1 || contact.user2;
-      return contact;
-    });
-    contacts = contacts.sort((contactA, contactB) => {
-      if (contactA.user.username < contactB.user.username) return -1;
-      if (contactA.user.username > contactB.user.username) return 1;
-      return 0;
-    });
-    return contacts;
+    return contacts.map(
+      ({ user1, user2, ...contact }) => ({ ...contact, user: user1 || user2 })
+    );
   },
 };
