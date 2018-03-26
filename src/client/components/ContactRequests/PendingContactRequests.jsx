@@ -16,16 +16,23 @@ class PendingContactRequests extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
-    if (!this.props.pendingRequests.data || !this.props.pendingRequests.data.length) return null;
     return (
       <div className="pending-contact-requests flex-column">
         <div className="pending-contact-requests-heading">
           Pending Contact Requests
         </div>
         <div className="pending-contact-requests-list">
-          {this.props.pendingRequests.loading ? (
+          {this.props.pendingRequests.loading && (
             <Loader />
-          ) : this.props.pendingRequests.data.map(request => (
+          )}
+          {!this.props.pendingRequests.data.length && (
+            <div className="no-requests flex-column flex-center">
+              <span>
+                No pending contact requests
+              </span>
+            </div>
+          )}
+          {this.props.pendingRequests.data.map(request => (
             <PendingContactRequest key={request.id} {...request} />
           ))}
         </div>

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { Link } from 'react-router-dom';
 import QUERY_CONTACTS from '../../graphql/queries/contacts/contacts.graphql';
+import { CONTACT_REQUESTS_ROUTE } from '../../constants';
 import Loader from '../Layout/Loader';
 import Contact from './ContactList/Contact';
 import '../../styles/contact-list.scss';
@@ -21,9 +23,22 @@ class ContactList extends React.PureComponent {
     return (
       <div className="contact-list-container full-height">
         <div className="contact-list">
-          {this.props.contacts.loading ? (
+          {this.props.contacts.loading && (
             <Loader />
-          ) : this.props.contactData.map(props => (
+          )}
+          {!this.props.contactData.length && (
+            <div className="no-contacts flex-column flex-center">
+              <span>
+                No contacts yet
+              </span>
+              <Link to={CONTACT_REQUESTS_ROUTE}>
+                <button className="webchat-button">
+                  ADD CONTACTS
+                </button>
+              </Link>
+            </div>
+          )}
+          {this.props.contactData.map(props => (
             <Contact key={props.id} {...props} />
           ))}
         </div>
