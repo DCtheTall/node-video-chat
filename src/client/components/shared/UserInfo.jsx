@@ -1,5 +1,6 @@
 import React from 'react';
 import { string } from 'prop-types';
+import classNames from 'classnames';
 import '../../styles/user-info.scss';
 
 /**
@@ -14,6 +15,9 @@ class UserInfo extends React.PureComponent {
   render() {
     return (
       <div className="user-info display-flex align-items-center">
+        {Boolean(this.props.status) && (
+          <div className={classNames('status-indicator', this.props.status)} />
+        )}
         <img
           src={this.props.pictureUrl}
           alt={this.props.username}
@@ -35,6 +39,7 @@ UserInfo.propTypes = {
   pictureUrl: string,
   email: string,
   username: string,
+  status: string,
 };
 
 export default UserInfo;

@@ -7,46 +7,6 @@
   padding: 3px 8px;
   width: unquote('calc(100% - 16px)');
 
-  .user {
-    .status-indicator {
-      border-radius: 50%;
-      height: 7px;
-      margin-right: 10px;
-      width: 7px;
-
-      &.offline {
-        background: none;
-        border: 1px solid $grey;
-      }
-
-      &.available {
-        background: $available-green;
-        border: 1px solid $available-green;
-      }
-    }
-
-    img {
-      border-radius: 50%;
-      border: 1px solid $webchat-magenta;
-      height: 40px;
-      margin-right: 10px;
-      width: 40px;
-    }
-
-    .user-info {
-      .username {
-        color: $dark-text;
-      }
-
-      .email {
-        color: $grey;
-        font-size: 10px;
-        max-width: 150px;
-        word-wrap: break-word;
-      }
-    }
-  }
-
   .controls {
     button {
       @include webchat-gradient('background', 10deg);
