@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      body: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       sender_id: {
         type: Sequelize.INTEGER,
         references: {

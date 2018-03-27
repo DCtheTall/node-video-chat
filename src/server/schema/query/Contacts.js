@@ -6,7 +6,7 @@ export default {
   type: new GraphQLList(Contact),
   name: 'Contacts',
   async resolve(parent, args, req) {
-    let contacts = await models.contact.findAll({
+    const contacts = await models.contact.findAll({
       where: {
         [Op.or]: [
           { user_1: req.user && req.user.id },
@@ -33,8 +33,6 @@ export default {
         ['createdAt', 'DESC'],
       ],
     });
-    return contacts.map(
-      ({ user1, user2, ...contact }) => ({ ...contact, user: user1 || user2 })
-    );
+    return contacts;
   },
 };

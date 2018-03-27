@@ -10,6 +10,10 @@ function linkMessage(sequelize, DataTypes) {
       autoIncrement: true,
       type: DataTypes.INTEGER,
     },
+    body: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     sender_id: {
       type: DataTypes.INTEGER,
       references: {

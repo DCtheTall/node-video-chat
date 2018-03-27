@@ -13,7 +13,7 @@ export default new GraphQLObjectType({
     },
     user: {
       type: User,
-      resolve: contact => contact.user,
+      resolve: contact => (contact.user1 || contact.user2),
     },
   },
 });
