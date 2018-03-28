@@ -1,11 +1,29 @@
 import React from 'react';
-import { string } from 'prop-types';
+import { string, shape } from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { MESSAGES_ROUTE } from '../../../constants';
+import '../../../styles/open-message-thread-headroom.scss';
 
 /**
  * @class Headroom
  * @extends {React.PureComponent}
  */
 class Headroom extends React.PureComponent {
+  /**
+   * @constructor
+   * @constructs Headroom
+   * @param {Object} props for component
+   */
+  constructor(props) {
+    super(props);
+    this.close = this.close.bind(this);
+  }
+  /**
+   * @returns {undefined}
+   */
+  close() {
+    this.props.history.push(MESSAGES_ROUTE);
+  }
   /**
    * render
    * @returns {JSX.Element} HTML
@@ -22,6 +40,9 @@ class Headroom extends React.PureComponent {
             {this.props.username}
           </span>
         </div>
+        <button className="webchat-text" onClick={this.close}>
+          &times;
+        </button>
       </div>
     );
   }
@@ -30,6 +51,7 @@ class Headroom extends React.PureComponent {
 Headroom.propTypes = {
   pictureUrl: string,
   username: string,
+  history: shape,
 };
 
-export default Headroom;
+export default withRouter(Headroom);

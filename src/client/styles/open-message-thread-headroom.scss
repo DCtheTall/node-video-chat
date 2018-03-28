@@ -1,0 +1,26 @@
+@import './base';
+
+.open-message-thread-headroom {
+  background: $white;
+  border-bottom: solid 1px $light-grey;
+  height: 48px;
+  justify-content: space-between;
+  margin-top: 2px;
+
+  .open-message-thread-user {
+    margin-left: 15px;
+
+    img {
+      border-radius: 50%;
+      border: 1px solid $webchat-magenta;
+      height: 30px;
+      margin-right: 10px;
+      width: 30px;
+    }
+  }
+
+  button {
+    font-size: 32px;
+    margin-right: 7px;
+  }
+}

@@ -15,9 +15,9 @@ class OpenMessageThread extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate() {
-    // if (!this.props.openMessageThread.loading && !this.props.openMessageThread.data) {
-    //   this.props.history.push(MESSAGES_ROUTE);
-    // }
+    if (!this.props.openMessageThread.loading && !this.props.openMessageThread.data) {
+      this.props.history.push(MESSAGES_ROUTE);
+    }
   }
   /**
    * render
