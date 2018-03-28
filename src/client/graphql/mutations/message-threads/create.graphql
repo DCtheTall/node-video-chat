@@ -1,5 +1,5 @@
 mutation createMessageThread($contactId: Int) {
-  data: CreateMessageThread(contactId: $contactId) {
+  result: CreateMessageThread(contactId: $contactId) {
     success
     message
     threadId
