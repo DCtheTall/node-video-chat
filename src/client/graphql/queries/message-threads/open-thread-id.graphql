@@ -1,0 +1,3 @@
+query messageThread($threadId: Int) {
+  data: MessageThread(threadId: $threadId) { id }
+}
