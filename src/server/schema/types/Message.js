@@ -1,15 +1,15 @@
-import gql from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql';
 import User from './User';
 
-export default new gql.GraphQLObjectType({
+export default new GraphQLObjectType({
   name: 'Message',
   fields: {
     body: {
-      type: gql.GraphQLString,
+      type: GraphQLString,
       resolve: message => message.body,
     },
     read: {
-      type: gql.GraphQLBoolean,
+      type: GraphQLBoolean,
       resolve: message => message.read,
     },
     sender: {

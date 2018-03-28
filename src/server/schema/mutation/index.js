@@ -8,6 +8,8 @@ import CreateContactRequest from './contact-requests/CreateContactRequest';
 import IgnoreContactRequest from './contact-requests/IgnoreContactRequest';
 import AcceptContactRequest from './contact-requests/AcceptContactRequest';
 
+import CreateMessageThread from './message-threads/CreateMessageThread';
+
 export default new GraphQLObjectType({
   name: 'MutationRoot',
   fields: {
@@ -17,5 +19,6 @@ export default new GraphQLObjectType({
     CreateContactRequest,
     IgnoreContactRequest,
     AcceptContactRequest,
+    CreateMessageThread,
   },
 });

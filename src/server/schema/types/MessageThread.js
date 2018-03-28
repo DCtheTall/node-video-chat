@@ -1,9 +1,11 @@
 import {
   GraphQLObjectType,
   GraphQLInt,
+  GraphQLList,
 } from 'graphql';
 import User from './User';
 import Contact from './Contact';
+import Message from './Message';
 
 export default new GraphQLObjectType({
   name: 'MessageThread',
@@ -19,6 +21,10 @@ export default new GraphQLObjectType({
     contact: {
       type: Contact,
       resolve: thread => thread.contact,
+    },
+    messages: {
+      type: new GraphQLList(Message),
+      resolve: thread => thread.messages,
     },
   },
 });

@@ -34,6 +34,7 @@ class Login extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
   /**
    * @returns {undefined}
@@ -94,6 +95,13 @@ class Login extends React.PureComponent {
     }
   }
   /**
+   * @param {Object} event onkeydown event
+   * @returns {undefined}
+   */
+  handleEnter({ keyCode }) {
+    if (keyCode === 13) this.handleSubmit();
+  }
+  /**
    * render
    * @returns {JSX.Element} HTML
    */
@@ -128,6 +136,7 @@ class Login extends React.PureComponent {
                 name="password"
                 onChange={this.handleChange}
                 value={this.state.password}
+                onKeyDown={this.handleEnter}
               />
               <button className="webchat-button" onClick={this.handleSubmit}>
                 Submit

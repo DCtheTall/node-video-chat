@@ -1,0 +1,6 @@
+query messageThreads {
+  data: MessageThreads {
+    id
+    user { id }
+  }
+}

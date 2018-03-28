@@ -4,8 +4,9 @@
   background: $white;
   border: {
     top: 1px solid fade-out($light-grey, .3);
-    bottom: 4px solid $light-grey;
   }
+  box-shadow: 0 3px 3px $background-grey;
   height: 40px;
+  margin-bottom: 3px;
   width: 100%;
 }
