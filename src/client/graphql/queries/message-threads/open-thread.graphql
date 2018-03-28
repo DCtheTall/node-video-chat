@@ -1,0 +1,9 @@
+query openMessageThread($threadId: Int) {
+  data: MessageThread(threadId: $threadId) {
+    id
+    user {
+      pictureUrl
+      username
+    }
+  }
+}
