@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { renderRoutes } from 'react-router-config';
 import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
+import routes from '../routes/messages';
 
 /**
  * @class Messages
@@ -16,7 +17,9 @@ class Messages extends React.PureComponent {
     return (
       <div className="app-content display-flex">
         <ChatContainer />
-        <Sidebar />
+        <Sidebar>
+          {renderRoutes(routes)}
+        </Sidebar>
       </div>
     );
   }
