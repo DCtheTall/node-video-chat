@@ -40,7 +40,7 @@ class Headroom extends React.PureComponent {
             {this.props.username}
           </span>
         </div>
-        <button className="webchat-text" onClick={this.close}>
+        <button onClick={this.close}>
           &times;
         </button>
       </div>
@@ -51,7 +51,7 @@ class Headroom extends React.PureComponent {
 Headroom.propTypes = {
   pictureUrl: string,
   username: string,
-  history: shape,
+  history: shape(),
 };
 
 export default withRouter(Headroom);

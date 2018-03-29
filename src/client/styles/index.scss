@@ -16,7 +16,9 @@ button {
     &:hover {
       cursor: pointer;
       &:not(:active) {
-        filter: brightness(110%);
+        &:not(:disabled) {
+          filter: brightness(110%);
+        }
       }
     }
   }

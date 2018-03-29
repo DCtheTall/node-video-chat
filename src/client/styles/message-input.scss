@@ -1,0 +1,48 @@
+@import './base';
+
+.message-input {
+  background: $white;
+  // border-top: 1px solid $light-grey;
+  box-shadow: 0px -1px 3px $light-grey;
+  min-height: 125px;
+  padding: 8px 3px 6px 10px;
+
+  textarea {
+    color: $dark-grey;
+    background: $background-grey;
+    border-radius: 10px;
+    border: 1px solid $light-grey;
+    box-shadow: inset 0px 0px 3px $light-grey;
+    font-size: 12px;
+    max-height: 75px;
+    outline: none  !important;
+    padding: 4px;
+    width: 88%;
+  }
+
+  .message-send-button-container {
+    width: 12%;
+
+    button {
+      @include webchat-gradient('background', 0deg);
+      border-radius: 50%;
+      height: 30px;
+      padding: 0px 3px 0px 0px;
+      width: 30px;
+
+      i {
+        color: $white;
+      }
+
+      &:hover {
+        &:not(:disabled) {
+          box-shadow: 0px 0px 3px $light-grey;
+        }
+      }
+
+      &:disabled {
+        background: $light-grey;
+      }
+    }
+  }
+}

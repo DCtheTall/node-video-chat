@@ -5,6 +5,8 @@ import QUERY_OPEN_MESSAGE_THREAD from '../../graphql/queries/message-threads/ope
 import { MESSAGES_ROUTE } from '../../constants';
 import Loader from '../../components/Layout/Loader';
 import Headroom from '../../components/Messages/OpenMessageThread/Headroom';
+import Messages from '../../components/Messages/OpenMessageThread/Messages';
+import MessageInput from '../../components/Messages/OpenMessageThread/MessageInput';
 
 /**
  * @class OpenMessageThread
@@ -34,6 +36,8 @@ class OpenMessageThread extends React.PureComponent {
     return (
       <div className="full-height flex-column">
         <Headroom {...this.props.openMessageThread.data.user} />
+        <Messages />
+        <MessageInput />
       </div>
     );
   }
