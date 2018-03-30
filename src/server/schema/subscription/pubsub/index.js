@@ -1,5 +1,7 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 
+export * from './constants';
+
 export default new RedisPubSub({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,

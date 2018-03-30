@@ -1,5 +1,9 @@
 @import './vars';
 
+@mixin calc($property, $string) {
+  #{$property}: unquote('calc(#{$string})');
+}
+
 @mixin webchat-gradient($property, $deg) {
   #{$property}: linear-gradient($deg, $webchat-orange, $webchat-magenta);
 }

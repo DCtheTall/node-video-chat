@@ -1,0 +1,3 @@
+mutation userTyping {
+  result: UserTyping { success }
+}

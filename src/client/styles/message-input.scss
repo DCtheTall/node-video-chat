@@ -5,13 +5,18 @@
   margin-bottom: 50px;
   padding: 10px;
 
+  .user-typing {
+    font-size: 12px;
+    margin: 3px 0 10px 8px;
+  }
+
   .message-input {
+    @include calc('width', '100% - 24px');
     align-items: flex-end;
     background: $white;
     border-radius: 25px;
     border: 1px solid $light-grey;
     padding: 8px 12px 8px;
-    width: 100%;
 
     textarea {
       border: 0;

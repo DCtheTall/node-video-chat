@@ -1,0 +1,3 @@
+subscription($currentlyMessagingUser: Int) {
+  userTyping: UserTyping(currentlyMessagingUser: $currentlyMessagingUser)
+}
