@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../../../styles/open-messages.scss';
 
 /**
  * @class Messages
@@ -12,7 +13,7 @@ class Messages extends React.PureComponent {
    */
   render() {
     return (
-      <div className="full-height" />
+      <div className="open-messages display-flex" />
     );
   }
 }

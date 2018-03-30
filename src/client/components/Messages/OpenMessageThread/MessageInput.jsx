@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Textarea from 'react-textarea-autosize';
 import '../../../styles/message-input.scss';
 
 /**
@@ -30,20 +31,21 @@ class MessageInput extends React.PureComponent {
    */
   render() {
     return (
-      <div className="message-input display-flex">
-        <textarea
-          rows="1"
-          placeholder="Write your message here"
-          value={this.state.message}
-          onChange={this.handleMessageChange}
-        />
-        <div className="message-send-button-container display-flex justify-content-center">
-          <button
-            className="message-send-button"
-            disabled={!this.state.message}
-          >
-            <i className="fa fa-send" />
-          </button>
+      <div className="message-input-wrapper display-flex">
+        <div className="message-input display-flex">
+          <Textarea
+            placeholder="Write your message here"
+            value={this.state.message}
+            onChange={this.handleMessageChange}
+          />
+          <div className="message-send-button-container display-flex justify-content-center">
+            <button
+              className="message-send-button"
+              disabled={!this.state.message}
+            >
+              <i className="fa fa-send" />
+            </button>
+          </div>
         </div>
       </div>
     );
