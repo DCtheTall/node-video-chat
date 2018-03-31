@@ -5,7 +5,7 @@ import Textarea from 'react-textarea-autosize';
 import Promise from 'bluebird';
 import { graphql, withApollo } from 'react-apollo';
 import { compose } from 'redux';
-import USER_TYPING_MUTATION from '../../../graphql/mutations/message-threads/user-typing.graphql';
+import USER_TYPING_MUTATION from '../../../graphql/mutations/messages/user-typing.graphql';
 import USER_TYPING_SUBSCRIPTION from '../../../graphql/subscriptions/messages/user-typing.graphql';
 import '../../../styles/message-input.scss';
 

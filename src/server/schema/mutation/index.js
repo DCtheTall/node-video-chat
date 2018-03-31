@@ -9,7 +9,8 @@ import IgnoreContactRequest from './contact-requests/IgnoreContactRequest';
 import AcceptContactRequest from './contact-requests/AcceptContactRequest';
 
 import CreateMessageThread from './message-threads/CreateMessageThread';
-import UserTyping from './message-threads/UserTyping';
+
+import UserTyping from './messages/UserTyping';
 
 export default new GraphQLObjectType({
   name: 'MutationRoot',
