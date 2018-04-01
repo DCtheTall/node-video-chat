@@ -12,8 +12,8 @@ query openMessageThread($threadId: Int) {
     messages {
       id
       body
-      sender { id }
       read
+      senderId
     }
   }
 }

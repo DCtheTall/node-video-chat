@@ -33,13 +33,13 @@ class Headroom extends React.PureComponent {
     return (
       <div className="open-message-thread-headroom display-flex align-items-center">
         <div className="open-message-thread-user display-flex align-items-center">
-          <StatusIndicator status={this.props.status} />
+          <StatusIndicator status={this.props.user.status} />
           <img
-            src={this.props.pictureUrl}
-            alt={this.props.username}
+            src={this.props.user.pictureUrl}
+            alt={this.props.user.username}
           />
           <span className="username webchat-text">
-            {this.props.username}
+            {this.props.user.username}
           </span>
         </div>
         <button onClick={this.close}>
@@ -51,10 +51,12 @@ class Headroom extends React.PureComponent {
 }
 
 Headroom.propTypes = {
-  status: string,
-  pictureUrl: string,
-  username: string,
   history: shape(),
+  user: shape({
+    status: string,
+    pictureUrl: string,
+    username: string,
+  }),
 };
 
 export default withRouter(Headroom);

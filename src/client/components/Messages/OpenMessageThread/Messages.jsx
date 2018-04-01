@@ -16,7 +16,7 @@ class Messages extends React.PureComponent {
     return (
       <div className="open-messages display-flex">
         {this.props.messages.map(message => (
-          <Message {...message} />
+          <Message key={message.id} {...message} />
         ))}
       </div>
     );

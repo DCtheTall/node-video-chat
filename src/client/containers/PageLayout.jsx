@@ -126,7 +126,7 @@ class PageLayout extends React.PureComponent {
       variables: {
         userIds: this.props.contacts.data ? this.props.contacts.data.map(contact => contact.user.id) : [],
       },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
+      updateQuery(prev, { subscriptionData: { data } }) {
         if (!data || !data.user) return prev;
         const newData = cloneDeep(prev.data).map(contact => (
           data.user.id === contact.user.id ? { ...contact, user: data.user } : contact

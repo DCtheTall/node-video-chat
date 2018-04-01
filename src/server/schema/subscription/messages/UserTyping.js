@@ -8,13 +8,10 @@ export default {
   args: {
     currentlyMessagingUser: { type: GraphQLInt },
   },
-  resolve: () => {
-    return true;
-  },
+  resolve: () => true,
   subscribe: withFilter(
     () => pubsub.asyncIterator(USER_TYPING),
-    ({ userTyping }, { currentlyMessagingUser }) => {
-      return userTyping === currentlyMessagingUser
-    },
+    ({ userTyping }, { currentlyMessagingUser }) =>
+      userTyping === currentlyMessagingUser,
   ),
 };

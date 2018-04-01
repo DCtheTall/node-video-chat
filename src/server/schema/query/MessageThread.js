@@ -19,6 +19,7 @@ export default {
           { user_2: req.user && req.user.id },
         ],
       },
+      order: [[{ model: models.message, as: 'messages' }, 'createdAt', 'ASC']],
       include: [
         {
           model: models.contact,
@@ -40,13 +41,6 @@ export default {
         {
           model: models.message,
           as: 'messages',
-          include: [
-            {
-              model: models.user,
-              as: 'sender',
-              attributes: ['id'],
-            },
-          ],
         },
       ],
     });

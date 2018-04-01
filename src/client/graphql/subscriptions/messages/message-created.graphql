@@ -1,0 +1,9 @@
+subscription($currentUserId: Int) {
+  messageCreated: MessageCreated(currentUserId: $currentUserId) {
+    id
+    threadId
+    body
+    read
+    senderId
+  }
+}

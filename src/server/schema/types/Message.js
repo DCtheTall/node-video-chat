@@ -16,9 +16,13 @@ export default new GraphQLObjectType({
       type: GraphQLBoolean,
       resolve: message => message.read,
     },
-    sender: {
-      type: User,
-      resolve: message => message.sender,
+    senderId: {
+      type: GraphQLInt,
+      resolve: message => message.sender_id,
+    },
+    threadId: {
+      type: GraphQLInt,
+      resolve: message => message.thread_id,
     },
   },
 });
