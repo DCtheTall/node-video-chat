@@ -44,11 +44,11 @@ function linkMessage(sequelize, DataTypes) {
   });
 
   Message.associate = function associate(models) {
-    Message.belongsTo(models.sender_id, {
+    Message.belongsTo(models.user, {
       as: 'sender',
       foreignKey: 'sender_id',
     });
-    Message.belongsTo(models.recipient_id, {
+    Message.belongsTo(models.user, {
       as: 'recipient',
       foreignKey: 'recipient_id',
     });

@@ -58,7 +58,7 @@ export default graphql(
   {
     name: 'openMessageThread',
     options: props => ({
-      variables: { threadId: props.match.params.id },
+      variables: { threadId: props.match.params.threadid },
     }),
   },
 )(OpenMessageThread);

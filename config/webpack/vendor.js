@@ -19,7 +19,7 @@ module.exports = [
   'react-router',
   'react-router-config',
   'react-router-dom',
-  'react-textarea-autoresize',
+  'react-textarea-autosize',
   'redux',
   'redux-actions',
   'redux-devtools-extension',

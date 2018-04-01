@@ -5,6 +5,7 @@ import linkUser from './user';
 import linkContactRequest from './contact_request';
 import linkContact from './contact';
 import linkMessageThread from './message_thread';
+import linkMessage from './message';
 
 const db = {};
 
@@ -13,6 +14,7 @@ const db = {};
   linkContactRequest,
   linkContact,
   linkMessageThread,
+  linkMessage,
 ].forEach((linkModel) => {
   const model = sequelize.import(linkModel.toString(), linkModel);
   db[model.name] = model;

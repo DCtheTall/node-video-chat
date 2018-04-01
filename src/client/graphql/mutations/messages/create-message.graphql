@@ -1,0 +1,6 @@
+mutation createMessage($threadId: Int, $body: String) {
+  result: CreateMessage(threadId: $threadId, body: $body) {
+    success
+    message
+  }
+}

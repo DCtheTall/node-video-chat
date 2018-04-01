@@ -11,6 +11,7 @@ import AcceptContactRequest from './contact-requests/AcceptContactRequest';
 import CreateMessageThread from './message-threads/CreateMessageThread';
 
 import UserTyping from './messages/UserTyping';
+import CreateMessage from './messages/CreateMessage';
 
 export default new GraphQLObjectType({
   name: 'MutationRoot',
@@ -23,5 +24,6 @@ export default new GraphQLObjectType({
     AcceptContactRequest,
     CreateMessageThread,
     UserTyping,
+    CreateMessage,
   },
 });
