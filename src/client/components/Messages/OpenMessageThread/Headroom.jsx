@@ -2,6 +2,7 @@ import React from 'react';
 import { string, shape } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { MESSAGES_ROUTE } from '../../../constants';
+import StatusIndicator from '../../shared/StatusIndicator';
 import '../../../styles/open-message-thread-headroom.scss';
 
 /**
@@ -32,6 +33,7 @@ class Headroom extends React.PureComponent {
     return (
       <div className="open-message-thread-headroom display-flex align-items-center">
         <div className="open-message-thread-user display-flex align-items-center">
+          <StatusIndicator status={this.props.status} />
           <img
             src={this.props.pictureUrl}
             alt={this.props.username}
@@ -49,6 +51,7 @@ class Headroom extends React.PureComponent {
 }
 
 Headroom.propTypes = {
+  status: string,
   pictureUrl: string,
   username: string,
   history: shape(),

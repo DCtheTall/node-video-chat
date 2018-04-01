@@ -5,6 +5,7 @@ query openMessageThread($threadId: Int) {
       id
       pictureUrl
       username
+      status
     }
   }
 }
