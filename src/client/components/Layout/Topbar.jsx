@@ -5,7 +5,7 @@ import { graphql, withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import QUERY_TOPBAR_DATA from '../../graphql/queries/user/topbar.graphql';
 import LOGOUT_MUTATION from '../../graphql/mutations/user/logout.graphql';
-import { isLoggedIn } from '../../helpers/auth-helpers';
+import isLoggedIn from '../../helpers/is-logged-in';
 import { addError, clearError } from '../../actions/error';
 import { resetStore } from '../../actions/store';
 import '../../styles/topbar.scss';

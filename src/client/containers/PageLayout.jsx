@@ -13,7 +13,7 @@ import SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED from '../graphql/subscriptions/cont
 import SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED from '../graphql/subscriptions/contact-requests/contact-request-accepted.graphql';
 import SUBSCRIBE_TO_USER_STATUS_CHANGE from '../graphql/subscriptions/users/status-change.graphql';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
-import { isLoggedIn } from '../helpers/auth-helpers';
+import isLoggedIn from '../helpers/is-logged-in';
 import { addError } from '../actions/error';
 import Topbar from '../components/Layout/Topbar';
 import ErrorBar from '../components/Layout/ErrorBar';

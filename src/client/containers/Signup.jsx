@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { INDEX_ROUTE, LOGIN_ROUTE } from '../constants';
 import SIGNUP_MUTATION from '../graphql/mutations/user/signup.graphql';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
-import { isLoggedIn } from '../helpers/auth-helpers';
+import isLoggedIn from '../helpers/is-logged-in';
 import { addError, clearError } from '../actions/error';
 import { setToken } from '../actions/token';
 import Loader from '../components/Layout/Loader';
