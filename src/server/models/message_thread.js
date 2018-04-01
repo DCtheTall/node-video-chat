@@ -52,6 +52,10 @@ function linkMessageThread(sequelize, DataTypes) {
       foreignKey: 'contact_id',
       as: 'contact',
     });
+    MessageThread.hasMany(models.message, {
+      foreignKey: 'thread_id',
+      as: 'messages',
+    });
   };
 
   return MessageThread;

@@ -1,9 +1,13 @@
-import { GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean } from 'graphql';
 import User from './User';
 
 export default new GraphQLObjectType({
   name: 'Message',
   fields: {
+    id: {
+      type: GraphQLInt,
+      resolve: message => message.id,
+    },
     body: {
       type: GraphQLString,
       resolve: message => message.body,
@@ -14,7 +18,7 @@ export default new GraphQLObjectType({
     },
     sender: {
       type: User,
-      resolve: message => (message.user1 || message.user2),
+      resolve: message => message.sender,
     },
   },
 });

@@ -36,7 +36,10 @@ class OpenMessageThread extends React.PureComponent {
     return (
       <div className="full-height flex-column">
         <Headroom {...this.props.openMessageThread.data.user} />
-        <Messages />
+        <Messages
+          userid={this.props.openMessageThread.data.user.id}
+          messages={this.props.openMessageThread.data.messages}
+        />
         <MessageInput user={this.props.openMessageThread.data.user} />
       </div>
     );
@@ -49,6 +52,7 @@ OpenMessageThread.propTypes = {
     loading: PropTypes.bool,
     data: PropTypes.shape({
       user: PropTypes.shape(),
+      messages: PropTypes.arrayOf(PropTypes.shape()),
     }),
   }),
 };

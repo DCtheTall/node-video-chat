@@ -9,6 +9,8 @@ export default {
     threadId: { type: GraphQLInt },
   },
   async resolve(parent, { threadId }, req) {
+    const notCurrentUser = () => ({ id: req.user && { [Op.ne]: req.user.id } });
+
     const thread = await models.message_thread.findOne({
       where: {
         id: threadId,
@@ -27,13 +29,24 @@ export default {
           model: models.user,
           as: 'user1',
           required: false,
-          where: { id: req.user && { [Op.ne]: req.user.id } },
+          where: notCurrentUser(),
         },
         {
           model: models.user,
           as: 'user2',
           required: false,
-          where: { id: req.user && { [Op.ne]: req.user.id } },
+          where: notCurrentUser(),
+        },
+        {
+          model: models.message,
+          as: 'messages',
+          include: [
+            {
+              model: models.user,
+              as: 'sender',
+              attributes: ['id'],
+            },
+          ],
         },
       ],
     });
