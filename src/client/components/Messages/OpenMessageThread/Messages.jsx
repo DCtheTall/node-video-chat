@@ -14,16 +14,23 @@ class Messages extends React.PureComponent {
    */
   render() {
     return (
-      <div className="open-messages display-flex">
-        {this.props.messages.map(message => (
-          <Message key={message.id} {...message} />
-        ))}
+      <div className="open-messages-container display-flex flex-column">
+        <div className="open-messages" ref={node => this.openMessage = node}>
+          {this.props.messages.map(message => (
+            <Message
+              key={message.id}
+              currentUserId={this.props.currentUserId}
+              {...message}
+            />
+          ))}
+        </div>
       </div>
     );
   }
 }
 
 Messages.propTypes = {
+  currentUserId: PropTypes.number,
   messages: PropTypes.arrayOf(PropTypes.shape()),
 };
 

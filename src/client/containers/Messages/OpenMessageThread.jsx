@@ -65,7 +65,10 @@ class OpenMessageThread extends React.PureComponent {
     return (
       <div className="full-height flex-column">
         <Headroom user={this.props.openMessageThread.data.user} />
-        <Messages messages={this.props.openMessageThread.data.messages} />
+        <Messages
+          currentUserId={this.props.userIdQuery.user.id}
+          messages={this.props.openMessageThread.data.messages}
+        />
         <MessageInput user={this.props.openMessageThread.data.user} />
       </div>
     );

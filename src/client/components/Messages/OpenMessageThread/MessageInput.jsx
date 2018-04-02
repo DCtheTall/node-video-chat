@@ -37,7 +37,7 @@ class MessageInput extends React.PureComponent {
     this.sendUserTyping = debounce(
       this.sendUserTyping.bind(this),
       300,
-      { leading: true, tailing: false },
+      { leading: true, tailing: false, maxWait: 300 },
     );
   }
   /**
