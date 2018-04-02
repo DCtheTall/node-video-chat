@@ -12,6 +12,7 @@ import CreateMessageThread from './message-threads/CreateMessageThread';
 
 import UserTyping from './messages/UserTyping';
 import CreateMessage from './messages/CreateMessage';
+import ReadMessage from './messages/ReadMessage';
 
 export default new GraphQLObjectType({
   name: 'MutationRoot',
@@ -19,11 +20,15 @@ export default new GraphQLObjectType({
     LoginUser,
     LogoutUser,
     SignupUser,
+
     CreateContactRequest,
     IgnoreContactRequest,
     AcceptContactRequest,
+
     CreateMessageThread,
+
     UserTyping,
     CreateMessage,
+    ReadMessage,
   },
 });

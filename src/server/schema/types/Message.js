@@ -1,5 +1,10 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean } from 'graphql';
-import User from './User';
+import {
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLBoolean,
+} from 'graphql';
+import moment from 'moment';
 
 export default new GraphQLObjectType({
   name: 'Message',
@@ -23,6 +28,10 @@ export default new GraphQLObjectType({
     threadId: {
       type: GraphQLInt,
       resolve: message => message.thread_id,
+    },
+    readAt: {
+      type: GraphQLString,
+      resolve: message => message.readAt && moment(message.readAt).toISOString(),
     },
   },
 });

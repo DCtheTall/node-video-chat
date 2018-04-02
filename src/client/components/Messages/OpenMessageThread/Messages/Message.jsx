@@ -1,6 +1,8 @@
 import React from 'react';
-import { number, string } from 'prop-types';
+import { number, string, func } from 'prop-types';
 import classNames from 'classnames';
+import { graphql } from 'react-apollo';
+import READ_MESSAGE from '../../../../graphql/mutations/messages/read-message.graphql';
 import '../../../../styles/open-message.scss';
 
 /**
@@ -8,6 +10,16 @@ import '../../../../styles/open-message.scss';
  * @extends {React.PureComponent}
  */
 class Message extends React.PureComponent {
+  /**
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    if (!this.props.readAt) {
+      this.props.readMessage({
+        variables: { messageId: this.props.id },
+      });
+    }
+  }
   /**
    * render
    * @returns {JSX.Element} HTML
@@ -29,9 +41,12 @@ class Message extends React.PureComponent {
 }
 
 Message.propTypes = {
+  id: number,
   currentUserId: number,
   senderId: number,
   body: string,
+  readAt: string,
+  readMessage: func,
 };
 
-export default Message;
+export default graphql(READ_MESSAGE, { name: 'readMessage' })(Message);

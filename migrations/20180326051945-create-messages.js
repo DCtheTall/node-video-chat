@@ -33,7 +33,7 @@ module.exports = {
           key: 'id',
         },
       },
-      read: Sequelize.BOOLEAN,
+      readAt: Sequelize.DATE,
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
       deletedAt: Sequelize.DATE,

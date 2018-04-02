@@ -1,0 +1,3 @@
+mutation readMessage($messageId: Int) {
+  result: ReadMessage(messageId: $messageId) { success }
+}

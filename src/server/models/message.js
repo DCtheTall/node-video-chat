@@ -35,7 +35,7 @@ function linkMessage(sequelize, DataTypes) {
         key: 'id',
       },
     },
-    read: DataTypes.BOOLEAN,
+    readAt: DataTypes.DATE,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,
