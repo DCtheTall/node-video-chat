@@ -55,6 +55,19 @@ class MessageInput extends React.PureComponent {
     });
   }
   /**
+   * @param {Object} props component will receive
+   * @returns {undefined}
+   */
+  componentWillReceiveProps(props) {
+    if (
+      props.messages.length !== this.props.messages.length
+      && props.messages[props.messages.length - 1].senderId === this.props.user.id
+    ) {
+      if (this.clearTypingMessageTimeout) clearTimeout(this.clearTypingMessageTimeout);
+      this.setState({ userTyping: false });
+    }
+  }
+  /**
    * @param {Object} event onchange event
    * @returns {undefined}
    */
@@ -89,7 +102,6 @@ class MessageInput extends React.PureComponent {
           threadId: this.props.match.params.threadid,
           body: this.state.message,
         },
-        // refetchQueries TODO when query message
       });
       if (!data.result) return this.handleError();
       const { success, message } = data.result;
@@ -150,6 +162,7 @@ MessageInput.propTypes = {
   client: PropTypes.shape({
     subscribe: PropTypes.func,
   }),
+  messages: PropTypes.arrayOf(PropTypes.shape()),
   sendUserTyping: PropTypes.func,
   createMessage: PropTypes.func,
   clearError: PropTypes.func,

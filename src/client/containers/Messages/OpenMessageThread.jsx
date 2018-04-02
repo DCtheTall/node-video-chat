@@ -69,7 +69,10 @@ class OpenMessageThread extends React.PureComponent {
           currentUserId={this.props.userIdQuery.user.id}
           messages={this.props.openMessageThread.data.messages}
         />
-        <MessageInput user={this.props.openMessageThread.data.user} />
+        <MessageInput
+          user={this.props.openMessageThread.data.user}
+          messages={this.props.openMessageThread.data.messages}
+        />
       </div>
     );
   }
