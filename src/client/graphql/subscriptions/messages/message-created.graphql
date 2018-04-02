@@ -3,7 +3,7 @@ subscription($currentUserId: Int) {
     id
     threadId
     body
-    read
+    readAt
     senderId
   }
 }

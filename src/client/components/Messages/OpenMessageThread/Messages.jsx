@@ -34,11 +34,16 @@ class Messages extends React.PureComponent {
           component="div"
           className="open-messages"
         >
-          {this.props.messages.map(message => (
+          {this.props.messages.map((message, i) => (
             <Message
               key={message.id}
               currentUserId={this.props.currentUserId}
               {...message}
+              displayReadAt={Boolean(
+                message.senderId === this.props.currentUserId
+                && message.readAt
+                && i === (this.props.messages.length - 1)
+              )}
             />
           ))}
         </StayScrolled>
