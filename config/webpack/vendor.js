@@ -19,6 +19,7 @@ module.exports = [
   'react-router',
   'react-router-config',
   'react-router-dom',
+  'react-stay-scrolled',
   'react-textarea-autosize',
   'redux',
   'redux-actions',
