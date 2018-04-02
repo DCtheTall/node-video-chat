@@ -1,11 +1,11 @@
 import { GraphQLInt } from 'graphql';
 import { withFilter } from 'graphql-subscriptions';
 import { Message } from '../../types';
-import pubsub, { MESSAGE_CREATED } from '../pubsub';
+import pubsub, { MESSAGE_READ } from '../pubsub';
 
 export default {
+  name: 'MessageRead',
   type: Message,
-  name: 'MessageCreated',
   args: {
     forThreadId: { type: GraphQLInt },
   },
@@ -19,10 +19,7 @@ export default {
     }
   },
   subscribe: withFilter(
-    () => pubsub.asyncIterator(MESSAGE_CREATED),
-    ({ threadId }, { forThreadId }) => {
-      console.log('\n\n\n\n\n\n\n',threadId, forThreadId,'\n\n\n\n\n\n')
-      return (forThreadId === threadId)
-    },
+    () => pubsub.asyncIterator(MESSAGE_READ),
+    ({ threadId }, { forThreadId }) => (threadId === forThreadId)
   ),
 };

@@ -18,12 +18,10 @@ export default {
         thread_id: threadId,
         sender_id: req.user.id,
         recipient_id: thread.user_1 === req.user.id ? thread.user_2 : thread.user_1,
-        read: false,
       });
       pubsub.publish(MESSAGE_CREATED, {
+        threadId,
         messageId: message.id,
-        senderId: message.sender_id,
-        recipientId: message.recipient_id,
       });
       return { success: true, message: 'Message sent' };
     } catch (err) {

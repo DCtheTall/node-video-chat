@@ -5,3 +5,4 @@ export const USER_STATUS_CHANGE = 'USER_STATUS_CHANGE';
 
 export const USER_TYPING = 'USER_TYPING';
 export const MESSAGE_CREATED = 'MESSAGE_CREATED';
+export const MESSAGE_READ = 'MESSAGE_READ';

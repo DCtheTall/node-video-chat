@@ -7,14 +7,18 @@ import UserStatusChange from './users/UserStatusChange';
 
 import UserTyping from './messages/UserTyping';
 import MessageCreated from './messages/MessageCreated';
+import MessageRead from './messages/MessageRead';
 
 export default new GraphQLObjectType({
   name: 'SubscriptionRoot',
   fields: {
     ContactRequestReceived,
     ContactRequestAccepted,
+
     UserStatusChange,
+
     UserTyping,
     MessageCreated,
+    MessageRead,
   },
 });

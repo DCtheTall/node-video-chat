@@ -1,5 +1,5 @@
-subscription($currentUserId: Int) {
-  messageCreated: MessageCreated(currentUserId: $currentUserId) {
+subscription($forThreadId: Int) {
+  messageCreated: MessageCreated(forThreadId: $forThreadId) {
     id
     threadId
     body

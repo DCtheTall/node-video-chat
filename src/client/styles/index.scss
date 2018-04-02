@@ -14,9 +14,9 @@ a,
 button {
   @media (hover: hover) {
     &:hover {
-      cursor: pointer;
       &:not(:active) {
         &:not(:disabled) {
+          cursor: pointer;
           filter: brightness(110%);
         }
       }

@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import QUERY_OPEN_MESSAGE_THREAD from '../../graphql/queries/message-threads/open-thread.graphql';
 import QUERY_USER_ID from '../../graphql/queries/user/id.graphql';
 import MESSAGE_CREATED_SUBSCRIPTION from '../../graphql/subscriptions/messages/message-created.graphql';
+import MESSAGE_READ_SUBSCRIPTION from '../../graphql/subscriptions/messages/message-read.graphql';
 import { MESSAGES_ROUTE } from '../../constants';
 import Loader from '../../components/Layout/Loader';
 import Headroom from '../../components/Messages/OpenMessageThread/Headroom';
@@ -23,20 +24,42 @@ class OpenMessageThread extends React.PureComponent {
     this.props.openMessageThread.subscribeToMore({
       document: MESSAGE_CREATED_SUBSCRIPTION,
       variables: {
-        currentUserId: this.props.userIdQuery.user && this.props.userIdQuery.user.id,
+        forThreadId: (
+          this.props.openMessageThread.data
+          && this.props.openMessageThread.data.id
+        ),
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
-        if (
-          !data
-          || !data.messageCreated
-          || !data.messageCreated
-          || data.messageCreated.threadId !== this.props.openMessageThread.data.id
-        ) return prev;
+        if (!data || !data.messageCreated) return prev;
         return {
           ...prev,
           data: {
             ...prev.data,
             messages: [...prev.data.messages, data.messageCreated],
+          },
+        };
+      },
+    });
+
+    this.props.openMessageThread.subscribeToMore({
+      document: MESSAGE_READ_SUBSCRIPTION,
+      variables: {
+        forThreadId: (
+          this.props.openMessageThread.data
+          && this.props.openMessageThread.data.id
+        ),
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        if (!data || !data.messageRead) return prev;
+        return {
+          ...prev,
+          data: {
+            ...prev.data,
+            messages: prev.data.messages.map(message => (
+              message.id = data.messageRead.id ?
+                ({ ...message, readAt: data.messageRead.readAt })
+                : message
+            )),
           },
         };
       },

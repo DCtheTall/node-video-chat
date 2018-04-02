@@ -14,7 +14,7 @@ class Messages extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate(props) {
-    if (props.messages.length < this.props.messages.length) {
+    if (props.messages !== this.props.messages) {
       this.scrollBottom();
     }
   }

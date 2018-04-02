@@ -1,0 +1,6 @@
+subscription ($forThreadId: Int) {
+  messageRead: MessageRead(forThreadId: $forThreadId) {
+    id
+    readAt
+  }
+}
