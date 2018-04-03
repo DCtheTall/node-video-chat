@@ -2,15 +2,15 @@
 
 
 .message-input-wrapper {
-  margin: { bottom: 50px; top: 20px }
+  margin: { bottom: 50px; top: 12px }
   padding: 10px;
   position: relative;
 
   .user-typing {
     font-size: 12px;
-    margin: 3px 0 10px 8px;
+    margin: 5px 0 10px 8px;
     position: absolute;
-    top: -18px;
+    top: -19px;
   }
 
   .message-input {

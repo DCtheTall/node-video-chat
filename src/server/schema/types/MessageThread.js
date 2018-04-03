@@ -24,7 +24,7 @@ export default new GraphQLObjectType({
     },
     messages: {
       type: new GraphQLList(Message),
-      resolve: thread => thread.messages,
+      resolve: thread => thread.messages.reverse(),
     },
   },
 });

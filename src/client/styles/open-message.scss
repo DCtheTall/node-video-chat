@@ -8,7 +8,8 @@
     border-radius: 15px;
     box-shadow: 0px 2px 2px fade-out($light-grey, .6);
     color: $dark-grey;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    max-width: 75%;
     padding: 10px;
   }
 
@@ -24,6 +25,6 @@
   .read-at-message {
     color: $grey;
     font-size: 10px;
-    margin-bottom: 7px;
+    margin-bottom: 4px;
   }
 }

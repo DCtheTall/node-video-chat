@@ -19,7 +19,7 @@ export default {
           { user_2: req.user && req.user.id },
         ],
       },
-      order: [[{ model: models.message, as: 'messages' }, 'createdAt', 'ASC']],
+      order: [[{ model: models.message, as: 'messages' }, 'createdAt', 'DESC']],
       include: [
         {
           model: models.contact,

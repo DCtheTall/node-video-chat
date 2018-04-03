@@ -56,7 +56,7 @@ class OpenMessageThread extends React.PureComponent {
           data: {
             ...prev.data,
             messages: prev.data.messages.map(message => (
-              message.id = data.messageRead.id ?
+              message.id === data.messageRead.id ?
                 ({ ...message, readAt: data.messageRead.readAt })
                 : message
             )),
