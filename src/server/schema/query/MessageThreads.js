@@ -13,6 +13,7 @@ export default {
           { user_2: req.user && req.user.id },
         ],
       },
+      order: [[{ model: models.message, as: 'messages' }, 'createdAt', 'DESC']],
       include: [
         {
           model: models.contact,
@@ -30,6 +31,10 @@ export default {
           as: 'user2',
           required: false,
           where: { id: req.user && { [Op.ne]: req.user.id } },
+        },
+        {
+          model: models.message,
+          as: 'messages',
         },
       ],
     });

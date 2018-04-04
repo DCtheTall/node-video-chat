@@ -21,8 +21,8 @@ export default {
   subscribe: withFilter(
     () => pubsub.asyncIterator(MESSAGE_CREATED),
     ({ threadId }, { forThreadId }) => {
-      console.log('\n\n\n\n\n\n\n',threadId, forThreadId,'\n\n\n\n\n\n')
-      return (forThreadId === threadId)
+      console.log('\n\n\n\n\n\n\n\n',forThreadId, threadId,'\n\n\n\n\n\n\n')
+      return forThreadId === threadId
     },
   ),
 };

@@ -24,10 +24,11 @@ class OpenMessageThread extends React.PureComponent {
     this.props.openMessageThread.subscribeToMore({
       document: MESSAGE_CREATED_SUBSCRIPTION,
       variables: {
-        forThreadId: (
-          this.props.openMessageThread.data
-          && this.props.openMessageThread.data.id
-        ),
+        forThreadId: Number((
+          (this.props.openMessageThread.data
+            && this.props.openMessageThread.data.id)
+          || this.props.match.params.threadid
+        )),
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.messageCreated) return prev;
@@ -44,10 +45,11 @@ class OpenMessageThread extends React.PureComponent {
     this.props.openMessageThread.subscribeToMore({
       document: MESSAGE_READ_SUBSCRIPTION,
       variables: {
-        forThreadId: (
-          this.props.openMessageThread.data
-          && this.props.openMessageThread.data.id
-        ),
+        forThreadId: Number((
+          (this.props.openMessageThread.data
+          && this.props.openMessageThread.data.id)
+          || this.props.match.params.threadid
+        )),
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.messageRead) return prev;
@@ -103,6 +105,7 @@ class OpenMessageThread extends React.PureComponent {
 
 OpenMessageThread.propTypes = {
   history: PropTypes.shape(),
+  match: PropTypes.shape(),
   userIdQuery: PropTypes.shape({
     user: PropTypes.shape({ id: PropTypes.number }),
   }),
