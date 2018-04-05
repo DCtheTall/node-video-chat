@@ -41,5 +41,9 @@ export default new GraphQLObjectType({
       type: GraphQLString,
       resolve: message => message.readAt && moment(message.readAt).toISOString(),
     },
+    createdAt: {
+      type: GraphQLString,
+      resolve: message => moment(message.createdAt).toISOString(),
+    },
   },
 });

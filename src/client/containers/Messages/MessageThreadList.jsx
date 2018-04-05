@@ -1,7 +1,9 @@
 import React from 'react';
-import { shape, arrayOf, func } from 'prop-types';
+import { shape, arrayOf, func, number } from 'prop-types';
 import { graphql } from 'react-apollo';
+import { compose } from 'redux';
 import QUERY_MESSAGE_THREADS from '../../graphql/queries/message-threads/message-threads.graphql';
+import QUERY_USER_ID from '../../graphql/queries/user/id.graphql';
 import Loader from '../../components/Layout/Loader';
 import Headroom from '../../components/Messages/MessageThreadList/Headroom';
 import MessageTreads from '../../components/Messages/MessageThreadList/MessageThreads';
@@ -34,6 +36,7 @@ class MessageThreadList extends React.PureComponent {
       <div className="full-height flex-column">
         <Headroom />
         <MessageTreads
+          currentUserId={this.props.currentSession.user.id}
           threads={this.props.messageThreads.data.filter(thread => thread.latestMessage)}
         />
       </div>
@@ -46,9 +49,18 @@ MessageThreadList.propTypes = {
     data: arrayOf(shape()),
     refetch: func,
   }),
+  currentSession: shape({
+    user: shape({ id: number }),
+  }),
 };
 
-export default graphql(
-  QUERY_MESSAGE_THREADS,
-  { name: 'messageThreads' },
+export default compose(
+  graphql(
+    QUERY_MESSAGE_THREADS,
+    { name: 'messageThreads' },
+  ),
+  graphql(
+    QUERY_USER_ID,
+    { name: 'currentSession' },
+  ),
 )(MessageThreadList);

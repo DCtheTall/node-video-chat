@@ -2,8 +2,8 @@ import React from 'react';
 import { number, string, func, bool } from 'prop-types';
 import classNames from 'classnames';
 import { graphql } from 'react-apollo';
-import moment from 'moment';
 import READ_MESSAGE from '../../../../graphql/mutations/messages/read-message.graphql';
+import formatDate from '../../../../helpers/format-date';
 import '../../../../styles/open-message.scss';
 
 /**
@@ -22,32 +22,13 @@ class Message extends React.PureComponent {
     }
   }
   /**
-   * @returns {string} formatted read at text for message
-   */
-  formattedReadAt() {
-    let format;
-    switch (true) {
-      case moment(this.props.readAt).isAfter(moment().startOf('day')):
-        format = 'H:mm a';
-        break;
-
-      case moment(this.props.readAt).isAfter(moment().startOf('week')):
-        format = 'ddd';
-        break;
-
-      default:
-        format = 'MMM D';
-    }
-    return `Read ${moment(this.props.readAt).format(format)}`;
-  }
-  /**
    * render
    * @returns {JSX.Element} HTML
    */
   render() {
     const ReadAt = this.props.readAt && this.props.displayReadAt ? (
       <div className="read-at-message">
-        {this.formattedReadAt()}
+        Read {formatDate(this.props.readAt)}
       </div>
     ) : null;
 

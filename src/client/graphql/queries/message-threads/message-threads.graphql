@@ -12,6 +12,9 @@ query messageThreads {
     latestMessage {
       id
       shortenedBody
+      createdAt
+      readAt
+      senderId
     }
   }
 }
