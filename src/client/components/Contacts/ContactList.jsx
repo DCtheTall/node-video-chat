@@ -16,6 +16,12 @@ import '../../styles/contact-list.scss';
  */
 class ContactList extends React.PureComponent {
   /**
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    this.props.contacts.refetch();
+  }
+  /**
    * render
    * @returns {JSX.Element} HTML
    */
@@ -49,6 +55,7 @@ class ContactList extends React.PureComponent {
 
 ContactList.propTypes = {
   contacts: PropTypes.shape({
+    refetch: PropTypes.func,
     loading: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape()),
   }),

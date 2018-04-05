@@ -80,7 +80,7 @@ class MessageInput extends React.PureComponent {
    * @returns {Promise<undefined>} submits message
    */
   handleEnterPress({ keyCode }) {
-    return keyCode === 13 && this.state.message && this.handleSubmit();
+    return keyCode === 13 && this.state.message.trim() && this.handleSubmit();
   }
   /**
    * @param {string} error message to display
@@ -100,7 +100,7 @@ class MessageInput extends React.PureComponent {
       const { data } = await this.props.createMessage({
         variables: {
           threadId: this.props.match.params.threadid,
-          body: this.state.message,
+          body: this.state.message.trim(),
         },
       });
       if (!data.result) return this.handleError();
@@ -141,7 +141,7 @@ class MessageInput extends React.PureComponent {
           <div className="message-send-button-container display-flex justify-content-center">
             <button
               className="message-send-button"
-              disabled={!this.state.message}
+              disabled={!this.state.message.trim()}
               onClick={this.handleSubmit}
             >
               <i className="fa fa-send" />

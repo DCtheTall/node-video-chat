@@ -1,6 +1,17 @@
 query messageThreads {
   data: MessageThreads {
     id
-    user { id }
+
+    user {
+      id
+      status
+      username
+      pictureUrl
+    }
+
+    latestMessage {
+      id
+      shortenedBody
+    }
   }
 }

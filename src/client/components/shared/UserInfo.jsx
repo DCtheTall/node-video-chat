@@ -27,8 +27,8 @@ class UserInfo extends React.PureComponent {
           <span className="username">
             {this.props.username}
           </span>
-          <span className="email">
-            {this.props.email}
+          <span className="grey-text">
+            {this.props.email || this.props.message}
           </span>
         </div>
       </div>
@@ -41,6 +41,7 @@ UserInfo.propTypes = {
   email: string,
   username: string,
   status: string,
+  message: string,
 };
 
 export default UserInfo;

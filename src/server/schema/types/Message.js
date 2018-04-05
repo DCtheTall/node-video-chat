@@ -17,6 +17,14 @@ export default new GraphQLObjectType({
       type: GraphQLString,
       resolve: message => message.body,
     },
+    shortenedBody: {
+      type: GraphQLString,
+      resolve: message => (
+        message.body.length > 55 ?
+          `${message.body.slice(0, 55).trim()}...`
+          : message.body
+      ),
+    },
     read: {
       type: GraphQLBoolean,
       resolve: message => message.read,
