@@ -38,7 +38,7 @@ class MessageThread extends React.PureComponent {
             {...this.props.user}
             message={this.props.latestMessage.shortenedBody}
           />
-          <div classMame="formatted-date">
+          <div className="formatted-date">
             {formatDate(this.props.latestMessage.createdAt)}
           </div>
         </div>

@@ -29,21 +29,27 @@ class ContactList extends React.PureComponent {
     return (
       <div className="contact-list-container full-height">
         <div className="contact-list">
-          {this.props.contacts.loading && (
-            <Loader />
-          )}
-          {!this.props.contactData.length && (
-            <div className="no-contacts flex-column flex-center">
-              <span>
-                No contacts yet
-              </span>
-              <Link to={CONTACT_REQUESTS_ROUTE}>
-                <button className="webchat-button">
-                  ADD CONTACTS
-                </button>
-              </Link>
-            </div>
-          )}
+          {!this.props.contactData.length
+            && this.props.contacts.loading
+            && (
+              <Loader />
+            )
+          }
+          {!this.props.contacts.loading
+            && !this.props.contactData.length
+            && (
+              <div className="no-contacts flex-column flex-center">
+                <span>
+                  No contacts yet
+                </span>
+                <Link to={CONTACT_REQUESTS_ROUTE}>
+                  <button className="webchat-button">
+                    ADD CONTACTS
+                  </button>
+                </Link>
+              </div>
+            )
+          }
           {this.props.contactData.map(props => (
             <Contact key={props.id} {...props} />
           ))}
