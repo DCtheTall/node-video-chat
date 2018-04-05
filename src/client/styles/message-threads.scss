@@ -1,6 +1,7 @@
 @import './base';
 
 .message-threads {
-  @include calc('max-height', '100% - 80px');
+  @include calc('max-height', '100% - 77px');
   overflow-y: scroll;
+  padding-bottom: 3px;
 }
