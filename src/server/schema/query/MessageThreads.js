@@ -1,5 +1,6 @@
 import { GraphQLList } from 'graphql';
 import { Op } from 'sequelize';
+import moment from 'moment';
 import { MessageThread } from '../types';
 
 export default {
@@ -39,16 +40,20 @@ export default {
           },
         ],
       });
-      return threads.sort((a, b) => {
-        const hasUnreadMessage = thread => (
-          thread.messages[0]
-          && thread.messages[0].sender_id !== req.user.id
-          && !thread.messages[0].readAt
-        );
-        if (hasUnreadMessage(a) && hasUnreadMessage(b)) return 0;
+
+      const hasUnreadMessage = thread => (
+        thread.messages[0].sender_id !== req.user.id
+        && !thread.messages[0].readAt
+      );
+      const defaultCompare = (a, b) => (
+        moment(b.messages[0].createdAt) - moment(a.messages[0].createdA)
+      );
+
+      return threads.filter(({ messages }) => messages.length).sort((a, b) => {
+        if (hasUnreadMessage(a) && hasUnreadMessage(b)) return defaultCompare(a, b);
         if (hasUnreadMessage(a)) return -1;
         if (hasUnreadMessage(b)) return 1;
-        return 0;
+        return defaultCompare(a, b);
       });
     } catch (err) {
       console.log(err);
