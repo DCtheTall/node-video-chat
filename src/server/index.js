@@ -4,6 +4,7 @@ import adapter from 'socket.io-redis';
 import { authorize } from 'socketio-jwt';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { Server as p2pServer } from 'socket.io-p2p-server';
 import { USER_STATUS_CHANGE } from './schema/subscription/pubsub/constants';
 import app from './app';
 import schema from './schema';
@@ -12,6 +13,7 @@ import pubsub from './schema/subscription/pubsub';
 const server = createServer(app);
 
 app.io = io(server);
+app.io.use(p2pServer);
 app.io.adapter(adapter({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT }));
 app.io.use(authorize({
   handshake: true,

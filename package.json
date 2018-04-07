@@ -81,6 +81,8 @@
     "sequelize": "^4.33.4",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
+    "socket.io-p2p": "^2.2.0",
+    "socket.io-p2p-server": "^1.2.0",
     "socket.io-redis": "^5.2.0",
     "socketio-jwt": "^4.5.0",
     "style-loader": "^0.20.2",
