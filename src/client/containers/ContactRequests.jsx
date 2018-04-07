@@ -1,5 +1,4 @@
 import React from 'react';
-import ChatContainer from './Layout/ChatContainer';
 import Sidebar from './Layout/Sidebar';
 import Headroom from '../components/ContactRequests/Headroom';
 import SearchResults from '../components/ContactRequests/SearchResults';
@@ -16,16 +15,13 @@ class ContactRequests extends React.PureComponent {
    */
   render() {
     return (
-      <div className="app-content display-flex">
-        <ChatContainer />
-        <Sidebar>
-          <div className="position-relative full-height">
-            <Headroom />
-            <SearchResults />
-            <PendingContactRequests />
-          </div>
-        </Sidebar>
-      </div>
+      <Sidebar>
+        <div className="position-relative full-height">
+          <Headroom />
+          <SearchResults />
+          <PendingContactRequests />
+        </div>
+      </Sidebar>
     );
   }
 }

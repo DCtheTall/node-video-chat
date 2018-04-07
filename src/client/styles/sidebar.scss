@@ -1,7 +1,7 @@
 @import './base';
 
 .sidebar-container {
-  box-shadow: -1px 0px 2px $light-grey;
+  box-shadow: -1px 0px 2px fade-out($black, .5);
   height: 100%;
   min-width: 300px;
   overflow-y: hidden;

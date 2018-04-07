@@ -18,6 +18,7 @@ import { addError } from '../actions/error';
 import Topbar from '../components/Layout/Topbar';
 import ErrorBar from '../components/Layout/ErrorBar';
 import NoticeBar from '../components/Layout/NoticeBar';
+import VideoChat from './Layout/VideoChat';
 import { addNotice } from '../actions/notice';
 import '../styles/layout.scss';
 
@@ -165,7 +166,10 @@ class PageLayout extends React.PureComponent {
             <ErrorBar />
           </div>
         )}
-        {renderRoutes(this.props.route.routes)}
+        <div className="app-content display-flex">
+          <VideoChat />
+          {renderRoutes(this.props.route.routes)}
+        </div>
       </div>
     );
   }
