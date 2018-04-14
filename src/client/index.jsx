@@ -16,10 +16,8 @@ import './styles/index.scss';
 import routes from './routes';
 import store from './store';
 import { setToken } from './actions/token';
-import getSocket from './socket';
 
 store.dispatch(setToken(window.__JWT_TOKEN__));
-const socket = getSocket();
 
 const httpLink = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
 const wsLink = new WebSocketLink({
