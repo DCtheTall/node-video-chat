@@ -42,7 +42,7 @@ class PageLayout extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidMount() {
-    if (!isLoggedIn(this.props.data.user) && !this.isAuthRoute()) {
+    if (!isLoggedIn(this.props.currentSession.user) && !this.isAuthRoute()) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
     this.subscribeToNewContactRequests();
@@ -54,7 +54,7 @@ class PageLayout extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate(props) {
-    if (isLoggedIn(props.data.user) && !isLoggedIn(this.props.data.user)) {
+    if (isLoggedIn(props.currentSession.user) && !isLoggedIn(this.props.currentSession.user)) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
   }
@@ -81,7 +81,7 @@ class PageLayout extends React.PureComponent {
     this.props.pendingRequests.subscribeToMore({
       document: SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED,
       variables: {
-        userId: this.props.data.user && this.props.data.user.id,
+        userId: this.props.currentSession.user && this.props.currentSession.user.id,
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.requestReceived) return prev;
@@ -103,7 +103,7 @@ class PageLayout extends React.PureComponent {
     this.props.contacts.subscribeToMore({
       document: SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED,
       variables: {
-        userId: this.props.data.user && this.props.data.user.id,
+        userId: this.props.currentSession.user && this.props.currentSession.user.id,
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.newContact) return prev;
@@ -167,7 +167,7 @@ class PageLayout extends React.PureComponent {
           </div>
         )}
         <div className="app-content display-flex">
-          <VideoChat />
+          {isLoggedIn(this.props.currentSession.user) && <VideoChat />}
           {renderRoutes(this.props.route.routes)}
         </div>
       </div>
@@ -183,7 +183,7 @@ PageLayout.propTypes = {
   userAgent: PropTypes.string,
   location: PropTypes.shape(),
   route: PropTypes.shape(),
-  data: PropTypes.shape({
+  currentSession: PropTypes.shape({
     user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),
@@ -206,7 +206,10 @@ export default compose(
     state => ({ error: state.error, notice: state.notice }),
     { addError, addNotice },
   ),
-  graphql(QUERY_USER_ID),
+  graphql(
+    QUERY_USER_ID,
+    { name: 'currentSession' },
+  ),
   graphql(
     QUERY_PENDING_CONTACT_REQUESTS,
     { name: 'pendingRequests' },
