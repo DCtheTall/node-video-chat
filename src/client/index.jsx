@@ -14,14 +14,12 @@ import { BrowserRouter } from 'react-router-dom';
 import './styles/index.scss';
 
 import routes from './routes';
-import configureStore from './store';
+import store from './store';
 import { setToken } from './actions/token';
-import connectSocket from './socket';
-
-const store = configureStore();
+import getSocket from './socket';
 
 store.dispatch(setToken(window.__JWT_TOKEN__));
-connectSocket(store);
+const socket = getSocket();
 
 const httpLink = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
 const wsLink = new WebSocketLink({

@@ -3,8 +3,8 @@ import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
 import reducers from '../reducers';
 
-export default (initialState = {}) => createStore(
+export default createStore(
   reducers,
-  initialState,
+  {},
   composeWithDevTools(applyMiddleware(thunk)),
 );

@@ -9,7 +9,7 @@ import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import { Provider } from 'react-redux';
 import schema from '../schema';
 import routes from '../../client/routes';
-import configureStore from '../../client/store';
+import store from '../../client/store';
 
 const context = {};
 
@@ -19,7 +19,6 @@ const context = {};
  * @returns {function} React.Component app
  */
 function createApp(req, apolloClient) {
-  const store = configureStore();
   const App = ({ location }) => (
     <Provider store={store}>
       <ApolloProvider client={apolloClient}>
