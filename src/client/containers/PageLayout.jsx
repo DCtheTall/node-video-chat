@@ -9,9 +9,11 @@ import cloneDeep from 'lodash.clonedeep';
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../graphql/queries/contact-requests/pending-requests.graphql';
 import QUERY_CONTACTS from '../graphql/queries/contacts/contacts.graphql';
+import QUERY_MESSAGE_THREADS from '../graphql/queries/message-threads/message-threads.graphql';
 import SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED from '../graphql/subscriptions/contact-requests/contact-request-received.graphql';
 import SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED from '../graphql/subscriptions/contact-requests/contact-request-accepted.graphql';
 import SUBSCRIBE_TO_USER_STATUS_CHANGE from '../graphql/subscriptions/users/status-change.graphql';
+import SUBSCRIBE_TO_MESSAGES_CREATED from '../graphql/subscriptions/messages/message-created.graphql';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 import isLoggedIn from '../helpers/is-logged-in';
 import { addError } from '../actions/error';
@@ -48,6 +50,7 @@ class PageLayout extends React.PureComponent {
     this.subscribeToNewContactRequests();
     this.subscribeToAcceptedContactRequests();
     this.subscribeToStatusChanges();
+    this.subscribeToNewMessages();
   }
   /**
    * @param {Object} props before update
@@ -140,6 +143,30 @@ class PageLayout extends React.PureComponent {
     });
   }
   /**
+   * @returns {undefined}
+   */
+  subscribeToNewMessages() {
+    this.props.messageThreads.subscribeToMore({
+      document: SUBSCRIBE_TO_MESSAGES_CREATED,
+      variables: {
+        forUserId: Number(this.props.currentSession.user.id),
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        if (!data || !data.messageCreated) return prev;
+        return {
+          ...prev,
+          data: prev.data.map((thread) => {
+            if (data.messageCreated.threadId !== thread.id) return thread;
+            return {
+              ...thread,
+              latestMessage: data.messageCreated,
+            };
+          }),
+        };
+      },
+    });
+  }
+  /**
    * render
    * @returns {JSX.Element} HTML
    */
@@ -197,6 +224,10 @@ PageLayout.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape()),
     subscribeToMore: PropTypes.func,
   }),
+  messageThreads: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.shape()),
+    subscribeToMore: PropTypes.func,
+  }),
   addNotice: PropTypes.func,
 };
 
@@ -217,5 +248,9 @@ export default compose(
   graphql(
     QUERY_CONTACTS,
     { name: 'contacts' },
+  ),
+  graphql(
+    QUERY_MESSAGE_THREADS,
+    { name: 'messageThreads' },
   ),
 )(PageLayout);

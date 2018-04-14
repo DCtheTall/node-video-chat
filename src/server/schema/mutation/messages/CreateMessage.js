@@ -32,7 +32,8 @@ export default {
         );
       });
       pubsub.publish(MESSAGE_CREATED, {
-        threadId,
+        user1: message.sender_id,
+        user2: message.recipient_id,
         messageId: message.id,
       });
       return { success: true, message: 'Message sent' };

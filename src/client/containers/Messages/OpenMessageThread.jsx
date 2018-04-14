@@ -24,7 +24,7 @@ class OpenMessageThread extends React.PureComponent {
     this.props.openMessageThread.subscribeToMore({
       document: MESSAGE_CREATED_SUBSCRIPTION,
       variables: {
-        forThreadId: Number(this.props.match.params.threadid),
+        forUserId: Number(this.props.currentSession.user.id),
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.messageCreated) return prev;

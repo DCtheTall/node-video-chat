@@ -7,7 +7,7 @@ export default {
   type: Message,
   name: 'MessageCreated',
   args: {
-    forThreadId: { type: GraphQLInt },
+    forUserId: { type: GraphQLInt },
   },
   async resolve({ messageId }) {
     try {
@@ -20,9 +20,9 @@ export default {
   },
   subscribe: withFilter(
     () => pubsub.asyncIterator(MESSAGE_CREATED),
-    ({ threadId }, { forThreadId }) => {
-      console.log('\n\n\n\n\n\n\n\n',forThreadId, threadId,'\n\n\n\n\n\n\n')
-      return forThreadId === threadId
+    ({ user1, user2 }, { forUserId }) => {
+      console.log('\n\n\n\n\n\n\n\n\n',user1,user2,forUserId);
+      return (forUserId === user1 || forUserId === user2)
     },
   ),
 };
