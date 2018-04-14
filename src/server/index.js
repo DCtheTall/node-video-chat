@@ -1,33 +1,13 @@
 import { createServer } from 'http';
-import io from 'socket.io';
-import adapter from 'socket.io-redis';
-import { authorize } from 'socketio-jwt';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { Server as p2pServer } from 'socket.io-p2p-server';
-import { USER_STATUS_CHANGE } from './schema/subscription/pubsub/constants';
 import app from './app';
 import schema from './schema';
-import pubsub from './schema/subscription/pubsub';
+import initIO from './io';
 
 const server = createServer(app);
 
-app.io = io(server);
-app.io.use(p2pServer);
-app.io.adapter(adapter({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT }));
-app.io.use(authorize({
-  handshake: true,
-  secret: process.env.JWT_SECRET,
-}));
-
-app.io.on('connection', (socket) => {
-  console.log(`socket connected to user ${socket.decoded_token.id}`);
-  pubsub.publish(USER_STATUS_CHANGE, { userId: socket.decoded_token.id });
-  socket.on('disconnect', () => {
-    console.log(`socket disconnected from user ${socket.decoded_token.id}`);
-    pubsub.publish(USER_STATUS_CHANGE, { userId: socket.decoded_token.id });
-  });
-});
+app.io = initIO(server);
 
 const websocketServer = createServer((req, res) => {
   res.writeHead(404);

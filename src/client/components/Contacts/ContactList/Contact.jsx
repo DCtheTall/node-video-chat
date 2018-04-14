@@ -8,6 +8,7 @@ import QUERY_MESSAGE_THREADS from '../../../graphql/queries/message-threads/mess
 import CREATE_MESSAGE_THREAD from '../../../graphql/mutations/message-threads/create.graphql';
 import { GET_MESSAGE_THREAD_ROUTE } from '../../../constants';
 import { addError, clearError } from '../../../actions/error';
+import { emitSocketPing } from '../../../actions/socket';
 import UserInfo from '../../shared/UserInfo';
 import '../../../styles/contact.scss';
 
@@ -24,8 +25,14 @@ class Contact extends React.PureComponent {
   constructor(props) {
     super(props);
     this.openTextChat = this.openTextChat.bind(this);
+    this.callContact = this.callContact.bind(this);
   }
-  callContact() {}
+  /**
+   * @returns {undefined}
+   */
+  callContact() {
+    this.props.emitSocketPing(this.props.user.socketId);
+  }
   /**
    * @returns {Promise<undefined>} opens existing message thread between users or creates one
    */
@@ -73,6 +80,7 @@ Contact.propTypes = {
     username: PropTypes.string,
     email: PropTypes.string,
     status: PropTypes.string,
+    socketId: PropTypes.string,
   }),
   messageThreads: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.shape),
@@ -81,11 +89,12 @@ Contact.propTypes = {
   addError: PropTypes.func,
   clearError: PropTypes.func,
   createMessageThread: PropTypes.func,
+  emitSocketPing: PropTypes.func,
 };
 
 export default compose(
   withRouter,
-  connect(null, { addError, clearError }),
+  connect(null, { addError, clearError, emitSocketPing }),
   graphql(
     QUERY_MESSAGE_THREADS,
     { name: 'messageThreads' },

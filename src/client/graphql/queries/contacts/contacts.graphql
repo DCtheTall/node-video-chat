@@ -7,6 +7,7 @@ query contacts {
       email
       pictureUrl
       status
+      socketId
     }
   }
 }

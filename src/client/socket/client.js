@@ -11,11 +11,14 @@ const socketEventHandlers = {
     console.log('Connect to the server terminated');
     store.dispatch(handleSocketDisconnect());
   },
+  sendPeerId(data) {
+    console.log(data);
+  },
 };
 
 const attachEventListeners = socket =>
   Object.keys(socketEventHandlers).map(event =>
-    socket.on(event, socketEventHandlers[event].bind(null, store)));
+    socket.on(event, socketEventHandlers[event]));
 
 const connect = token => io.connect(process.env.APP_URL, { query: `token=${token}` });
 

@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import getSocket from '../../socket';
 import '../../styles/video-chat-container.scss';
-
-const socket = getSocket();
 
 /**
  * @class VideoChat
