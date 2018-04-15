@@ -2,6 +2,6 @@
 
 .message-threads {
   @include calc('max-height', '100% - 77px');
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-bottom: 3px;
 }

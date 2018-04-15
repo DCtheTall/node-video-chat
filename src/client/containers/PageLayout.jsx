@@ -153,6 +153,10 @@ class PageLayout extends React.PureComponent {
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.messageCreated) return prev;
+        if (!prev.data.find(thread => thread.id === data.messageCreated.threadId)) {
+          this.props.messageThreads.refetch();
+          return prev;
+        }
         return {
           ...prev,
           data: prev.data.map((thread) => {
@@ -227,6 +231,7 @@ PageLayout.propTypes = {
   messageThreads: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.shape()),
     subscribeToMore: PropTypes.func,
+    refetch: PropTypes.func,
   }),
   addNotice: PropTypes.func,
 };

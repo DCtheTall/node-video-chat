@@ -13,7 +13,7 @@
 
   .pending-contact-requests-list {
     max-height: unquote('calc(100% - 138px)');
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .no-requests {
