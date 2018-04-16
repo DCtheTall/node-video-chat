@@ -4,4 +4,10 @@
   @include calc('max-height', '100% - 77px');
   overflow-y: auto;
   padding-bottom: 3px;
+
+  .no-message-threads {
+    color: $grey;
+    font-size: 12px;
+    margin-top: 40px;
+  }
 }

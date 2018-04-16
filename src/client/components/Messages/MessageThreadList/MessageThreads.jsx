@@ -15,6 +15,11 @@ class MessageThreads extends React.PureComponent {
   render() {
     return (
       <div className="message-threads display-flex flex-column">
+        {!this.props.threads.length && (
+          <div className="no-message-threads text-center">
+            No conversations yet.
+          </div>
+        )}
         {this.props.threads.map(thread => (
           <MessageThread
             currentUserId={this.props.currentUserId}
