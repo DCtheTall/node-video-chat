@@ -8,13 +8,14 @@ const p2pSocket = new P2P(socket);
 const startButton = document.getElementById('start-stream');
 
 p2pSocket.on('start-stream', () => {
+  console.log('hello')
   p2p.usePeerConnection = true;
   startButton.setAttribute('disabled', true);
 });
 
 p2pSocket.on('stream', (stream) => {
   const audio = document.querySelector('audio');
-  audio.src = window.URL.createObjectURL(stream);
+  audio.srcObject = stream;
   audio.play();
 });
 
@@ -32,7 +33,7 @@ async function startStream() {
     const p2pSocket = new P2P(socket, { peerOpts: { stream: destination.stream } });
 
     source.connect(destination);
-    p2psocket.on('ready', () => p2pSocket.usePeerConnection = true);
+    p2pSocket.on('ready', () => p2pSocket.usePeerConnection = true);
     p2pSocket.emit('ready', { peerId: p2pSocket.peerId });
   } catch (err) {
     console.error(err);
