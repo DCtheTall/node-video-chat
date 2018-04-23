@@ -4,3 +4,4 @@ build/
 public/dist/
 TODO.txt
 dump.rdb
+bundle.js
