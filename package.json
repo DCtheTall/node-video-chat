@@ -14,6 +14,7 @@
     "socket.io": "^2.1.0",
     "socket.io-client": "^2.1.0",
     "socket.io-p2p": "^2.2.0",
-    "socket.io-p2p-server": "^1.2.0"
+    "socket.io-p2p-server": "^1.2.0",
+    "socket.io-redis": "^5.2.0"
   }
 }
