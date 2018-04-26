@@ -1,9 +1,9 @@
-const P2P = require('socket.io-p2p');
+// const P2P = require('socket.io-p2p');
 const io = require('socket.io-client');
 const Promise = require('bluebird');
 
 const socket = io();
-const p2pSocket = new P2P(socket);
+// const p2pSocket = new P2P(socket);
 
 const startButton = document.getElementById('start-stream');
 
@@ -13,25 +13,39 @@ const roomButton = document.getElementById('join-room-btn');
 const roomJoined = document.getElementById('room-joined');
 const roomName = document.getElementById('room-name');
 const usersInRoom = document.getElementById('users-in-room');
+const leaveRoomButon = document.getElementById('leave-room');
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
-socket.on('joined-room', ({ room, clients }) => {
+let room;
+
+socket.on('joined-room', ({ room, client }) => {
   joinRoom.style.display = 'none';
   roomJoined.style.display = 'block';
   roomName.innerHTML = `You're in room: ${room}`;
-  usersInRoom.innerHTML = `There ${clients > 1 ? 'are' : 'is'} currently ${clients} user${clients > 1 ? 's' : ''} in the room`;
+  usersInRoom.innerHTML += `Socket ${client} just joined.<br>`;
+});
+
+socket.on('left-room', ({ client }) => {
+  usersInRoom.innerHTML += `Socket ${client} just left.<br>`;
 });
 
 function handleJoinRoom() {
-  const room = roomInput.value;
+  room = roomInput.value;
   if (!room) return;
   roomInput.value = '';
-  socket.emit('join-or-create', room);
+  socket.emit('join-or-create-room', room);
+}
+
+function handleLeaveRoom() {
+  socket.emit('leave-room', room);
+  joinRoom.style.display = 'block';
+  roomJoined.style.display = 'none';
 }
 
 roomButton.addEventListener('click', handleJoinRoom);
 roomJoined.style.display = 'none';
+leaveRoomButon.addEventListener('click', handleLeaveRoom);
 
 // p2pSocket.on('stream', (stream) => {
 //   p2pSocket.usePeerConnection = true;
