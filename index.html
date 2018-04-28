@@ -4,23 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> Socket.io Streaming Example </title>
+    <title> WebRTC </title>
   </head>
   <body>
     <!-- <h1> Socket.io Video Chat Prototype </h1>
     <button id="start-stream"> Start streaming </button>
     <audio controls></audio> -->
-    <div id="join-room">
+
+    <!-- <div id="join-room">
       <h2> Create or join room </h2>
       <input id="room-input">
       <button id="join-room-btn"> Submit </button>
-    </div>
-    <div id="room-joined">
+    </div> -->
+
+    <!-- <div id="room-joined">
       <h2 id="room-name"></h2>
       <span id="users-in-room"></span>
       <br>
       <button id="leave-room"> Leave </button>
+    </div> -->
+
+    <div id="webrtc-example">
+      <video></video>
+      <br>
+      <span id="error-msg" style="color: red;"></span>
     </div>
+
     <script src="/bundle.js"></script>
   </body>
 </html>

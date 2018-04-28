@@ -1,7 +1,7 @@
 const { createServer } = require('http');
 const ecstatic = require('ecstatic');
 const IO = require('socket.io');
-const { Server: p2pServer } = require('socket.io-p2p-server');
+// const { Server: p2pServer } = require('socket.io-p2p-server');
 const adapter = require('socket.io-redis');
 const Promise = require('bluebird');
 
@@ -16,6 +16,7 @@ io.adapter(adapter({
   host: 'localhost',
   port: 6379,
 }));
+// io.use(p2pServer);
 
 io.on('connection', (socket) => {
   socket.on('join-or-create-room', async (room) => {
