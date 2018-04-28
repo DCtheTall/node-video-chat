@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> WebRTC </title>
+    <style>
+      .video {
+        max-height: 200px;
+      }
+    </style>
   </head>
   <body>
     <!-- <h1> Socket.io Video Chat Prototype </h1>
@@ -25,9 +30,17 @@
     </div> -->
 
     <div id="webrtc-example">
-      <video></video>
+      <!-- First WebRTC example -->
+      <!-- <video></video>
       <br>
-      <span id="error-msg" style="color: red;"></span>
+      <span id="error-msg" style="color: red;"></span> -->
+      <button id="start-button"> Start </button>
+      <button id="call-button"> Call </button>
+      <button id="hang-up-button"> Hang up </button>
+      <br>
+      <br>
+      <video autoplay id="local-video" class="video"></video>
+      <video autoplay id="remote-video" class="video"></video>
     </div>
 
     <script src="/bundle.js"></script>
