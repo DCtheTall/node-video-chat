@@ -6,42 +6,51 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> WebRTC </title>
     <style>
-      video {
+      .video-container {
         height: 300px;
+        position: relative;
+      }
+      video {
+        background: black;
+        border: 1px solid black;
+        position: absolute;
+      }
+      .remote-video {
+        height: 300px;
+        left: 0px;
+        top: 0px;
+        width: 400px;
+      }
+      .local-video {
+        height: 80px;
+        left: 260px;
+        top: 200px;
+        width: 120px;
       }
     </style>
   </head>
   <body>
-    <!-- <h1> Socket.io Video Chat Prototype </h1>
-    <button id="start-stream"> Start streaming </button>
-    <audio controls></audio> -->
-
-    <!-- <div id="join-room">
-      <h2> Create or join room </h2>
-      <input id="room-input">
-      <button id="join-room-btn"> Submit </button>
-    </div> -->
-
-    <!-- <div id="room-joined">
-      <h2 id="room-name"></h2>
-      <span id="users-in-room"></span>
-      <br>
-      <button id="leave-room"> Leave </button>
-    </div> -->
-
     <div id="webrtc-example">
-      <!-- First WebRTC example -->
-      <!-- <video></video>
+      <h2 id="socket-id-banner"></h2>
+      <p id="status-message"></p>
+      <div class="video-container">
+        <video autoplay id="remote-video" class="remote-video"></video>
+        <video autoplay id="local-video" class="local-video"></video>
+      </div>
       <br>
-      <span id="error-msg" style="color: red;"></span> -->
-      <button id="start-button"> Start </button>
-      <button id="call-button"> Call </button>
+      <br>
+      <button id="test-video-button"> Test video </button>
       <button id="hang-up-button"> Hang up </button>
+      <button id="call-accept-button"> Accept </button>
+      <button id="call-ignore-button"> Ignore </button>
       <br>
       <br>
-      <video autoplay id="local-video"></video>
+      <input id="socket-id-input" type="text" placeholder="Socket ID">
+      <button id="call-button"> Call </button>
+      <br>
+      <br>
+      <span id="error-message" style="color:red;"></span>
     </div>
-
     <script src="/bundle.js"></script>
   </body>
 </html>

@@ -1,7 +1,6 @@
 const { createServer } = require('http');
 const ecstatic = require('ecstatic');
 const IO = require('socket.io');
-// const { Server: p2pServer } = require('socket.io-p2p-server');
 const adapter = require('socket.io-redis');
 const Promise = require('bluebird');
 
@@ -12,28 +11,29 @@ const server = createServer(ecstatic({
 }));
 const io = IO(server);
 
+function getSocketById(io, id) {
+  const { connected } = io.sockets.clients();
+  const connectedSockets = Object.keys(connected).map(key => connected[key]);
+  return connectedSockets.find(so => so.id === id);
+}
+
 io.adapter(adapter({
   host: 'localhost',
   port: 6379,
 }));
-// io.use(p2pServer);
 
 io.on('connection', (socket) => {
-  socket.on('join-or-create-room', async (room) => {
-    const ioAdapter = io.of('/').adapter;
-    await Promise.promisify(ioAdapter.remoteJoin, { context: ioAdapter })(socket.id, room);
-    io.to(room).emit('joined-room', {
-      room,
-      client: socket.id,
-    });
+  socket.on('call:request', ({ toId }) => {
+    console.log(`Call request from ${socket.id} to call ${toId}`);
+    const toSocket = getSocketById(io, toId);
+    if (!toSocket) socket.emit('call:unavailable', { toId });
+    toSocket.emit('call:received', { fromId: socket.id });
   });
-
-  socket.on('leave-room', async (room) => {
-    const ioAdapter = io.of('/').adapter;
-    await Promise.promisify(ioAdapter.remoteLeave, { context: ioAdapter })(socket.id, room);
-    io.to(room).emit('left-room', {
-      client: socket.id,
-    });
+  socket.on('call:ignored', ({ fromId }) => {
+    console.log(`Call from ${fromId} ignored by ${socket.id}`);
+    const fromSocket = getSocketById(io, fromId);
+    if (!fromSocket) return;
+    fromSocket.emit('call:unavailable', { toId: socket.id });
   });
 });
 
