@@ -24,16 +24,23 @@ const Statuses = new Enum([
   'AcceptingCall',
 ]);
 
-// These vars will represent local state
-let localStream;
-let currentStatus = Statuses.Available;
-let remoteSocketId;
-
 const hideElement = e => e.style.display = 'none';
 const showElement = e => e.style.display = 'block';
 const stopStream = stream => stream.getTracks().forEach(track => track.stop());
 const displayError = msg => errorMessage.innerHTML = msg;
 const clearError = () => displayError('');
+
+// These vars will represent local state
+// in a production env use a state manager
+let localStream;
+let currentStatus = Statuses.Available;
+let remoteSocketId;
+
+/*
+
+Local video
+
+*/
 
 async function startLocalVideo() {
   if (localVideo.srcObject) return;
@@ -48,13 +55,15 @@ function endVideoTest() {
   testVideoButton.innerHTML = 'Test video';
   testVideoButton.removeEventListener('click', endVideoTest);
   testVideoButton.addEventListener('click', testVideo);
-  currentStatus = Statues.Available;
+  currentStatus = Statuses.Available;
 }
 
 async function testVideo() {
   try {
     await startLocalVideo();
   } catch (err) {
+    if (/allowed/i.test(err.name)) displayError('Please allow camera access to use this app.');
+    else displayError('Something went wrong starting the video');
     console.error(err);
     return;
   }
@@ -64,6 +73,13 @@ async function testVideo() {
   testVideoButton.addEventListener('click', endVideoTest);
   currentStatus = Statuses.Testing;
 }
+
+
+/*
+
+Handlers for emitting a call request to another user
+
+*/
 
 function applyToInitialControls(fn) {
   fn(testVideoButton);
@@ -117,6 +133,12 @@ function handleUnsuccessfulCall({ toId }) {
   currentStatus = Statuses.Available;
 }
 
+/*
+
+Handlers for responding to a call
+
+*/
+
 function applyToAnswerControls(fn) {
   fn(callAcceptButton);
   fn(callIgnoreButton);
@@ -139,6 +161,7 @@ async function acceptCall() {
   try {
     await startLocalVideo();
   } catch (err) {
+    displayError('Something went wrong starting the video');
     console.error(err);
     return;
   }
@@ -166,10 +189,7 @@ function handleCallAccepted({ toId }) {
   currentStatus = Statuses.CallAccepted;
 }
 
-hideElement(hangUpButton);
-hideElement(callAcceptButton);
-hideElement(callIgnoreButton);
-
+// Socket events
 socket.on('connect', () => (socketIdBanner.innerHTML = `Your socket ID: ${socket.id}`));
 socket.on('call:unavailable', handleUnsuccessfulCall);
 socket.on('call:received', handleCallReceived);
@@ -182,7 +202,13 @@ socket.on('call:canceled', () => {
 });
 socket.on('call:accepted', handleCallAccepted);
 
+// Attach event listeners to DOM nodes
 testVideoButton.addEventListener('click', testVideo);
 callButton.addEventListener('click', startCall);
 callIgnoreButton.addEventListener('click', ignoreCall);
 callAcceptButton.addEventListener('click', acceptCall);
+
+// Hide elements that aren't needed yet
+hideElement(hangUpButton);
+hideElement(callAcceptButton);
+hideElement(callIgnoreButton);
