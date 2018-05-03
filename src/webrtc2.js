@@ -90,14 +90,10 @@ function start() {
 }
 
 function call() {
-  const videoTracks = localStream.getVideoTracks();
-  const audioTracks = localStream.getAudioTracks();
   const servers = null;
 
   callButton.disabled = true;
   hangUpButton.disabled = false;
-
-  // console.log(videoTracks[0].label);
 
   peerConnection1 = new RTCPeerConnection(servers);
   peerConnection2 = new RTCPeerConnection(servers);

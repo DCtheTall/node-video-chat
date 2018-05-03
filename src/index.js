@@ -21,6 +21,7 @@ const Statuses = new Enum([
   'Testing',
   'Calling',
   'ReceivingCall',
+  'AcceptingCall',
 ]);
 
 // These vars will represent local state
@@ -53,14 +54,15 @@ function endVideoTest() {
 async function testVideo() {
   try {
     await startLocalVideo();
-    remoteVideo.srcObject = localStream;
-    testVideoButton.innerHTML = 'End test';
-    testVideoButton.removeEventListener('click', testVideo);
-    testVideoButton.addEventListener('click', endVideoTest);
-    currentStatus = Statuses.Testing;
   } catch (err) {
     console.error(err);
+    return;
   }
+  remoteVideo.srcObject = localStream;
+  testVideoButton.innerHTML = 'End test';
+  testVideoButton.removeEventListener('click', testVideo);
+  testVideoButton.addEventListener('click', endVideoTest);
+  currentStatus = Statuses.Testing;
 }
 
 function applyToInitialControls(fn) {
@@ -72,16 +74,27 @@ function applyToInitialControls(fn) {
 const hideInitialControls = applyToInitialControls.bind(null, hideElement);
 const showInitialControls = applyToInitialControls.bind(null, showElement);
 
+function handleCallCanceled() {
+  hideElement(hangUpButton);
+  hangUpButton.removeEventListener('click', handleCallCanceled);
+  showInitialControls();
+  stopStream(localStream);
+  socket.emit('call:canceled', { toId: remoteSocketId });
+  currentStatus = Statuses.Available;
+}
+
 async function startCall() {
   clearError();
   if (!socketIdInput.value) return;
   try {
     if (currentStatus === Statuses.Testing) endVideoTest();
     hideInitialControls();
+    showElement(hangUpButton);
+    hangUpButton.addEventListener('click', handleCallCanceled);
     await startLocalVideo();
-    currentStatus = Statuses.Calling;
     remoteSocketId = socketIdInput.value;
     socket.emit('call:request', { toId: remoteSocketId });
+    currentStatus = Statuses.Calling;
     setTimeout(
       () => handleUnsuccessfulCall({ toId: remoteSocketId }),
       25000
@@ -104,24 +117,53 @@ function handleUnsuccessfulCall({ toId }) {
   currentStatus = Statuses.Available;
 }
 
+function applyToAnswerControls(fn) {
+  fn(callAcceptButton);
+  fn(callIgnoreButton);
+}
+
+const hideAnswerControls = applyToAnswerControls.bind(null, hideElement);
+const showAnswerControls = applyToAnswerControls.bind(null, showElement);
+
 function ignoreCall() {
   if (currentStatus !== Statuses.ReceivingCall) return;
   showInitialControls();
-  hideElement(callAcceptButton);
-  hideElement(callIgnoreButton);
+  hideAnswerControls();
+  statusMessage.innerHTML = '';
   socket.emit('call:ignored', { fromId: remoteSocketId });
   remoteSocketId = null;
   currentStatus = Statuses.Available;
 }
 
+async function acceptCall() {
+  try {
+    await startLocalVideo();
+  } catch (err) {
+    console.error(err);
+    return;
+  }
+  hideAnswerControls();
+  statusMessage.innerHTML = `In call with ${remoteSocketId}`;
+  socket.emit('call:accepted', { fromId: remoteSocketId });
+  currentStatus = Statuses.CallAccepted;
+}
+
 function handleCallReceived({ fromId }) {
   currentStatus = Statuses.ReceivingCall;
   hideInitialControls();
-  showElement(callAcceptButton);
-  showElement(callIgnoreButton);
+  showAnswerControls();
   statusMessage.innerHTML = `Receiving call from ${fromId}`;
   remoteSocketId = fromId;
   setTimeout(ignoreCall, 25000);
+}
+
+function handleCallAccepted({ toId }) {
+  if (currentStatus !== Statuses.Calling) {
+    // TODO emit hangup to other socket
+  }
+  statusMessage.innerHTML = `In call with ${remoteSocketId}`;
+  hangUpButton.addEventListener('click', handleCallCanceled);
+  currentStatus = Statuses.CallAccepted;
 }
 
 hideElement(hangUpButton);
@@ -131,6 +173,16 @@ hideElement(callIgnoreButton);
 socket.on('connect', () => (socketIdBanner.innerHTML = `Your socket ID: ${socket.id}`));
 socket.on('call:unavailable', handleUnsuccessfulCall);
 socket.on('call:received', handleCallReceived);
+socket.on('call:canceled', () => {
+  showInitialControls();
+  hideAnswerControls();
+  remoteSocketId = null;
+  statusMessage.innerHTML = '';
+  currentStatus = Statuses.Available;
+});
+socket.on('call:accepted', handleCallAccepted);
 
 testVideoButton.addEventListener('click', testVideo);
 callButton.addEventListener('click', startCall);
+callIgnoreButton.addEventListener('click', ignoreCall);
+callAcceptButton.addEventListener('click', acceptCall);

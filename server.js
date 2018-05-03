@@ -29,11 +29,22 @@ io.on('connection', (socket) => {
     if (!toSocket) socket.emit('call:unavailable', { toId });
     toSocket.emit('call:received', { fromId: socket.id });
   });
+  socket.on('call:canceled', ({ toId }) => {
+    console.log(`Call from ${socket.id} to ${toId} canceled by caller`);
+    const toSocket = getSocketById(io, toId);
+    return toSocket && toSocket.emit('call:canceled', { fromId: socket.id });
+  });
   socket.on('call:ignored', ({ fromId }) => {
     console.log(`Call from ${fromId} ignored by ${socket.id}`);
     const fromSocket = getSocketById(io, fromId);
     if (!fromSocket) return;
     fromSocket.emit('call:unavailable', { toId: socket.id });
+  });
+  socket.on('call:accepted', ({ fromId }) => {
+    console.log(`Call from ${fromId} to ${socket.id} accepted. Establishing peer connection`);
+    const fromSocket = getSocketById(io, fromId);
+    if (!fromSocket) return socket.emit('call:canceled', { fromId });
+    fromSocket.emit('call:accepted', { toId: socket.id });
   });
 });
 
