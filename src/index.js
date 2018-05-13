@@ -35,7 +35,9 @@ const clearError = () => displayError('');
 // in a production env use a state manager
 let currentStatus = Statuses.Available;
 let localStream;
+let iceServerConfig;
 let pc;
+let remoteStream;
 let remoteSocketId;
 
 /*
@@ -100,11 +102,17 @@ function handleIceCandidate(event) {
   }
 }
 
+function handleRemoteStreamAdded(event) {
+  console.log('Remote stream added.');
+  remoteVideo.srcObject = event.stream;
+  remoteStream = event.stream;
+}
+
 function createPeerConnection() {
   try {
-    pc = new RTCPeerConnection(null);
+    pc = new RTCPeerConnection(iceServerConfig);
     pc.onicecandidate = handleIceCandidate;
-    // pc.onaddstream
+    pc.onaddstream = handleRemoteStreamAdded;
     // pc.onremovestream
   } catch (err) {
     console.error(err);
@@ -121,6 +129,11 @@ function setLocalDescAndSendMessage(description) {
   pc.setLocalDescription(description);
   console.log('setLocalAndSendMessage sending message', sessionDescription);
   socket.emit('session:description', description);
+}
+
+function startPeerConnection() {
+  createPeerConnection();
+  pc.addStream(localStream);
 }
 
 /*
@@ -217,6 +230,7 @@ async function acceptCall() {
   statusMessage.innerHTML = `In call with ${remoteSocketId}`;
   socket.emit('call:accepted', { fromId: remoteSocketId });
   currentStatus = Statuses.CallAccepted;
+  startPeerConnection();
 }
 
 function handleCallReceived({ fromId }) {
@@ -228,17 +242,20 @@ function handleCallReceived({ fromId }) {
   setTimeout(ignoreCall, 25000);
 }
 
-function handleCallAccepted({ toId }) {
+function handleCallAccepted({ toId, iceServerConfig: config }) {
   if (currentStatus !== Statuses.Calling) {
     // TODO emit hangup to other socket
   }
+  iceServerConfig = config;
   statusMessage.innerHTML = `In call with ${remoteSocketId}`;
   hangUpButton.removeEventListener('click', handleCallCanceled);
   currentStatus = Statuses.CallAccepted;
+  startPeerConnection();
 }
 
 // Socket events
 socket.on('connect', () => (socketIdBanner.innerHTML = `Your socket ID: ${socket.id}`));
+
 socket.on('call:unavailable', handleUnsuccessfulCall);
 socket.on('call:received', handleCallReceived);
 socket.on('call:canceled', () => {
@@ -249,6 +266,8 @@ socket.on('call:canceled', () => {
   currentStatus = Statuses.Available;
 });
 socket.on('call:accepted', handleCallAccepted);
+
+socket.on('ice:config', ({ iceServerConfig: config }) => iceServerConfig = config);
 
 // Attach event listeners to DOM nodes
 testVideoButton.addEventListener('click', testVideo);

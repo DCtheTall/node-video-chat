@@ -1,8 +1,11 @@
+require('dotenv').load();
+
 const { createServer } = require('http');
 const ecstatic = require('ecstatic');
 const IO = require('socket.io');
 const adapter = require('socket.io-redis');
 const Promise = require('bluebird');
+const Twilio = require('twilio');
 
 const server = createServer(ecstatic({
   root: __dirname,
@@ -10,6 +13,7 @@ const server = createServer(ecstatic({
   cache: 1,
 }));
 const io = IO(server);
+const twilio = Twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 function getSocketById(io, id) {
   const { connected } = io.sockets.clients();
@@ -40,11 +44,18 @@ io.on('connection', (socket) => {
     if (!fromSocket) return;
     fromSocket.emit('call:unavailable', { toId: socket.id });
   });
-  socket.on('call:accepted', ({ fromId }) => {
+  socket.on('call:accepted', async ({ fromId }) => {
     console.log(`Call from ${fromId} to ${socket.id} accepted. Establishing peer connection`);
     const fromSocket = getSocketById(io, fromId);
     if (!fromSocket) return socket.emit('call:canceled', { fromId });
-    fromSocket.emit('call:accepted', { toId: socket.id });
+    const token = await twilio.tokens.create();
+    fromSocket.emit('call:accepted', {
+      toId: socket.id,
+      iceServerConfig: token.iceServers,
+    });
+    socket.emit('ice:config', {
+      iceServerConfig: token.iceServers,
+    });
   });
 });
 
