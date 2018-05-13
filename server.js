@@ -57,6 +57,19 @@ io.on('connection', (socket) => {
       iceServerConfig: token.iceServers,
     });
   });
+
+  socket.on('session:description', ({ description, toId }) => {
+    console.log(`Session ${description.type} description sent from ${socket.id} to ${toId}`);
+    const toSocket = getSocketById(io, toId);
+    if (!toSocket) {} // todo emit hangup to the socket that emitted this event
+    toSocket.emit(`ice:${description.type}`, { description });
+  });
+  socket.on('ice:candidate', ({ toId, data }) => {
+    console.log(`Sending ICE candidate from ${socket.id} to ${toId}`);
+    const toSocket = getSocketById(io, toId);
+    if (!toSocket) { } // todo emit hangup to the socket that emitted this event
+    toSocket.emit('ice:candidate', { data });
+  });
 });
 
 server.listen(4000, () => console.log('Listening on 4000'));

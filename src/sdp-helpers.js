@@ -57,8 +57,8 @@ module.exports = {
    const sdpLines = sdp.split('\r\n');
    let mLineIndex;
    // Search for m line
-   for (let i = 0; i < adpLines.length; i += 1) {
-     if (sdpLines[i].icludes('m=audio')) {
+   for (let i = 0; i < sdpLines.length; i += 1) {
+     if (sdpLines[i].includes('m=audio')) {
        mLineIndex = i;
        break;
      }

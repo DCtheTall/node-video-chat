@@ -24,6 +24,12 @@ const Statuses = new Enum([
   'ReceivingCall',
   'AcceptingCall',
 ]);
+const sdpConstraints = {
+  'mandatory': {
+    'OfferToReceiveAudio': true,
+    'OfferToReceiveVideo': true,
+  },
+};
 
 const hideElement = e => e.style.display = 'none';
 const showElement = e => e.style.display = 'block';
@@ -80,14 +86,6 @@ async function testVideo() {
 
 /*
 
-Signaling functions for socket.io
-
-*/
-
-function sendMessage({}) {}
-
-/*
-
 WebRTC code
 
 */
@@ -95,10 +93,14 @@ WebRTC code
 function handleIceCandidate(event) {
   console.log('handleIceCandidate event: ' + event);
   if (event.candidate) {
-    // TODO
-    // socket.emit('ice:candidate', {
-    //   label: event.candidate.sdpMLineIndex,
-    // });
+    socket.emit('ice:candidate', {
+      toId: remoteSocketId,
+      data: {
+        label: event.candidate.sdpMLineIndex,
+        id: event.candidate.sdpMid,
+        candidate: event.candidate.candidate,
+      },
+    });
   }
 }
 
@@ -127,13 +129,47 @@ function handleCreateOfferError(event) {
 function setLocalDescAndSendMessage(description) {
   description.sdp = preferOpus(description.sdp);
   pc.setLocalDescription(description);
-  console.log('setLocalAndSendMessage sending message', sessionDescription);
-  socket.emit('session:description', description);
+  socket.emit('session:description', {
+    description,
+    toId: remoteSocketId,
+  });
 }
 
-function startPeerConnection() {
+function startPeerConnection(isInitiator = false) {
   createPeerConnection();
   pc.addStream(localStream);
+  if (isInitiator) {
+    pc.createOffer(
+      setLocalDescAndSendMessage,
+      e => console.log('createOffer() error: ', e)
+    );
+  }
+}
+
+function handleIceCandidateReceived({ data }) {
+  if (!pc) return; // possible hangup? idk
+  const candidate = new RTCIceCandidate({
+    sdpMLineIndex: data.label,
+    candidate: data.candidate,
+  });
+  pc.addIceCandidate(candidate);
+}
+
+function setRemoteDesc({ description }) {
+  console.log(description.type);
+  if (!pc) {
+    // TODO emit hangup
+  }
+  pc.setRemoteDescription(new RTCSessionDescription(description));
+}
+
+function setRemoteDescAndAnswer(data) {
+  setRemoteDesc(data);
+  pc.createAnswer(
+    setLocalDescAndSendMessage,
+    e => console.log('createAnswer() error: ', e),
+    sdpConstraints
+  );
 }
 
 /*
@@ -242,7 +278,7 @@ function handleCallReceived({ fromId }) {
   setTimeout(ignoreCall, 25000);
 }
 
-function handleCallAccepted({ toId, iceServerConfig: config }) {
+function handleCallAccepted({ iceServerConfig: config }) {
   if (currentStatus !== Statuses.Calling) {
     // TODO emit hangup to other socket
   }
@@ -250,7 +286,7 @@ function handleCallAccepted({ toId, iceServerConfig: config }) {
   statusMessage.innerHTML = `In call with ${remoteSocketId}`;
   hangUpButton.removeEventListener('click', handleCallCanceled);
   currentStatus = Statuses.CallAccepted;
-  startPeerConnection();
+  startPeerConnection(true);
 }
 
 // Socket events
@@ -267,7 +303,12 @@ socket.on('call:canceled', () => {
 });
 socket.on('call:accepted', handleCallAccepted);
 
-socket.on('ice:config', ({ iceServerConfig: config }) => iceServerConfig = config);
+socket.on('ice:config', ({ iceServerConfig: config }) => {
+  iceServerConfig = config;
+});
+socket.on('ice:offer', setRemoteDescAndAnswer);
+socket.on('ice:answer', setRemoteDesc);
+socket.on('ice:candidate', handleIceCandidateReceived);
 
 // Attach event listeners to DOM nodes
 testVideoButton.addEventListener('click', testVideo);
