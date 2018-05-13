@@ -2,6 +2,7 @@ require('webrtc-adapter'); // webrtc browswer polyfill
 
 const io = require('socket.io-client');
 const Enum = require('enum');
+const { preferOpus } = require('./sdp-helpers');
 
 const socketIdBanner = document.getElementById('socket-id-banner');
 const localVideo = document.getElementById('local-video');
@@ -32,8 +33,9 @@ const clearError = () => displayError('');
 
 // These vars will represent local state
 // in a production env use a state manager
-let localStream;
 let currentStatus = Statuses.Available;
+let localStream;
+let pc;
 let remoteSocketId;
 
 /*
@@ -74,6 +76,52 @@ async function testVideo() {
   currentStatus = Statuses.Testing;
 }
 
+/*
+
+Signaling functions for socket.io
+
+*/
+
+function sendMessage({}) {}
+
+/*
+
+WebRTC code
+
+*/
+
+function handleIceCandidate(event) {
+  console.log('handleIceCandidate event: ' + event);
+  if (event.candidate) {
+    // TODO
+    // socket.emit('ice:candidate', {
+    //   label: event.candidate.sdpMLineIndex,
+    // });
+  }
+}
+
+function createPeerConnection() {
+  try {
+    pc = new RTCPeerConnection(null);
+    pc.onicecandidate = handleIceCandidate;
+    // pc.onaddstream
+    // pc.onremovestream
+  } catch (err) {
+    console.error(err);
+    alert('Failed to create peer connection');
+  }
+}
+
+function handleCreateOfferError(event) {
+  console.log('createOffer() error: ', e);
+}
+
+function setLocalDescAndSendMessage(description) {
+  description.sdp = preferOpus(description.sdp);
+  pc.setLocalDescription(description);
+  console.log('setLocalAndSendMessage sending message', sessionDescription);
+  socket.emit('session:description', description);
+}
 
 /*
 
@@ -185,7 +233,7 @@ function handleCallAccepted({ toId }) {
     // TODO emit hangup to other socket
   }
   statusMessage.innerHTML = `In call with ${remoteSocketId}`;
-  hangUpButton.addEventListener('click', handleCallCanceled);
+  hangUpButton.removeEventListener('click', handleCallCanceled);
   currentStatus = Statuses.CallAccepted;
 }
 
