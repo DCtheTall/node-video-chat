@@ -46,17 +46,27 @@ io.on('connection', (socket) => {
   });
   socket.on('call:accepted', async ({ fromId }) => {
     console.log(`Call from ${fromId} to ${socket.id} accepted. Establishing peer connection`);
-    const fromSocket = getSocketById(io, fromId);
-    if (!fromSocket) return socket.emit('call:canceled', { fromId });
-    const token = await twilio.tokens.create();
-    fromSocket.emit('call:accepted', {
-      toId: socket.id,
-      iceServerConfig: token.iceServers,
-    });
-    socket.emit('ice:config', {
-      iceServerConfig: token.iceServers,
-    });
+    try {
+      const fromSocket = getSocketById(io, fromId);
+      if (!fromSocket) return socket.emit('call:canceled', { fromId });
+      const token = await twilio.tokens.create();
+      fromSocket.emit('call:accepted', {
+        toId: socket.id,
+        iceServerConfig: token.iceServers,
+      });
+      socket.emit('ice:config', {
+        iceServerConfig: token.iceServers,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   });
+  socket.on('call:hangup', async ({ toId }) => {
+    console.log(`Call to ${toId} ended by ${socket.id}`);
+    const toSocket = getSocketById(io, toId);
+    if (!toSocket) return;
+    toSocket.emit('call:hangup');
+  })
 
   socket.on('session:description', ({ description, toId }) => {
     console.log(`Session ${description.type} description sent from ${socket.id} to ${toId}`);
