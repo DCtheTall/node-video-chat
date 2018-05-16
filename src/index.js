@@ -23,6 +23,7 @@ const Statuses = new Enum([
   'Calling',
   'ReceivingCall',
   'AcceptingCall',
+  'InCall',
 ]);
 const sdpConstraints = {
   'mandatory': {
@@ -46,6 +47,19 @@ let pc;
 let remoteStream;
 let remoteSocketId;
 
+function setCurrentStatus(newStatus) {
+  const statusMessages = {
+    [Statuses.Available]: 'available',
+    [Statuses.Testing]: 'testing',
+    [Statuses.Calling]: 'calling',
+    [Statuses.ReceivingCall]: 'receiving call',
+    [Statuses.AcceptingCall]: 'accepting call',
+    [Statuses.InCall]: 'in call',
+  };
+  console.log(`Status set to ${statusMessages[newStatus]}`);
+  currentStatus = newStatus;
+}
+
 /*
 
 Local video
@@ -65,7 +79,7 @@ function endVideoTest() {
   testVideoButton.innerHTML = 'Test video';
   testVideoButton.removeEventListener('click', endVideoTest);
   testVideoButton.addEventListener('click', testVideo);
-  currentStatus = Statuses.Available;
+  setCurrentStatus(Statuses.Available);
 }
 
 async function testVideo() {
@@ -81,7 +95,7 @@ async function testVideo() {
   testVideoButton.innerHTML = 'End test';
   testVideoButton.removeEventListener('click', testVideo);
   testVideoButton.addEventListener('click', endVideoTest);
-  currentStatus = Statuses.Testing;
+  setCurrentStatus(Statuses.Testing);
 }
 
 /*
@@ -110,12 +124,18 @@ function handleRemoteStreamAdded(event) {
   remoteStream = event.stream;
 }
 
+function handleRemoteStreamRemoved() {
+  console.log('Remote stream removed.');
+  remoteVideo.srcObject = null;
+  stopStream(remoteStream);
+}
+
 function createPeerConnection() {
   try {
     pc = new RTCPeerConnection(iceServerConfig);
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
-    // pc.onremovestream
+    pc.onremovestream = handleRemoteStreamRemoved;
   } catch (err) {
     console.error(err);
     alert('Failed to create peer connection');
@@ -153,10 +173,10 @@ function handleIceCandidateReceived({ data }) {
     candidate: data.candidate,
   });
   pc.addIceCandidate(candidate);
+  setCurrentStatus(Statuses.InCall);
 }
 
 function setRemoteDesc({ description }) {
-  console.log(description.type);
   if (!pc) {
     // TODO emit hangup
   }
@@ -170,6 +190,13 @@ function setRemoteDescAndAnswer(data) {
     e => console.log('createAnswer() error: ', e),
     sdpConstraints
   );
+}
+
+function closePeerConnection() {
+  if (pc) {
+    pc.close();
+    pc = null;
+  }
 }
 
 /*
@@ -187,13 +214,19 @@ function applyToInitialControls(fn) {
 const hideInitialControls = applyToInitialControls.bind(null, hideElement);
 const showInitialControls = applyToInitialControls.bind(null, showElement);
 
-function handleCallCanceled() {
-  hideElement(hangUpButton);
+function handleCallCanceled(isInitiator) {
+  remoteSocketId = null;
+  statusMessage.innerHTML = '';
   hangUpButton.removeEventListener('click', handleCallCanceled);
+  if (isInitiator) {
+    socket.emit('call:canceled', { toId: remoteSocketId });
+    stopStream(localStream);
+  } else {
+    hideAnswerControls();
+  }
   showInitialControls();
-  stopStream(localStream);
-  socket.emit('call:canceled', { toId: remoteSocketId });
-  currentStatus = Statuses.Available;
+  hideElement(hangUpButton);
+  setCurrentStatus(Statuses.Available);
 }
 
 async function startCall() {
@@ -203,31 +236,31 @@ async function startCall() {
     if (currentStatus === Statuses.Testing) endVideoTest();
     hideInitialControls();
     showElement(hangUpButton);
-    hangUpButton.addEventListener('click', handleCallCanceled);
+    hangUpButton.addEventListener('click', handleCallCanceled.bind(null, true));
     await startLocalVideo();
     remoteSocketId = socketIdInput.value;
+    socketIdInput.value = '';
     socket.emit('call:request', { toId: remoteSocketId });
-    currentStatus = Statuses.Calling;
     setTimeout(
       () => handleUnsuccessfulCall({ toId: remoteSocketId }),
       25000
     );
-    socketIdInput.value = '';
+    setCurrentStatus(Statuses.Calling);
   } catch (err) {
-    currentStatus = Statuses.Available;
+    setCurrentStatus(Statuses.Available);
     console.error(err);
   }
 }
 
 function handleUnsuccessfulCall({ toId }) {
   if (currentStatus !== Statuses.Calling) return;
-  displayError(`Socket ${toId} is not available.`);
   localVideo.srcObject = null;
-  stopStream(localStream);
-  showInitialControls();
-  setTimeout(clearError, 1e4);
   remoteSocketId = null;
-  currentStatus = Statuses.Available;
+  showInitialControls();
+  stopStream(localStream);
+  setTimeout(clearError, 1e4);
+  displayError(`Socket ${toId} is not available.`);
+  setCurrentStatus(Statuses.Available);
 }
 
 /*
@@ -251,7 +284,7 @@ function ignoreCall() {
   statusMessage.innerHTML = '';
   socket.emit('call:ignored', { fromId: remoteSocketId });
   remoteSocketId = null;
-  currentStatus = Statuses.Available;
+  setCurrentStatus(Statuses.Available);
 }
 
 async function acceptCall() {
@@ -265,17 +298,16 @@ async function acceptCall() {
   hideAnswerControls();
   statusMessage.innerHTML = `In call with ${remoteSocketId}`;
   socket.emit('call:accepted', { fromId: remoteSocketId });
-  currentStatus = Statuses.CallAccepted;
   startPeerConnection();
 }
 
 function handleCallReceived({ fromId }) {
-  currentStatus = Statuses.ReceivingCall;
-  hideInitialControls();
-  showAnswerControls();
   statusMessage.innerHTML = `Receiving call from ${fromId}`;
   remoteSocketId = fromId;
-  setTimeout(ignoreCall, 25000);
+  hideInitialControls();
+  showAnswerControls();
+  setTimeout(ignoreCall, 25e3);
+  setCurrentStatus(Statuses.ReceivingCall);
 }
 
 function handleCallAccepted({ iceServerConfig: config }) {
@@ -294,18 +326,10 @@ socket.on('connect', () => (socketIdBanner.innerHTML = `Your socket ID: ${socket
 
 socket.on('call:unavailable', handleUnsuccessfulCall);
 socket.on('call:received', handleCallReceived);
-socket.on('call:canceled', () => {
-  showInitialControls();
-  hideAnswerControls();
-  remoteSocketId = null;
-  statusMessage.innerHTML = '';
-  currentStatus = Statuses.Available;
-});
+socket.on('call:canceled', handleCallCanceled);
 socket.on('call:accepted', handleCallAccepted);
 
-socket.on('ice:config', ({ iceServerConfig: config }) => {
-  iceServerConfig = config;
-});
+socket.on('ice:config', ({ iceServerConfig: config }) => iceServerConfig = config);
 socket.on('ice:offer', setRemoteDescAndAnswer);
 socket.on('ice:answer', setRemoteDesc);
 socket.on('ice:candidate', handleIceCandidateReceived);
