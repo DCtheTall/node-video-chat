@@ -15,6 +15,8 @@ const errorMessage = document.getElementById('error-message');
 const callAcceptButton = document.getElementById('call-accept-button');
 const callIgnoreButton = document.getElementById('call-ignore-button');
 const statusMessage = document.getElementById('status-message');
+const toggleSound = document.getElementById('toggle-sound');
+const toggleVideo = document.getElementById('toggle-video');
 
 const socket = io();
 const Statuses = new Enum([
@@ -35,7 +37,6 @@ const sdpConstraints = {
 const hideElement = e => e.style.display = 'none';
 const showElement = e => e.style.display = 'block';
 const stopStream = stream => stream.getTracks().forEach(track => track.stop());
-const displayError = msg => errorMessage.innerHTML = msg;
 const clearError = () => displayError('');
 
 function applyToInitialControls(fn) {
@@ -77,6 +78,11 @@ function setCurrentStatus(newStatus) {
   currentStatus = newStatus;
 }
 
+function displayError(msg) {
+  errorMessage.innerHTML = msg;
+  setTimeout(clearError, 5e3);
+}
+
 /*
 
 Local video
@@ -98,7 +104,7 @@ function endVideo() {
 
 async function startLocalVideo() {
   if (localVideo.srcObject) return;
-  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   localVideo.srcObject = localStream;
 }
 
@@ -125,6 +131,15 @@ async function testVideo() {
   testVideoButton.addEventListener('click', endVideoTest);
   setCurrentStatus(Statuses.Testing);
 }
+
+function toggleLocalTack(i) {
+  if (!localStream) return;
+  const audio = localStream.getTracks()[i];
+  audio.enabled = !audio.enabled;
+}
+
+toggleSound.addEventListener('click', toggleLocalTack.bind(null, 0));
+toggleVideo.addEventListener('click', toggleLocalTack.bind(null, 1));
 
 /*
 
@@ -175,7 +190,7 @@ function createPeerConnection() {
     pc.onremovestream = handleRemoteStreamRemoved;
   } catch (err) {
     console.error(err);
-    alert('Failed to create peer connection');
+    displayError('Failed to create peer connection');
   }
 }
 
@@ -195,12 +210,14 @@ function setLocalDescAndSendMessage(description) {
 function startPeerConnection(isInitiator = false) {
   createPeerConnection();
   pc.addStream(localStream);
-  if (isInitiator) {
-    pc.createOffer(
-      setLocalDescAndSendMessage,
-      e => console.log('createOffer() error: ', e)
-    );
-  }
+  if (!isInitiator) return;
+  pc.createOffer(
+    setLocalDescAndSendMessage,
+    e => (
+      console.log('createOffer() error', e)
+      || displayError('Something went wrong setting up the peer connection')
+    )
+  );
 }
 
 function handleIceCandidateReceived({ data }) {
@@ -228,7 +245,10 @@ function setRemoteDescAndAnswer(data) {
   setRemoteDesc(data);
   pc.createAnswer(
     setLocalDescAndSendMessage,
-    e => console.log('createAnswer() error: ', e),
+    e => (
+      console.log('createAnswer() error', e)
+      || displayError('Something went wrong setting up the peer connection')
+    ),
     sdpConstraints
   );
 }
@@ -272,16 +292,12 @@ Handlers for emitting a call request to another user
 
 */
 
-function handleCallCanceled(isInitiator = true) {
-  remoteSocketId = null;
+function cancelCall() {
   statusMessage.innerHTML = '';
-  hangUpButton.removeEventListener('click', handleCallCanceled);
-  if (isInitiator) {
-    socket.emit('call:canceled', { toId: remoteSocketId });
-    stopStream(localStream);
-  } else {
-    hideAnswerControls();
-  }
+  hangUpButton.removeEventListener('click', cancelCall);
+  socket.emit('call:canceled', { toId: remoteSocketId });
+  remoteSocketId = null;
+  stopStream(localStream);
   showInitialControls();
   hideElement(hangUpButton);
   setCurrentStatus(Statuses.Available);
@@ -294,7 +310,7 @@ async function startCall() {
     if (currentStatus === Statuses.Testing) endVideoTest();
     hideInitialControls();
     showElement(hangUpButton);
-    hangUpButton.addEventListener('click', handleCallCanceled);
+    hangUpButton.addEventListener('click', cancelCall);
     await startLocalVideo();
     remoteSocketId = socketIdInput.value;
     socketIdInput.value = '';
@@ -307,6 +323,7 @@ async function startCall() {
   } catch (err) {
     setCurrentStatus(Statuses.Available);
     console.error(err);
+    displayError('Something went wrong starting the call');
   }
 }
 
@@ -323,11 +340,12 @@ function handleUnsuccessfulCall({ toId }) {
 
 function handleCallAccepted({ iceServerConfig: config }) {
   if (currentStatus !== Statuses.Calling) {
-    // TODO emit hangup to other socket
+    emitHangup();
+    return;
   }
   iceServerConfig = config;
   statusMessage.innerHTML = `In call with ${remoteSocketId}`;
-  hangUpButton.removeEventListener('click', handleCallCanceled);
+  hangUpButton.removeEventListener('click', cancelCall);
   hangUpButton.addEventListener('click', hangUp);
   currentStatus = Statuses.CallAccepted;
   startPeerConnection(true);
@@ -338,6 +356,16 @@ function handleCallAccepted({ iceServerConfig: config }) {
 Handlers for responding to a call
 
 */
+
+function handleCallCanceled() {
+  remoteSocketId = null;
+  statusMessage.innerHTML = '';
+  hangUpButton.removeEventListener('click', cancelCall);
+  hideAnswerControls();
+  showInitialControls();
+  hideElement(hangUpButton);
+  setCurrentStatus(Statuses.Available);
+}
 
 function ignoreCall() {
   if (currentStatus !== Statuses.ReceivingCall) return;
@@ -379,7 +407,7 @@ socket.on('connect', () => (socketIdBanner.innerHTML = `Your socket ID: ${socket
 
 socket.on('call:unavailable', handleUnsuccessfulCall);
 socket.on('call:received', handleCallReceived);
-socket.on('call:canceled', handleCallCanceled.bind(null, false));
+socket.on('call:canceled', handleCallCanceled);
 socket.on('call:accepted', handleCallAccepted);
 socket.on('call:hangup', handleHangup);
 

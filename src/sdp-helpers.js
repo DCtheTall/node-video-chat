@@ -54,7 +54,7 @@ module.exports = {
    * https://en.wikipedia.org/wiki/Opus_(audio_format)
    */
   preferOpus(sdp) {
-   const sdpLines = sdp.split('\r\n');
+   let sdpLines = sdp.split('\r\n');
    let mLineIndex;
    // Search for m line
    for (let i = 0; i < sdpLines.length; i += 1) {
@@ -67,7 +67,7 @@ module.exports = {
      return sdp;
    }
    // If Opus is availbble, set it as the default in m line
-   for (i = 0; i < sdLines.length; i += 1) {
+   for (i = 0; i < sdpLines.length; i += 1) {
      if (sdpLines[i].includes('opus/48000')) {
        const opusPayload = extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
         if (opusPayload) {

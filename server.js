@@ -71,13 +71,19 @@ io.on('connection', (socket) => {
   socket.on('session:description', ({ description, toId }) => {
     console.log(`Session ${description.type} description sent from ${socket.id} to ${toId}`);
     const toSocket = getSocketById(io, toId);
-    if (!toSocket) {} // todo emit hangup to the socket that emitted this event
+    if (!toSocket) {
+      socket.emit('call:hangup');
+      return;
+    }
     toSocket.emit(`ice:${description.type}`, { description });
   });
   socket.on('ice:candidate', ({ toId, data }) => {
     console.log(`Sending ICE candidate from ${socket.id} to ${toId}`);
     const toSocket = getSocketById(io, toId);
-    if (!toSocket) { } // todo emit hangup to the socket that emitted this event
+    if (!toSocket) {
+      socket.emit('call:hangup');
+      return;
+    }
     toSocket.emit('ice:candidate', { data });
   });
 });
