@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-import connectP2P from './p2p';
 import { handleSocketDisconnect } from '../actions/socket';
 import store from '../store';
 
@@ -27,7 +26,6 @@ let { token } = store.getState();
 let socket = connect(token);
 attachEventListeners(socket, store);
 
-socket.p2p = connectP2P(socket);
 
 store.subscribe(() => {
   const { token: newToken } = store.getState();

@@ -4,6 +4,11 @@ import {
   GraphQLString,
 } from 'graphql';
 
+/**
+ * @param {Object} user instance
+ * @param {Object} io socket.io instance
+ * @returns {Object} socket for particular user
+ */
 function getUserSocket(user, io) {
   const { connected } = io.sockets.clients();
   const connectedSockets = Object.keys(connected).map(key => connected[key]);

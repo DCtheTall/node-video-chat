@@ -1,0 +1,58 @@
+<!DOCTYPE hmtl>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> WebRTC </title>
+    <style>
+      .video-container {
+        height: 300px;
+        position: relative;
+      }
+      video {
+        background: black;
+        border: 1px solid black;
+        position: absolute;
+      }
+      .remote-video {
+        height: 300px;
+        left: 0px;
+        top: 0px;
+        width: 400px;
+      }
+      .local-video {
+        height: 80px;
+        left: 260px;
+        bottom: 20px;
+        width: 120px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="webrtc-example">
+      <h2 id="socket-id-banner"></h2>
+      <p id="status-message"></p>
+      <div class="video-container">
+        <video autoplay id="remote-video" class="remote-video"></video>
+        <video autoplay id="local-video" class="local-video"></video>
+      </div>
+      <button id="toggle-video"> Toggle Video </button>
+      <button id="toggle-sound"> Toggle Sound </button>
+      <br>
+      <br>
+      <button id="test-video-button"> Test video </button>
+      <button id="hang-up-button"> Hang up </button>
+      <button id="call-accept-button"> Accept </button>
+      <button id="call-ignore-button"> Ignore </button>
+      <br>
+      <br>
+      <input id="socket-id-input" type="text" placeholder="Socket ID">
+      <button id="call-button"> Call </button>
+      <br>
+      <br>
+      <span id="error-message" style="color:red;"></span>
+    </div>
+    <script src="/bundle.js"></script>
+  </body>
+</html>

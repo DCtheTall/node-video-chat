@@ -1,6 +1,5 @@
 import io from 'socket.io';
 import adapter from 'socket.io-redis';
-import { Server as p2pServer } from 'socket.io-p2p-server';
 import { authorize } from 'socketio-jwt';
 import { USER_STATUS_CHANGE } from './schema/subscription/pubsub/constants';
 import pubsub from './schema/subscription/pubsub';
@@ -11,7 +10,6 @@ import pubsub from './schema/subscription/pubsub';
  */
 export default function initIO(server) {
   const instance = io(server);
-  instance.use(p2pServer);
   instance.adapter(adapter({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,

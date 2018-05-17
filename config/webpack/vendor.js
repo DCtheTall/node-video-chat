@@ -27,6 +27,5 @@ module.exports = [
   'redux-devtools-extension',
   'redux-thunk',
   'socket.io-client',
-  'socket.io-p2p',
   'validator',
 ];
