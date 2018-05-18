@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { handleSocketDisconnect } from '../actions/socket';
+import { handleSocketDisconnect } from '../actions/call';
 import store from '../store';
 
 const socketEventHandlers = {

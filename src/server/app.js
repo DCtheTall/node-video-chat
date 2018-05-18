@@ -7,7 +7,7 @@ import compression from 'compression';
 import render from './routes/render';
 import schema from './schema';
 import models from './models';
-import deserealizeUser from './lib/user/deserealize';
+import deserealizeUser from './lib/deserealize-user';
 
 const app = express();
 

@@ -30,11 +30,11 @@
       margin-bottom: 4px;
       max-height: 150px;
       resize: none;
-      width: 90%;
+      width: 100%;
     }
 
     .message-send-button-container {
-      width: 12%;
+      width: 30px;
 
       button {
         @include webchat-gradient('background', 0deg);

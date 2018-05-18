@@ -8,7 +8,7 @@ import QUERY_MESSAGE_THREADS from '../../../graphql/queries/message-threads/mess
 import CREATE_MESSAGE_THREAD from '../../../graphql/mutations/message-threads/create.graphql';
 import { GET_MESSAGE_THREAD_ROUTE } from '../../../constants';
 import { addError, clearError } from '../../../actions/error';
-import { emitSocketPing } from '../../../actions/socket';
+import { startCall } from '../../../actions/call';
 import UserInfo from '../../shared/UserInfo';
 import '../../../styles/contact.scss';
 
@@ -94,7 +94,7 @@ Contact.propTypes = {
 
 export default compose(
   withRouter,
-  connect(null, { addError, clearError, emitSocketPing }),
+  connect(null, { addError, clearError, startCall }),
   graphql(
     QUERY_MESSAGE_THREADS,
     { name: 'messageThreads' },

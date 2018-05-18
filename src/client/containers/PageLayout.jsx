@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import cloneDeep from 'lodash.clonedeep';
+
 import QUERY_USER_ID from '../graphql/queries/user/id.graphql';
 import QUERY_PENDING_CONTACT_REQUESTS from '../graphql/queries/contact-requests/pending-requests.graphql';
 import QUERY_CONTACTS from '../graphql/queries/contacts/contacts.graphql';
@@ -15,13 +16,15 @@ import SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED from '../graphql/subscriptions/cont
 import SUBSCRIBE_TO_USER_STATUS_CHANGE from '../graphql/subscriptions/users/status-change.graphql';
 import SUBSCRIBE_TO_MESSAGES_CREATED from '../graphql/subscriptions/messages/message-created.graphql';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
+
 import isLoggedIn from '../helpers/is-logged-in';
 import { addError } from '../actions/error';
+import { addNotice } from '../actions/notice';
 import Topbar from '../components/Layout/Topbar';
 import ErrorBar from '../components/Layout/ErrorBar';
 import NoticeBar from '../components/Layout/NoticeBar';
-import VideoChat from './Layout/VideoChat';
-import { addNotice } from '../actions/notice';
+import VideoChat from './VideoChat';
+
 import '../styles/layout.scss';
 
 /**

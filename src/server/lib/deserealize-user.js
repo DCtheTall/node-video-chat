@@ -1,6 +1,5 @@
 import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
-import userIncludeConfig from './include-config';
 
 /**
  * Express middleware
@@ -15,18 +14,10 @@ export default async function deserealizeUser(req, res, next) {
     const token = req.cookies.get(process.env.COOKIE_KEY, { signed: true }) || '';
     if (!token) return next();
     const { id } = await jwt.verify(token, process.env.JWT_SECRET);
-    const user = await models.user.findById(id, {
-      order: [
-        [{ model: models.contact_request, as: 'contactRequestsReceived' }, 'createdAt', 'DESC'],
-      ],
-      include: userIncludeConfig,
-    });
+    const user = await models.user.findById(id);
     req.user = user;
   } catch (err) {
     console.log(err);
   }
   return next();
-}
-
-export async function subscriptionServer() {
 }
