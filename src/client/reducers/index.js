@@ -5,6 +5,7 @@ import notice from './notice';
 import contactRequests from './contact-requests';
 import token from './token';
 import contacts from './contacts';
+import call from './call';
 
 const root = combineReducers({
   error,
@@ -12,6 +13,7 @@ const root = combineReducers({
   contactRequests,
   token,
   contacts,
+  call,
 });
 
 export default (state, action) => (

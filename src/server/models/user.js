@@ -35,6 +35,7 @@ function linkUser(sequelize, DataTypes) {
       type: DataTypes.STRING,
       defaultValue: '/images/placeholder.jpg',
     },
+    lastInteractedAt: DataTypes.DATE,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     deletedAt: DataTypes.DATE,
