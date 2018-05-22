@@ -1,8 +1,43 @@
 @import './base';
 
 .video-chat-container {
-  background: $dark-grey;
+  @include video-chat-background-gradient;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-width: 600px;
   width: 100%;
+  z-index: 1;
+
+  video {
+    background: $black;
+  }
+
+  .remote-video-container {
+    align-items: flex-end;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    min-height: 300px;
+    position: relative;
+    width: 100%;
+
+    .remote-video {
+      border: 3px solid $black;
+      height: 100%;
+      min-height: 300px;
+      min-width: 550px;
+      width: 80%;
+    }
+
+    .local-video {
+      bottom: 10px;
+      border: 2px solid $dark-grey;
+      border-radius: 5px;
+      height: 150px;
+      position: absolute;
+      right: 10px;
+      width: 200px;
+    }
+  }
 }

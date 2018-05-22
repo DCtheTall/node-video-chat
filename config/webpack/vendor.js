@@ -8,6 +8,7 @@ module.exports = [
   'axios',
   'bluebird',
   'classnames',
+  'enum',
   'graphql-tag',
   'lodash.clonedeep',
   'lodash.debounce',
@@ -28,4 +29,5 @@ module.exports = [
   'redux-thunk',
   'socket.io-client',
   'validator',
+  'webrtc-adapter',
 ];

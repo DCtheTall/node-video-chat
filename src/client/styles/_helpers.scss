@@ -52,6 +52,10 @@
   position: relative;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .webchat-button {
   @include webchat-gradient('background', 15deg);
   border-radius: 21px;
@@ -81,8 +85,4 @@
   -webkit-text-fill-color: transparent;
   font-family: $montserrat;
   -webkit-background-clip: text;
-}
-
-.text-center {
-  text-align: center;
 }

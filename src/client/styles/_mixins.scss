@@ -14,3 +14,7 @@
   font-family: $montserrat;
   -webkit-background-clip: text;
 }
+
+@mixin video-chat-background-gradient {
+  background: linear-gradient(0deg, $input-grey, $dark-grey);
+}

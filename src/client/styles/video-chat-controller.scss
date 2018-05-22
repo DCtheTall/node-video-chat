@@ -1,0 +1,45 @@
+@import './base';
+
+.video-chat-bottom-banner {
+  display: flex;
+  justify-content: center;
+  background: $darker-grey;
+  height: 120px;
+  width: 100%;
+
+  .hangup-button-container {
+    border: 3px solid $black;
+    border-radius: 50%;
+    height: 70px;
+    margin-top: -15px;
+    position: relative;
+    width: 70px;
+    vertical-align: top;
+
+    .hangup-button {
+      background: darken($error-red, 10%);
+      border: 1.5px solid $white;
+      border-radius: 50%;
+      position: relative;
+      width: 70px;
+      height: 70px;
+      z-index: 100;
+
+      svg {
+        left: -3px;
+        position: absolute;
+        top: -3px;
+      }
+    }
+
+    .hangup-message {
+      bottom: -25px;
+      color: $white;
+      font-size: 12px;
+      left: -15px;
+      text-align: center;
+      position: absolute;
+      width: 100px;
+    }
+  }
+}
