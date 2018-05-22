@@ -12,4 +12,4 @@ export const GET_MESSAGE_THREAD_ROUTE = threadid => MESSAGE_THREAD_ROUTE.replace
 
 export const RESET_REDUX_STORE = 'RESET_REDUX_STORE';
 
-export * from './socket-events';
+export * from '../../constants';

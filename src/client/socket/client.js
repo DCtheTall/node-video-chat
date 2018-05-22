@@ -1,31 +1,12 @@
 import io from 'socket.io-client';
-import { handleSocketDisconnect } from '../actions/call';
 import store from '../store';
-
-const socketEventHandlers = {
-  connect() {
-    console.log('Connection established with server');
-  },
-  disconnect() {
-    console.log('Connect to the server terminated');
-    store.dispatch(handleSocketDisconnect());
-  },
-  sendPeerId(data) {
-    console.log(data);
-  },
-};
-
-const attachEventListeners = socket =>
-  Object.keys(socketEventHandlers).map(event =>
-    socket.on(event, socketEventHandlers[event]));
+import attachEventHandlers from './events';
 
 const connect = token => io.connect(process.env.APP_URL, { query: `token=${token}` });
 
-
 let { token } = store.getState();
 let socket = connect(token);
-attachEventListeners(socket, store);
-
+attachEventHandlers(socket);
 
 store.subscribe(() => {
   const { token: newToken } = store.getState();
@@ -33,7 +14,7 @@ store.subscribe(() => {
   if (socket) socket.disconnect();
   socket = null;
   if (newToken) socket = connect(newToken);
-  if (socket) attachEventListeners(socket, store);
+  if (socket) attachEventHandlers(socket);
   token = newToken;
 });
 
