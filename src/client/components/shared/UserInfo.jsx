@@ -1,6 +1,5 @@
 import React from 'react';
 import { string } from 'prop-types';
-import classNames from 'classnames';
 import StatusIndicator from './StatusIndicator';
 import '../../styles/user-info.scss';
 

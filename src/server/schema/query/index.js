@@ -3,6 +3,7 @@ import User from './User';
 import Users from './Users';
 import ContactRequests from './ContactRequests';
 import Contacts from './Contacts';
+import Contact from './Contact';
 import MessageThreads from './MessageThreads';
 import MessageThread from './MessageThread';
 
@@ -12,8 +13,9 @@ export default new GraphQLObjectType({
     User,
     Users,
     ContactRequests,
+    Contact,
     Contacts,
-    MessageThreads,
     MessageThread,
+    MessageThreads,
   },
 });

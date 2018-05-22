@@ -303,6 +303,17 @@ function cancelCall() {
   setCurrentStatus(Statuses.Available);
 }
 
+function handleUnsuccessfulCall({ toId }) {
+  if (currentStatus !== Statuses.Calling) return;
+  localVideo.srcObject = null;
+  remoteSocketId = null;
+  showInitialControls();
+  stopStream(localStream);
+  setTimeout(clearError, 1e4);
+  displayError(`Socket ${toId} is not available.`);
+  setCurrentStatus(Statuses.Available);
+}
+
 async function startCall() {
   clearError();
   if (!socketIdInput.value) return;
@@ -325,17 +336,6 @@ async function startCall() {
     console.error(err);
     displayError('Something went wrong starting the call');
   }
-}
-
-function handleUnsuccessfulCall({ toId }) {
-  if (currentStatus !== Statuses.Calling) return;
-  localVideo.srcObject = null;
-  remoteSocketId = null;
-  showInitialControls();
-  stopStream(localStream);
-  setTimeout(clearError, 1e4);
-  displayError(`Socket ${toId} is not available.`);
-  setCurrentStatus(Statuses.Available);
 }
 
 function handleCallAccepted({ iceServerConfig: config }) {

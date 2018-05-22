@@ -31,7 +31,7 @@ class Contact extends React.PureComponent {
    * @returns {undefined}
    */
   callContact() {
-    this.props.emitSocketPing(this.props.user.socketId);
+    this.props.startCall(this.props.id, this.props.user.socketId);
   }
   /**
    * @returns {Promise<undefined>} opens existing message thread between users or creates one
@@ -89,7 +89,7 @@ Contact.propTypes = {
   addError: PropTypes.func,
   clearError: PropTypes.func,
   createMessageThread: PropTypes.func,
-  emitSocketPing: PropTypes.func,
+  startCall: PropTypes.func,
 };
 
 export default compose(

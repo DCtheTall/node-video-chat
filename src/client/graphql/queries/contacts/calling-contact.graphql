@@ -1,0 +1,10 @@
+query callingContact($contactId: Int) {
+  data: Contact(contactId: $contactId) {
+    id
+    user {
+      id
+      username
+      pictureUrl
+    }
+  }
+}

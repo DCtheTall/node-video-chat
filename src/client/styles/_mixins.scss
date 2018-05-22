@@ -18,3 +18,11 @@
 @mixin video-chat-background-gradient {
   background: linear-gradient(0deg, $input-grey, $dark-grey);
 }
+
+@mixin user-info-img {
+  border-radius: 50%;
+  border: 1px solid $webchat-magenta;
+  height: 40px;
+  margin-right: 10px;
+  width: 40px;
+}

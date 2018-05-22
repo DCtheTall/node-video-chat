@@ -1,4 +1,4 @@
-import User from '../types/User';
+import { User } from '../types';
 
 export default {
   type: User,

@@ -1,1 +1,2 @@
-const SOCKET_CONNECTED = 'SOCKET_CONNECTED';
+export const CALL_REQUEST = 'call:request';
+export const CALL_CANCELED = 'call:canceled';

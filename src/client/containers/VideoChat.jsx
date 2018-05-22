@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CallStatuses } from '../actions/call';
 import { addError } from '../actions/error';
-import Available from './VideoChat/Available';
+import Available from '../components/VideoChat/Available';
+import Calling from '../components/VideoChat/Calling';
 import Controller from '../components/VideoChat/Controller';
 import '../styles/video-chat-container.scss';
 
@@ -37,7 +38,8 @@ class VideoChat extends React.PureComponent {
    */
   componentWillReceiveProps(props) {
     if (
-      props.status === CallStatuses.Available
+      (props.status === CallStatuses.Available
+        || props.status === CallStatuses.Calling)
       && this.props.status === CallStatuses.Testing
     ) {
       this.endVideo();
@@ -100,6 +102,9 @@ class VideoChat extends React.PureComponent {
   render() {
     if (this.props.status === CallStatuses.Available) {
       return <Available />;
+    }
+    if (this.props.status === CallStatuses.Calling) {
+      return <Calling />;
     }
     return (
       <div className="video-chat-container">

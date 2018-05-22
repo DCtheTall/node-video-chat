@@ -1,0 +1,21 @@
+@import './base';
+
+.video-chat-calling {
+  @include video-chat-background-gradient;
+
+  .calling-contact {
+    img {
+      @include user-info-img;
+      height: 70px;
+      margin: 0 0 20px;
+      width: 70px;
+    }
+
+    .calling {
+      color: $white;
+      font-size: 14;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  }
+}
