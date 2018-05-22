@@ -103,7 +103,7 @@ class VideoChat extends React.PureComponent {
     if (this.props.status === CallStatuses.Available) {
       return <Available />;
     }
-    if (this.props.status === CallStatuses.Calling) {
+    if ([CallStatuses.Calling, CallStatuses.CallFailed].includes(this.props.status)) {
       return <Calling />;
     }
     return (

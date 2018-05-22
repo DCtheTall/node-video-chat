@@ -4,6 +4,12 @@ import { graphql } from 'react-apollo';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CALLING_CONTACT_QUERY from '../../graphql/queries/contacts/calling-contact.graphql';
+import {
+  cancelCall,
+  CallStatuses,
+  setCallStatusToAvailable,
+  setCallingContactId,
+} from '../../actions/call';
 import Loader from '../Layout/Loader';
 import '../../styles/video-chat-calling.scss';
 
@@ -12,6 +18,33 @@ import '../../styles/video-chat-calling.scss';
  * @extends {React.PureComponent}
  */
 class Calling extends React.PureComponent {
+  /**
+   * @constructor
+   * @constructs Calling
+   * @param {Object} props for component
+   */
+  constructor(props) {
+    super(props);
+    this.cancelCall = this.cancelCall.bind(this);
+  }
+  /**
+   * @param {Object} props component will receive
+   * @returns {undefined}
+   */
+  componentWillReceiveProps(props) {
+    if (props.status === CallStatuses.CallFailed) {
+      setTimeout(() => {
+        this.props.setCallStatusToAvailable();
+        this.props.setCallingContactId(null);
+      }, 1e4);
+    }
+  }
+  /**
+   * @returns {undefined}
+   */
+  cancelCall() {
+    this.props.cancelCall();
+  }
   /**
    * render
    * @returns {JSX.Element} HTML
@@ -28,11 +61,19 @@ class Calling extends React.PureComponent {
               src={this.props.callingContact.data.user.pictureUrl}
             />
             <div className="calling">
-              Calling {this.props.callingContact.data.user.username}...
+              {this.props.status === CallStatuses.Calling ?
+                `Calling ${this.props.callingContact.data.user.username}...`
+                : `Unable to reach ${this.props.callingContact.data.user.username}.`
+              }
             </div>
-            <button className="webchat-button">
-              CANCEL
-            </button>
+            {this.props.status === CallStatuses.Calling && (
+              <button
+                className="webchat-button"
+                onClick={this.cancelCall}
+              >
+                CANCEL
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -41,6 +82,10 @@ class Calling extends React.PureComponent {
 }
 
 Calling.propTypes = {
+  status: PropTypes.shape(),
+  cancelCall: PropTypes.func,
+  setCallingContactId: PropTypes.func,
+  setCallStatusToAvailable: PropTypes.func,
   callingContact: PropTypes.shape({
     loading: PropTypes.bool,
     data: PropTypes.shape({
@@ -54,7 +99,15 @@ Calling.propTypes = {
 
 export default compose(
   connect(
-    state => ({ callingContactId: state.call.callingContactId }),
+    state => ({
+      callingContactId: state.call.callingContactId,
+      status: state.call.status,
+    }),
+    {
+      cancelCall,
+      setCallStatusToAvailable,
+      setCallingContactId,
+    },
   ),
   graphql(
     CALLING_CONTACT_QUERY,
