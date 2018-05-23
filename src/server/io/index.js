@@ -24,7 +24,7 @@ export default function initIO(server) {
   instance.on(CONNECTION, (socket) => {
     console.log(`socket connected to user ${socket.decoded_token.id}`);
     pubsub.publish(USER_STATUS_CHANGE, { userId: socket.decoded_token.id });
-    attachEventHandlers(socket);
+    attachEventHandlers(instance, socket);
   });
 
   return instance;
