@@ -6,6 +6,7 @@ import { USER_STATUS_CHANGE } from '../../schema/subscription/pubsub/constants';
  * @returns {undefined}
  */
 export default function handleDisconnect(socket) {
+  if (!socket.decoded_token) return;
   console.log(`socket disconnected from user ${socket.decoded_token.id}`);
   pubsub.publish(USER_STATUS_CHANGE, { userId: socket.decoded_token.id });
 }
