@@ -5,6 +5,7 @@ import {
   setCallStatusToTesting,
   setCallStatusToCalling,
   setCallStatusToCallFailed,
+  setCallStatusToReceivingCall,
   setCallingContactId,
   setCallingSocketId,
 } from '../actions/call';
@@ -16,7 +17,8 @@ export default handleActions(
       setCallStatusToAvailable,
       setCallStatusToTesting,
       setCallStatusToCalling,
-      setCallStatusToCallFailed)]: (state, { payload }) => ({ ...state, status: payload }),
+      setCallStatusToCallFailed,
+      setCallStatusToReceivingCall)]: (state, { payload }) => ({ ...state, status: payload }),
     [setCallingContactId]: (state, { payload }) => ({ ...state, callingContactId: payload }),
     [setCallingSocketId]: (state, { payload }) => ({ ...state, callingSocketId: payload }),
   },

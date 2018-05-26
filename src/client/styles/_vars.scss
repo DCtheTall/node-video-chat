@@ -17,6 +17,10 @@ $small-device: (max-device-width: 767px);
 $top-bar-height: 40px;
 $webchat-orange: #f1ba4a;
 $webchat-magenta: #e984bc;
+$webchat-green: #68cf5a;
+$webchat-blue-green: #51d8af;
 $white: #fff;
 
 $app-content-height: unquote('calc(100% - #{$top-bar-height})');
+$hangup-gradient: linear-gradient(15deg, darken($webchat-magenta, 5%), darken($error-red, 15%));
+$accept-gradient: linear-gradient(15deg, $webchat-green, $webchat-blue-green);

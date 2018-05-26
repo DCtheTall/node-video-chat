@@ -56,8 +56,9 @@
   text-align: center;
 }
 
-.webchat-button {
-  @include webchat-gradient('background', 15deg);
+.webchat-button,
+.hangup-button,
+.accept-button {
   border-radius: 21px;
   color: $white;
   text-transform: uppercase;
@@ -78,6 +79,18 @@
   &:active {
     box-shadow: inset 0px 2px 3px fade-out($grey, .9);
   }
+}
+
+.webchat-button {
+  @include webchat-gradient('background', 15deg);
+}
+
+.hangup-button {
+  background: $hangup-gradient;
+}
+
+.accept-button {
+  background: $accept-gradient;
 }
 
 .webchat-text {

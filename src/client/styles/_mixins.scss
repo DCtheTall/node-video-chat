@@ -16,7 +16,7 @@
 }
 
 @mixin video-chat-background-gradient {
-  background: linear-gradient(0deg, $input-grey, $dark-grey);
+  background: linear-gradient(0deg, $darker-grey, $dark-grey);
 }
 
 @mixin user-info-img {

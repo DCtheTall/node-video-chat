@@ -3,17 +3,7 @@ import {
   GraphQLInt,
   GraphQLString,
 } from 'graphql';
-
-/**
- * @param {Object} user instance
- * @param {Object} io socket.io instance
- * @returns {Object} socket for particular user
- */
-function getUserSocket(user, io) {
-  const { connected } = io.sockets.clients();
-  const connectedSockets = Object.keys(connected).map(key => connected[key]);
-  return connectedSockets.find(so => so.decoded_token.id === user.id);
-}
+import { getSocketByUserId } from '../../io/helpers';
 
 export default new GraphQLObjectType({
   name: 'User',
@@ -42,7 +32,7 @@ export default new GraphQLObjectType({
       type: GraphQLString,
       description: 'the contacts current status: available or offline',
       resolve(user, args, req) {
-        const socket = getUserSocket(user, req.app.io);
+        const socket = getSocketByUserId(user.id, req.app.io);
         if (socket) return 'available';
         return 'offline';
       },
@@ -51,7 +41,7 @@ export default new GraphQLObjectType({
       type: GraphQLString,
       description: 'the id of the socket the user is currently connected to',
       resolve(user, args, req) {
-        const socket = getUserSocket(user, req.app.io);
+        const socket = getSocketByUserId(user.id, req.app.io);
         if (socket) return socket.id;
         return null;
       },

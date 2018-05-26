@@ -60,7 +60,7 @@ class Calling extends React.PureComponent {
               alt={this.props.callingContact.data.user.username}
               src={this.props.callingContact.data.user.pictureUrl}
             />
-            <div className="calling">
+            <div className="call-message">
               {this.props.status === CallStatuses.Calling ?
                 `Calling ${this.props.callingContact.data.user.username}...`
                 : `Unable to reach ${this.props.callingContact.data.user.username}.`
@@ -68,7 +68,7 @@ class Calling extends React.PureComponent {
             </div>
             {this.props.status === CallStatuses.Calling && (
               <button
-                className="webchat-button"
+                className="hangup-button"
                 onClick={this.cancelCall}
               >
                 CANCEL

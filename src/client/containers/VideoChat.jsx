@@ -5,6 +5,7 @@ import { CallStatuses } from '../actions/call';
 import { addError } from '../actions/error';
 import Available from '../components/VideoChat/Available';
 import Calling from '../components/VideoChat/Calling';
+import ReceivingCall from '../components/VideoChat/ReceivingCall';
 import Controller from '../components/VideoChat/Controller';
 import '../styles/video-chat-container.scss';
 
@@ -105,6 +106,9 @@ class VideoChat extends React.PureComponent {
     }
     if ([CallStatuses.Calling, CallStatuses.CallFailed].includes(this.props.status)) {
       return <Calling />;
+    }
+    if (this.props.status === CallStatuses.ReceivingCall) {
+      return <ReceivingCall />;
     }
     return (
       <div className="video-chat-container">

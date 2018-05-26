@@ -3,12 +3,12 @@
 .video-chat-bottom-banner {
   display: flex;
   justify-content: center;
-  background: $darker-grey;
+  background: $dark-grey;
   height: 120px;
   width: 100%;
 
   .hangup-button-container {
-    border: 1px solid $black;
+    border: 3px solid $black;
     border-radius: 50%;
     height: 70px;
     margin-top: -15px;
@@ -17,7 +17,7 @@
     vertical-align: top;
 
     .hangup-button {
-      background: linear-gradient(180deg, darken($error-red, 15%), darken($webchat-magenta, 5%));
+      background: $hangup-gradient;
       border: 1px solid $white;
       border-radius: 50%;
       position: relative;

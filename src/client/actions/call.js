@@ -3,13 +3,14 @@ import Enum from 'enum';
 
 import { CALL_REQUEST, CALL_CANCELED } from '../constants';
 import { addError, clearError } from './error';
-import socketModule from '../socket';
+import socketModule from '../io';
 
 export const CallStatuses = new Enum([
   'Available',
   'Testing',
   'Calling',
   'CallFailed',
+  'ReceivingCall',
 ]);
 
 export const {
@@ -17,6 +18,7 @@ export const {
   setCallStatusToTesting,
   setCallStatusToCalling,
   setCallStatusToCallFailed,
+  setCallStatusToReceivingCall,
   setCallingContactId,
   setCallingSocketId,
 } = createActions({
@@ -24,6 +26,7 @@ export const {
   SET_CALL_STATUS_TO_TESTING: () => CallStatuses.Testing,
   SET_CALL_STATUS_TO_CALLING: () => CallStatuses.Calling,
   SET_CALL_STATUS_TO_CALL_FAILED: () => CallStatuses.CallFailed,
+  SET_CALL_STATUS_TO_RECEIVING_CALL: () => CallStatuses.ReceivingCall,
   SET_CALLING_CONTACT_ID: payload => payload,
   SET_CALLING_SOCKET_ID: payload => payload,
 });
@@ -67,17 +70,37 @@ export function cancelCall(callFailed = false) {
  * @returns {function} redux thunk
  */
 export function startCall(contactId, socketId) {
-  return async function innerEmitSocketPing(dispatch, getState) {
+  return async function innerStartCall(dispatch, getState) {
     const { status } = getState().call;
     const socket = await getSocket();
-    if (status === CallStatuses.Calling) {
+    if (status !== CallStatuses.Available) {
       dispatch(addError('You must end the current call to call another user!'));
       return;
     }
     dispatch(clearError());
     dispatch(setCallingContactId(contactId));
+    dispatch(setCallingSocketId(socketId));
     dispatch(setCallStatusToCalling());
     socket.emit(CALL_REQUEST, { toId: socketId });
     setTimeout(() => dispatch(cancelCall(true)), 25e3);
+  };
+}
+
+/**
+ * @param {number} contactId of contact making call
+ * @param {string} socketId of socket call is coming from
+ * @returns {function} thunk
+ */
+export function receiveCall(contactId, socketId) {
+  return function innerReceiveCall(dispatch, getState) {
+    const { status } = getState().call;
+    if (status !== CallStatuses.Available) {
+      // TODO emit ignore call event
+      return;
+    }
+    dispatch(clearError());
+    dispatch(setCallingContactId(contactId));
+    dispatch(setCallingSocketId(socketId));
+    dispatch(setCallStatusToReceivingCall());
   };
 }
