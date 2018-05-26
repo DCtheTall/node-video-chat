@@ -10,5 +10,5 @@ import getSocketById from '../helpers/get-socket-by-id';
 export default function handleCallCanceled(io, socket, { toId }) {
   console.log(`Call from ${socket.id} to ${toId} canceled by caller`);
   const toSocket = getSocketById(io, toId);
-  return toSocket && toSocket.emit(CALL_CANCELED, { fromId: socket.id });
+  return toSocket && toSocket.emit(CALL_CANCELED);
 }

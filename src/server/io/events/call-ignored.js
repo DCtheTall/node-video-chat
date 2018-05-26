@@ -10,5 +10,5 @@ import getSocketById from '../helpers/get-socket-by-id';
 export default function handleCallIgnored(io, socket, { fromId }) {
   console.log(`Call from ${fromId} ignored by ${socket.id}`);
   const fromSocket = getSocketById(io, fromId);
-  return fromSocket && fromSocket.emit(CALL_UNAVAILABLE, { toId: socket.id });
+  return fromSocket && fromSocket.emit(CALL_UNAVAILABLE);
 }

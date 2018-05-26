@@ -8,7 +8,8 @@ import {
   cancelCall,
   CallStatuses,
   setCallStatusToAvailable,
-  setCallingContactId,
+  clearCallingContactId,
+  clearCallingSocketId,
 } from '../../actions/call';
 import Loader from '../Layout/Loader';
 import '../../styles/video-chat-calling.scss';
@@ -33,10 +34,25 @@ class Calling extends React.PureComponent {
    */
   componentWillReceiveProps(props) {
     if (props.status === CallStatuses.CallFailed) {
-      setTimeout(() => {
+      this.callFailedTimer = setTimeout(() => {
+        if (props.status !== CallStatuses.CallFailed) return;
+        this.callFailedTimer = null;
         this.props.setCallStatusToAvailable();
-        this.props.setCallingContactId(null);
+        this.props.clearCallingContactId();
+        this.props.clearCallingSocketId();
       }, 1e4);
+    } else if (this.callFailedTimer) {
+      clearTimeout(this.callFailedTimer);
+      this.callFailedTimer = null;
+    }
+  }
+  /**
+   * @returns {undefined}
+   */
+  componentWillUnmount() {
+    if (this.callFailedTimer) {
+      clearTimeout(this.callFailedTimer);
+      this.callFailedTimer = null;
     }
   }
   /**
@@ -84,8 +100,9 @@ class Calling extends React.PureComponent {
 Calling.propTypes = {
   status: PropTypes.shape(),
   cancelCall: PropTypes.func,
-  setCallingContactId: PropTypes.func,
   setCallStatusToAvailable: PropTypes.func,
+  clearCallingContactId: PropTypes.func,
+  clearCallingSocketId: PropTypes.func,
   callingContact: PropTypes.shape({
     loading: PropTypes.bool,
     data: PropTypes.shape({
@@ -106,7 +123,8 @@ export default compose(
     {
       cancelCall,
       setCallStatusToAvailable,
-      setCallingContactId,
+      clearCallingContactId,
+      clearCallingSocketId,
     },
   ),
   graphql(

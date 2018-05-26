@@ -5,7 +5,7 @@ import { graphql } from 'react-apollo';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CALLING_CONTACT_QUERY from '../../graphql/queries/contacts/calling-contact.graphql';
-import {} from '../../actions/call';
+import { ignoreCall, CallStatuses } from '../../actions/call';
 import Loader from '../Layout/Loader';
 import '../../styles/video-chat-receiving-call.scss';
 
@@ -24,8 +24,32 @@ class ReceivingCall extends React.PureComponent {
     this.acceptCall = this.acceptCall.bind(this);
     this.ignoreCall = this.ignoreCall.bind(this);
   }
+  /**
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    this.ignoreTimer = setTimeout(() => {
+      if (this.props.status !== CallStatuses.ReceivingCall) return;
+      this.ignoreTimer = null;
+      this.props.ignoreCall();
+    }, 25e3);
+  }
+  /**
+   * @returns {undefined}
+   */
+  componentWillUnmount() {
+    if (this.ignoreTimer) {
+      clearTimeout(this.ignoreTimer);
+      this.ignoreTimer = null;
+    }
+  }
   acceptCall() {}
-  ignoreCall() {}
+  /**
+   * @returns {undefined}
+   */
+  ignoreCall() {
+    this.props.ignoreCall();
+  }
   /**
    * render
    * @returns {JSX.Element} HTML
@@ -74,6 +98,8 @@ class ReceivingCall extends React.PureComponent {
 }
 
 ReceivingCall.propTypes = {
+  status: PropTypes.shape(),
+  ignoreCall: PropTypes.func,
   callingContact: PropTypes.shape({
     loading: PropTypes.bool,
     data: PropTypes.shape({
@@ -87,7 +113,11 @@ ReceivingCall.propTypes = {
 
 export default compose(
   connect(
-    state => ({ callingContactId: state.call.callingContactId }),
+    state => ({
+      callingContactId: state.call.callingContactId,
+      status: state.call.status,
+    }),
+    { ignoreCall },
   ),
   graphql(
     CALLING_CONTACT_QUERY,
