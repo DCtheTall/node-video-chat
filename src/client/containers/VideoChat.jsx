@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { CallStatuses } from '../actions/call';
+import {
+  CallStatuses,
+  acceptCall,
+  ignoreCall,
+} from '../actions/call';
 import { addError } from '../actions/error';
 import Available from '../components/VideoChat/Available';
 import Calling from '../components/VideoChat/Calling';
@@ -29,6 +33,7 @@ class VideoChat extends React.PureComponent {
    */
   constructor(props) {
     super(props);
+    this.startLocalVideo = this.startLocalVideo.bind(this);
     this.localStream = null;
     this.remoteStream = null;
     this.peerConnection = null;
@@ -50,12 +55,25 @@ class VideoChat extends React.PureComponent {
    * @param {Object} props before update
    * @returns {undefined}
    */
-  componentDidUpdate(props) {
+  async componentDidUpdate(props) {
     if (
       props.status === CallStatuses.Available
       && this.props.status === CallStatuses.Testing
     ) {
       this.startVideoTest();
+    }
+
+    if (
+      props.status === CallStatuses.ReceivingCall
+      && this.props.status === CallStatuses.AcceptingCall
+    ) {
+      try {
+        await this.startLocalVideo();
+      } catch (err) {
+        console.error(err);
+        this.props.ignoreCall();
+      }
+      this.props.acceptCall();
     }
   }
   /**
@@ -137,6 +155,8 @@ class VideoChat extends React.PureComponent {
 VideoChat.propTypes = {
   status: PropTypes.shape(),
   addError: PropTypes.func,
+  acceptCall: PropTypes.func,
+  ignoreCall: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -144,6 +164,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = {
   addError,
+  acceptCall,
+  ignoreCall,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideoChat);

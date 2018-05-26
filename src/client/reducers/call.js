@@ -10,6 +10,9 @@ import {
   clearCallingContactId,
   setCallingSocketId,
   clearCallingSocketId,
+  setIceServerConfig,
+  clearIceServerConfig,
+  setCallStatusToAcceptingCall,
 } from '../actions/call';
 
 
@@ -20,17 +23,25 @@ export default handleActions(
       setCallStatusToTesting,
       setCallStatusToCalling,
       setCallStatusToCallFailed,
-      setCallStatusToReceivingCall)]: (state, { payload }) => ({ ...state, status: payload }),
+      setCallStatusToReceivingCall,
+      setCallStatusToAcceptingCall)]: (state, { payload }) => ({ ...state, status: payload }),
+
     [combineActions(
       setCallingContactId,
       clearCallingContactId)]: (state, { payload }) => ({ ...state, callingContactId: payload }),
+
     [combineActions(
       setCallingSocketId,
       clearCallingSocketId)]: (state, { payload }) => ({ ...state, callingSocketId: payload }),
+
+    [combineActions(
+      setIceServerConfig,
+      clearIceServerConfig)]: (state, { payload }) => ({ ...state, iceServerConfig: payload }),
   },
   {
     status: CallStatuses.Available,
     callingContactId: null,
     callingSocketId: null,
+    iceServerConfig: null,
   },
 );

@@ -15,9 +15,11 @@ export const CallStatuses = new Enum([
   'Calling',
   'CallFailed',
   'ReceivingCall',
+  'AcceptingCall',
 ]);
 
 const isAvailable = status => [CallStatuses.Available, CallStatuses.CallFailed].includes(status);
+const canIgnoreCall = status => [CallStatuses.ReceivingCall, CallStatuses.AcceptingCall].incudes(status);
 
 export const {
   setCallStatusToAvailable,
@@ -25,20 +27,32 @@ export const {
   setCallStatusToCalling,
   setCallStatusToCallFailed,
   setCallStatusToReceivingCall,
+  setCallStatusToAcceptingCall,
+
   setCallingContactId,
   clearCallingContactId,
+
   setCallingSocketId,
   clearCallingSocketId,
+
+  setIceServerConfig,
+  clearIceServerConfig,
 } = createActions({
   SET_CALL_STATUS_TO_AVAILABLE: () => CallStatuses.Available,
   SET_CALL_STATUS_TO_TESTING: () => CallStatuses.Testing,
   SET_CALL_STATUS_TO_CALLING: () => CallStatuses.Calling,
   SET_CALL_STATUS_TO_CALL_FAILED: () => CallStatuses.CallFailed,
   SET_CALL_STATUS_TO_RECEIVING_CALL: () => CallStatuses.ReceivingCall,
+  SET_CALL_STATUS_TO_ACCEPTING_CALL: () => CallStatuses.AcceptingCall,
+
   SET_CALLING_CONTACT_ID: payload => payload,
   CLEAR_CALLING_CONTACT_ID: () => null,
+
   SET_CALLING_SOCKET_ID: payload => payload,
   CLEAR_CALLING_SOCKET_ID: () => null,
+
+  SET_ICE_SERVER_CONFIG: payload => payload,
+  CLEAR_ICE_SERVER_CONFIG: () => null,
 });
 
 const getSocket = async () => (await socketModule).default();
@@ -133,13 +147,17 @@ export function handleCallCanceled() {
 export function ignoreCall(fromId) {
   return async function innerIgnoreCall(dispatch, getState) {
     const { status, callingSocketId } = getState().call;
-    if (status !== CallStatuses.ReceivingCall) return;
+    if (!canIgnoreCall(status)) return;
     const socket = await getSocket();
     socket.emit(CALL_IGNORED, { fromId: fromId || callingSocketId });
     dispatch(setCallStatusToAvailable());
     dispatch(clearCallingContactId());
     dispatch(clearCallingSocketId());
   };
+}
+
+export function acceptCall() {
+  return function innerAcceptCall() { /* TODO */ }
 }
 
 /**

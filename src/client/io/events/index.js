@@ -4,6 +4,7 @@ import {
   CALL_REQUEST,
   CALL_CANCELED,
   CALL_UNAVAILABLE,
+  ICE_SERVER_CONFIG,
 } from '../../constants';
 import store from '../../store';
 import {
@@ -11,6 +12,7 @@ import {
   receiveCall,
   handleCallCanceled,
   handleCallUnavailable,
+  setIceServerConfig,
 } from '../../actions/call';
 
 const handlers = {
@@ -32,6 +34,10 @@ const handlers = {
     const { callingContactId } = store.getState().call;
     console.log(`Contact ${callingContactId} is not available`);
     store.dispatch(handleCallUnavailable());
+  },
+  [ICE_SERVER_CONFIG]: ({ iceServerConfig }) => {
+    console.log('Received ICE server config');
+    store.dispatch(setIceServerConfig(iceServerConfig));
   },
 };
 

@@ -5,7 +5,11 @@ import { graphql } from 'react-apollo';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CALLING_CONTACT_QUERY from '../../graphql/queries/contacts/calling-contact.graphql';
-import { ignoreCall, CallStatuses } from '../../actions/call';
+import {
+  CallStatuses,
+  ignoreCall,
+  setCallStatusToAcceptingCall,
+} from '../../actions/call';
 import Loader from '../Layout/Loader';
 import '../../styles/video-chat-receiving-call.scss';
 
@@ -43,7 +47,12 @@ class ReceivingCall extends React.PureComponent {
       this.ignoreTimer = null;
     }
   }
-  acceptCall() {}
+  /**
+   * @returns {undefined}
+   */
+  async acceptCall() {
+    this.props.setCallStatusToAcceptingCall();
+  }
   /**
    * @returns {undefined}
    */
@@ -100,6 +109,7 @@ class ReceivingCall extends React.PureComponent {
 ReceivingCall.propTypes = {
   status: PropTypes.shape(),
   ignoreCall: PropTypes.func,
+  setCallStatusToAcceptingCall: PropTypes.func,
   callingContact: PropTypes.shape({
     loading: PropTypes.bool,
     data: PropTypes.shape({
@@ -117,7 +127,10 @@ export default compose(
       callingContactId: state.call.callingContactId,
       status: state.call.status,
     }),
-    { ignoreCall },
+    {
+      ignoreCall,
+      setCallStatusToAcceptingCall,
+    },
   ),
   graphql(
     CALLING_CONTACT_QUERY,

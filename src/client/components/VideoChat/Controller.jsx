@@ -35,8 +35,9 @@ class Controller extends React.PureComponent {
   getHangupMessage() {
     switch (this.props.status) {
       case CallStatuses.Testing:
-      default:
         return 'End video test';
+      default:
+        return 'Hang up';
     }
   }
   /**

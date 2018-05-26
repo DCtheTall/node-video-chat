@@ -87,6 +87,7 @@
     "socketio-jwt": "^4.5.0",
     "style-loader": "^0.20.2",
     "subscriptions-transport-ws": "^0.9.6",
+    "twilio": "^3.17.1",
     "validator": "^9.4.1",
     "webpack": "^3.11.0",
     "webpack-node-externals": "^1.6.0",
