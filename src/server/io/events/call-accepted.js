@@ -23,10 +23,7 @@ export default async function callAccepted(io, socket, { fromId }) {
       return;
     }
     const token = await twilio.tokens.create();
-    fromSocket.emit(CALL_ACCEPTED, {
-      toId: socket.id,
-      iceServerConfig: token.iceServers,
-    });
+    fromSocket.emit(CALL_ACCEPTED, { iceServerConfig: token.iceServers });
     socket.emit(ICE_SERVER_CONFIG, { iceServerConfig: token.iceServers });
   } catch (err) {
     console.log(err);

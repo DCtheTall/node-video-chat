@@ -5,6 +5,7 @@ import {
   CALL_REQUEST,
   CALL_CANCELED,
   CALL_IGNORED,
+  CALL_ACCEPTED,
 } from '../constants';
 import { addError, clearError } from './error';
 import socketModule from '../io';
@@ -69,6 +70,22 @@ export function handleSocketDisconnect() {
 }
 
 /**
+ * Handles when the called user is unavailable
+ * @returns {function} thunk
+ */
+export function handleCallUnavailable() {
+  return function innerHandleCallUnavailable(dispatch, getState) {
+    const { status } = getState().call;
+    if (status !== CallStatuses.Calling) return;
+    dispatch(setCallStatusToCallFailed());
+  };
+}
+
+export function handleCallAccepted() {
+  return function innerHandleCallAccepted() { /* TODO */ };
+}
+
+/**
  * Cancel the call to another user
  * @param {boolean} [callFailed=false] if the call cancel was due to not being able
  *                                     to reach the other user
@@ -85,18 +102,6 @@ export function cancelCall(callFailed = false) {
       dispatch(setCallStatusToAvailable());
     }
     socket.emit(CALL_CANCELED, { toId: callingSocketId });
-  };
-}
-
-/**
- * Handles when the called user is unavailable
- * @returns {function} thunk
- */
-export function handleCallUnavailable() {
-  return function innerHandleCallUnavailable(dispatch, getState) {
-    const { status } = getState().call;
-    if (status !== CallStatuses.Calling) return;
-    dispatch(setCallStatusToCallFailed());
   };
 }
 
@@ -156,8 +161,16 @@ export function ignoreCall(fromId) {
   };
 }
 
+/**
+ * User accepts call from another user
+ * @returns {function} thunk
+ */
 export function acceptCall() {
-  return function innerAcceptCall() { /* TODO */ }
+  return async function innerAcceptCall(dispatch, getState) {
+    const socket = await getSocket();
+    const { callingSocketId } = getState().call;
+    socket.emit(CALL_ACCEPTED, { fromId: callingSocketId });
+  };
 }
 
 /**
