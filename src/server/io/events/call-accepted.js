@@ -14,16 +14,16 @@ const twilio = Twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
  * @param {Object} payload from the call accepted event
  * @returns {undefined}
  */
-export default async function callAccepted(io, socket, { fromId }) {
-  console.log(`Call from ${fromId} to ${socket.id} accepted. Establishing peer connection`);
+export default async function callAccepted(io, socket, { toId }) {
+  console.log(`Call from ${toId} to ${socket.id} accepted. Establishing peer connection`);
   try {
-    const fromSocket = getSocketById(io, fromId);
-    if (!fromSocket) {
+    const toSocket = getSocketById(io, toId);
+    if (!toSocket) {
       socket.emit(CALL_CANCELED);
       return;
     }
     const token = await twilio.tokens.create();
-    fromSocket.emit(CALL_ACCEPTED, { iceServerConfig: token.iceServers });
+    toSocket.emit(CALL_ACCEPTED, { iceServerConfig: token.iceServers });
     socket.emit(ICE_SERVER_CONFIG, { iceServerConfig: token.iceServers });
   } catch (err) {
     console.log(err);

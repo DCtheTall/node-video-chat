@@ -7,8 +7,8 @@ import getSocketById from '../helpers/get-socket-by-id';
  * @param {Object} payload from message
  * @returns {undefined}
  */
-export default function handleCallIgnored(io, socket, { fromId }) {
-  console.log(`Call from ${fromId} ignored by ${socket.id}`);
-  const fromSocket = getSocketById(io, fromId);
-  return fromSocket && fromSocket.emit(CALL_UNAVAILABLE);
+export default function handleCallIgnored(io, socket, { toId }) {
+  console.log(`Call from ${toId} ignored by ${socket.id}`);
+  const toSocket = getSocketById(io, toId);
+  return toSocket && toSocket.emit(CALL_UNAVAILABLE);
 }

@@ -6,6 +6,8 @@ import {
   CALL_CANCELED,
   CALL_IGNORED,
   CALL_ACCEPTED,
+  ICE_CANDIDATE,
+  ICE_DESCRIPTION,
 } from '../constants';
 import { addError, clearError } from './error';
 import socketModule from '../io';
@@ -19,8 +21,11 @@ export const CallStatuses = new Enum([
   'AcceptingCall',
 ]);
 
-const isAvailable = status => [CallStatuses.Available, CallStatuses.CallFailed].includes(status);
-const canIgnoreCall = status => [CallStatuses.ReceivingCall, CallStatuses.AcceptingCall].incudes(status);
+const isAvailable = status =>
+  [CallStatuses.Available, CallStatuses.CallFailed].includes(status);
+
+const canIgnoreCall = status =>
+  [CallStatuses.ReceivingCall, CallStatuses.AcceptingCall].incudes(status);
 
 export const {
   setCallStatusToAvailable,
@@ -38,6 +43,12 @@ export const {
 
   setIceServerConfig,
   clearIceServerConfig,
+
+  setRemoteDescription,
+  clearRemoteDescription,
+
+  setIceCandidate,
+  clearIceCandidate,
 } = createActions({
   SET_CALL_STATUS_TO_AVAILABLE: () => CallStatuses.Available,
   SET_CALL_STATUS_TO_TESTING: () => CallStatuses.Testing,
@@ -54,6 +65,12 @@ export const {
 
   SET_ICE_SERVER_CONFIG: payload => payload,
   CLEAR_ICE_SERVER_CONFIG: () => null,
+
+  SET_REMOTE_DESCRIPTION: payload => payload,
+  CLEAR_REMOTE_DESCRIPTION: () => null,
+
+  SET_ICE_CANDIDATE: payload => payload,
+  CLEAR_ICE_CANDIDATE: () => null,
 });
 
 const getSocket = async () => (await socketModule).default();
@@ -81,8 +98,20 @@ export function handleCallUnavailable() {
   };
 }
 
+/**
+ * Handles when the called user accepts your call, peer connection
+ * is created in the VideoChat container component
+ * @returns {function} thunk
+ */
 export function handleCallAccepted() {
-  return function innerHandleCallAccepted() { /* TODO */ };
+  return function innerHandleCallAccepted(dispatch, getState) {
+    const { status } = getState().call;
+    if (status !== CallStatuses.Calling) {
+      // TODO emit hangup event
+      return;
+    }
+    dispatch(setCallStatusToAcceptingCall());
+  };
 }
 
 /**
@@ -154,7 +183,7 @@ export function ignoreCall(fromId) {
     const { status, callingSocketId } = getState().call;
     if (!canIgnoreCall(status)) return;
     const socket = await getSocket();
-    socket.emit(CALL_IGNORED, { fromId: fromId || callingSocketId });
+    socket.emit(CALL_IGNORED, { toId: fromId || callingSocketId });
     dispatch(setCallStatusToAvailable());
     dispatch(clearCallingContactId());
     dispatch(clearCallingSocketId());
@@ -169,7 +198,7 @@ export function acceptCall() {
   return async function innerAcceptCall(dispatch, getState) {
     const socket = await getSocket();
     const { callingSocketId } = getState().call;
-    socket.emit(CALL_ACCEPTED, { fromId: callingSocketId });
+    socket.emit(CALL_ACCEPTED, { toId: callingSocketId });
   };
 }
 
@@ -191,5 +220,40 @@ export function receiveCall(contactId, socketId) {
     dispatch(setCallingContactId(contactId));
     dispatch(setCallingSocketId(socketId));
     dispatch(setCallStatusToReceivingCall());
+  };
+}
+
+/**
+ * @param {Object} event data containing ICE candidate for peer connection
+ * @returns {function} thunk
+ */
+export function handleIceCandidate(event) {
+  return async function innerHandleIceCandidate(dispatch, getState) {
+    if (!event.candidate) return;
+    const { callingSocketId } = getState().call;
+    const socket = await getSocket();
+    socket.emit(ICE_CANDIDATE, {
+      toId: callingSocketId,
+      data: {
+        label: event.candidate.sdpMLineIndex,
+        id: event.candidate.sdpMid,
+        candidate: event.candidate.candidate,
+      },
+    });
+  };
+}
+
+/**
+ * @param {Object} description for session with peer
+ * @returns {function} thunk
+ */
+export function sendSessionDescription(description) {
+  return async function innerSendSessionDescription(dispatch, getState) {
+    const socket = await getSocket();
+    const { callingSocketId } = getState().call;
+    socket.emit(ICE_DESCRIPTION, {
+      toId: callingSocketId,
+      description,
+    });
   };
 }

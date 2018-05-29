@@ -8,3 +8,5 @@ export const CALL_IGNORED = 'call:ignored';
 export const CALL_ACCEPTED = 'call:accepted';
 
 export const ICE_SERVER_CONFIG = 'ice:config';
+export const ICE_CANDIDATE = 'ice:candidate';
+export const ICE_DESCRIPTION = 'ice:description';

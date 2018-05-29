@@ -1,6 +1,8 @@
 import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 
+const TOKEN_EXPIRATION = 24 * 60 * 60 * 1e3;
+
 /**
  * Express middleware
  * @param {Express.Request} req request
@@ -17,7 +19,7 @@ export default async function deserealizeUser(req, res, next) {
     const { id: tmp } = await jwt.verify(token, process.env.JWT_SECRET);
     id = tmp;
     const user = await models.user.findById(id);
-    req.cookies.set(process.env.COOKIE_KEY, token, { signed: true, maxAge: Date.now() + (24 * 60 * 60 * 1e3) });
+    req.cookies.set(process.env.COOKIE_KEY, token, { signed: true, maxAge: Date.now() + TOKEN_EXPIRATION });
     req.user = user;
     next();
   } catch (err) {
