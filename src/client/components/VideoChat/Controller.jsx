@@ -26,8 +26,9 @@ class Controller extends React.PureComponent {
    */
   onHangupClick() {
     if (this.props.status === CallStatuses.Testing) {
-      this.props.setCallStatusToAvailable();
+      return this.props.setCallStatusToAvailable();
     }
+    return this.props.startHangup();
   }
   /**
    * @returns {string} message when someone hovers the hangup button
@@ -95,6 +96,7 @@ class Controller extends React.PureComponent {
 Controller.propTypes = {
   status: PropTypes.shape(),
   setCallStatusToAvailable: PropTypes.func,
+  startHangup: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

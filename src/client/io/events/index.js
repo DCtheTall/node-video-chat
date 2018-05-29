@@ -5,6 +5,7 @@ import {
   CALL_CANCELED,
   CALL_UNAVAILABLE,
   CALL_ACCEPTED,
+  CALL_HANG_UP,
   ICE_SERVER_CONFIG,
   ICE_DESCRIPTION,
   ICE_CANDIDATE,
@@ -19,6 +20,7 @@ import {
   setIceServerConfig,
   setRemoteDescription,
   setIceCandidate,
+  handleHangUp,
 } from '../../actions/call';
 
 const handlers = {
@@ -50,6 +52,12 @@ const handlers = {
     console.log(`Call request to ${callingContactId} accepted`);
     store.dispatch(setIceServerConfig(iceServerConfig));
     store.dispatch(handleCallAccepted());
+  },
+
+  [CALL_HANG_UP]: () => {
+    const { callingContactId } = store.getState().call;
+    console.log(`Call ended by ${callingContactId}`);
+    store.dispatch(handleHangUp());
   },
 
   [ICE_SERVER_CONFIG]: ({ iceServerConfig }) => {

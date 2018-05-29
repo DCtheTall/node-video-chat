@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
+
 import { preferOpus } from '../helpers/sdp-helpers';
 import {
   CallStatuses,
@@ -8,12 +10,16 @@ import {
   ignoreCall,
   handleIceCandidate,
   sendSessionDescription,
+  setCallStatusToInCall,
+  setCallStatusToAvailable,
+  emitHangup,
 } from '../actions/call';
 import { addError } from '../actions/error';
 import Available from '../components/VideoChat/Available';
 import Calling from '../components/VideoChat/Calling';
 import ReceivingCall from '../components/VideoChat/ReceivingCall';
 import Controller from '../components/VideoChat/Controller';
+import CallOverlay from '../components/VideoChat/CallOverlay';
 import '../styles/video-chat-container.scss';
 
 const SDP_CONSTRAINTS = {
@@ -45,6 +51,7 @@ class VideoChat extends React.PureComponent {
     super(props);
     this.state = { isInitiator: false };
     this.startLocalVideo = this.startLocalVideo.bind(this);
+    this.startHangup = this.startHangup.bind(this);
     this.localStream = null;
     this.remoteStream = null;
     this.peerConnection = null;
@@ -87,9 +94,8 @@ class VideoChat extends React.PureComponent {
         await this.startLocalVideo();
       } catch (err) {
         console.error(err);
-        // TODO emit hangup if caller fails to start video
         (this.props.status === CallStatuses.Calling ?
-          () => { /* TODO this is hangup */ } : this.props.ignoreCall)();
+          this.startHangup.bind(this) : this.props.ignoreCall)();
       }
       if (props.status === CallStatuses.ReceivingCall) this.props.acceptCall();
       this.state.isInitiator = props.status === CallStatuses.Calling;
@@ -106,6 +112,35 @@ class VideoChat extends React.PureComponent {
     if (props.iceCandidate !== this.props.iceCandidate) {
       this.addIceCandidate();
     }
+
+    // Handle receiving hangup
+    if (
+      props.status === CallStatuses.InCall
+      && this.props.status === CallStatuses.HangingUp
+    ) {
+      this.onHangup();
+    }
+  }
+  /**
+   * @returns {undefined}
+   */
+  componentWillUnmount() {
+    if (this.hangupTimer) {
+      clearTimeout(this.hangupTimer);
+      this.hangupTimer = null;
+    }
+  }
+  /**
+   * @returns {undefined}
+   */
+  onHangup() {
+    this.hangupTimer = setTimeout(() => {
+      this.state.isInitiator = false;
+      this.endVideo();
+      this.props.setCallStatusToAvailable();
+      clearTimeout(this.hangupTimer);
+      this.hangupTimer = null;
+    }, 5e3);
   }
   /**
    * @returns {undefined}
@@ -137,11 +172,12 @@ class VideoChat extends React.PureComponent {
    */
   addIceCandidate() {
     if (!this.peerConnection) {
-      // TODO emit hangup
+      this.startHangup();
       return;
     }
     const candidate = new RTCIceCandidate(this.props.iceCandidate);
     this.peerConnection.addIceCandidate(candidate);
+    this.props.setCallStatusToInCall();
   }
   /**
    * @returns {undefined}
@@ -161,9 +197,19 @@ class VideoChat extends React.PureComponent {
   /**
    * @returns {undefined}
    */
+  async startHangup() {
+    this.state.isInitiator = false;
+    await this.props.emitHangup();
+    this.endVideo();
+    this.props.setCallStatusToAvailable();
+  }
+  /**
+   * @returns {undefined}
+   */
   sendAnswer() {
     if (!this.peerConnection) {
-      // TODO emit hangup
+      this.startHangup();
+      return;
     }
     this.peerConnection.createAnswer(
       this.setLocalDescriptionAndSendToPeer.bind(this),
@@ -204,7 +250,7 @@ class VideoChat extends React.PureComponent {
     } catch (err) {
       console.error(err);
       this.props.addError('Failed to create a connection.');
-      // TODO emit hangup
+      this.startHangup();
     }
   }
   /**
@@ -239,9 +285,21 @@ class VideoChat extends React.PureComponent {
     return (
       <div className="video-chat-container">
         <div className="remote-video-container">
+          {[
+            CallStatuses.AcceptingCall,
+            CallStatuses.HangingUp,
+          ].includes(this.props.status) && (
+            <CallOverlay />
+          )}
           <video
             ref={node => this.remoteVideo = node}
-            className="remote-video"
+            className={classNames(
+              'remote-video',
+              [
+                CallStatuses.AcceptingCall,
+                CallStatuses.HangingUp,
+              ].includes(this.props.status) && 'partially-transparent',
+            )}
             autoPlay
           >
             <track kind="captions" />
@@ -254,7 +312,7 @@ class VideoChat extends React.PureComponent {
             <track kind="captions" />
           </video>
         </div>
-        <Controller />
+        <Controller startHangup={this.startHangup} />
       </div>
     );
   }
@@ -273,6 +331,9 @@ VideoChat.propTypes = {
   ]),
   remoteDescription: PropTypes.shape(),
   iceCandidate: PropTypes.shape(),
+  setCallStatusToInCall: PropTypes.func,
+  setCallStatusToAvailable: PropTypes.func,
+  emitHangup: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -287,6 +348,9 @@ const mapDispatchToProps = {
   ignoreCall,
   handleIceCandidate,
   sendSessionDescription,
+  setCallStatusToInCall,
+  setCallStatusToAvailable,
+  emitHangup,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideoChat);

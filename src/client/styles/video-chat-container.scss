@@ -28,6 +28,10 @@
       min-height: 300px;
       min-width: 550px;
       width: 80%;
+
+      &.partially-transparent {
+        opacity: 0.25;
+      }
     }
 
     .local-video {

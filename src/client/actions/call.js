@@ -8,6 +8,7 @@ import {
   CALL_ACCEPTED,
   ICE_CANDIDATE,
   ICE_DESCRIPTION,
+  CALL_HANG_UP,
 } from '../constants';
 import { addError, clearError } from './error';
 import socketModule from '../io';
@@ -19,6 +20,8 @@ export const CallStatuses = new Enum([
   'CallFailed',
   'ReceivingCall',
   'AcceptingCall',
+  'InCall',
+  'HangingUp',
 ]);
 
 const isAvailable = status =>
@@ -34,6 +37,8 @@ export const {
   setCallStatusToCallFailed,
   setCallStatusToReceivingCall,
   setCallStatusToAcceptingCall,
+  setCallStatusToInCall,
+  setCallStatusToHangingUp,
 
   setCallingContactId,
   clearCallingContactId,
@@ -56,6 +61,8 @@ export const {
   SET_CALL_STATUS_TO_CALL_FAILED: () => CallStatuses.CallFailed,
   SET_CALL_STATUS_TO_RECEIVING_CALL: () => CallStatuses.ReceivingCall,
   SET_CALL_STATUS_TO_ACCEPTING_CALL: () => CallStatuses.AcceptingCall,
+  SET_CALL_STATUS_TO_IN_CALL: () => CallStatuses.InCall,
+  SET_CALL_STATUS_TO_HANGING_UP: () => CallStatuses.HangingUp,
 
   SET_CALLING_CONTACT_ID: payload => payload,
   CLEAR_CALLING_CONTACT_ID: () => null,
@@ -255,5 +262,42 @@ export function sendSessionDescription(description) {
       toId: callingSocketId,
       description,
     });
+  };
+}
+
+/**
+ * Clear current session data
+ * @param {function} dispatch action
+ * @returns {undefined}
+ */
+function clearSessionData(dispatch) {
+  dispatch(clearCallingContactId());
+  dispatch(clearCallingSocketId());
+  dispatch(clearIceServerConfig());
+  dispatch(clearRemoteDescription());
+  dispatch(clearIceCandidate());
+}
+
+/**
+ * Emit hangup event to other person in the call
+ * @returns {function} thunk
+ */
+export function emitHangup() {
+  return async function innerEmitHangup(dispatch, getState) {
+    const socket = await getSocket();
+    const { callingSocketId } = getState().call;
+    socket.emit(CALL_HANG_UP, { toId: callingSocketId });
+    clearSessionData(dispatch);
+  };
+}
+
+/**
+ * Handle hangup from other person in call
+ * @returns {function} thunk
+ */
+export function handleHangUp() {
+  return function innerHandleHangup(dispatch) {
+    dispatch(setCallStatusToHangingUp());
+    clearSessionData(dispatch);
   };
 }

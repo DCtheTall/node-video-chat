@@ -1,0 +1,15 @@
+@import './base';
+
+.video-chat-call-overlay {
+  background: fade-out($black, 0.5);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  .call-message {
+    color: $white;
+    font-size: 16px;
+  }
+}

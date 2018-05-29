@@ -1,14 +1,14 @@
 $available-green: #94da7f;
-$background-grey: #f9f9f9;
-$black: #000;
-$darker-grey: #333;
-$dark-grey: #444;
+$background-grey: #eee;
+$black: #111;
+$darker-grey: #222;
+$dark-grey: #333;
 $desktop: (min-width: 768px);
 $error-red: #f76a82;
 $error-text: lighten($error-red, 30%);
 $grey: #999;
 $input-grey: #666;
-$light-grey: #ddd;
+$light-grey: #d0d0d0;
 $mobile: (max-width: 767px);
 $montserrat: 'Montserrat';
 $notif-red: #af3533;
@@ -19,7 +19,7 @@ $webchat-orange: #f1ba4a;
 $webchat-magenta: #e984bc;
 $webchat-green: #68cf5a;
 $webchat-blue-green: #51d8af;
-$white: #fff;
+$white: #f8f8f8;
 
 $app-content-height: unquote('calc(100% - #{$top-bar-height})');
 $hangup-gradient: linear-gradient(15deg, darken($webchat-magenta, 5%), darken($error-red, 15%));

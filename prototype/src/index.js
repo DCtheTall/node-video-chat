@@ -194,7 +194,7 @@ function createPeerConnection() {
   }
 }
 
-function handleCreateOfferError(event) {
+function handleCreateOfferError(e) {
   console.log('createOffer() error: ', e);
 }
 
