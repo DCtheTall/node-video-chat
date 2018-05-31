@@ -43,6 +43,11 @@ class PageLayout extends React.PureComponent {
     this.state = { isMobileDevice: false };
     this.isAuthRoute = this.isAuthRoute.bind(this);
     this.isMobileDevice = this.isMobileDevice.bind(this);
+    try {
+      this.messageSound = document.getElementById('message-sound');
+    } catch (err) {
+      this.messageSound = null;
+    }
   }
   /**
    * @returns {undefined}
@@ -64,10 +69,6 @@ class PageLayout extends React.PureComponent {
     if (isLoggedIn(props.currentSession.user) && !isLoggedIn(this.props.currentSession.user)) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
-    this.subscribeToNewContactRequests();
-    this.subscribeToAcceptedContactRequests();
-    this.subscribeToStatusChanges();
-    this.subscribeToNewMessages();
   }
   /**
    * @returns {boolean} true if on the login/signup page
@@ -172,6 +173,9 @@ class PageLayout extends React.PureComponent {
         if (!prev.data.find(thread => thread.id === data.messageCreated.threadId)) {
           this.props.messageThreads.refetch();
           return prev;
+        }
+        if (data.messageCreated.senderId !== Number(this.props.currentSession.user.id)) {
+          this.messageSound.play();
         }
         return {
           ...prev,
