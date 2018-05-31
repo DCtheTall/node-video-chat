@@ -1,0 +1,60 @@
+@import './base';
+
+.video-chat-controller-track-toggle {
+  border: 3px solid $black;
+  border-radius: 50%;
+  background: $dark-grey;
+  height: 40px;
+  margin-right: 25px;
+  margin-top: -5px;
+  position: relative;
+  width: 40px;
+
+  button {
+    border: 1px solid $light-grey;
+    border-radius: 50%;
+    height: 40px;
+    position: absolute;
+    overflow: hidden;
+    width: 40px;
+
+    i {
+      color: $light-grey;
+      font-size: 18px;
+    }
+
+    &.track-disabled {
+      border-color: $error-red;
+
+      i {
+        color: $error-red;
+      }
+    }
+
+    svg {
+      top: -5px;
+      height: 45px;
+      left: -5px;
+      width: 45px;
+      position: absolute;
+
+      .red-strike {
+        stroke: $error-red;
+      }
+
+      .shadow {
+        stroke: $dark-grey;
+      }
+    }
+  }
+
+  .explainer {
+    bottom: -25px;
+    color: $white;
+    font-size: 12px;
+    left: -25px;
+    text-align: center;
+    position: absolute;
+    width: 100px;
+  }
+}

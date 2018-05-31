@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLList } from 'graphql';
+import { GraphQLList, GraphQLInt } from 'graphql';
 import { withFilter } from 'graphql-subscriptions';
 import { USER_STATUS_CHANGE } from '../pubsub/constants';
 import { User } from '../../types';

@@ -19,6 +19,8 @@ import {
   clearRemoteDescription,
   setIceCandidate,
   clearIceCandidate,
+  toggleAudioTrack,
+  toggleVideoTrack,
 } from '../actions/call';
 
 
@@ -53,6 +55,9 @@ export default handleActions(
     [combineActions(
       setIceCandidate,
       clearIceCandidate)]: (state, { payload }) => ({ ...state, iceCandidate: payload }),
+
+    [toggleVideoTrack]: state => ({ ...state, videoEnabled: !state.videoEnabled }),
+    [toggleAudioTrack]: state => ({ ...state, audioEnabled: !state.audioEnabled }),
   },
   {
     status: CallStatuses.Available,
@@ -61,5 +66,7 @@ export default handleActions(
     iceServerConfig: null,
     remoteDescription: null,
     iceCandidate: null,
+    videoEnabled: true,
+    audioEnabled: true,
   },
 );

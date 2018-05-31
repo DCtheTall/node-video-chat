@@ -20,6 +20,7 @@ import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 import isLoggedIn from '../helpers/is-logged-in';
 import { addError } from '../actions/error';
 import { addNotice } from '../actions/notice';
+import { handleHangUp } from '../actions/call';
 import Topbar from '../components/Layout/Topbar';
 import ErrorBar from '../components/Layout/ErrorBar';
 import NoticeBar from '../components/Layout/NoticeBar';
@@ -63,6 +64,10 @@ class PageLayout extends React.PureComponent {
     if (isLoggedIn(props.currentSession.user) && !isLoggedIn(this.props.currentSession.user)) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
+    this.subscribeToNewContactRequests();
+    this.subscribeToAcceptedContactRequests();
+    this.subscribeToStatusChanges();
+    this.subscribeToNewMessages();
   }
   /**
    * @returns {boolean} true if on the login/signup page
@@ -133,11 +138,19 @@ class PageLayout extends React.PureComponent {
       variables: {
         userIds: this.props.contacts.data ? this.props.contacts.data.map(contact => contact.user.id) : [],
       },
-      updateQuery(prev, { subscriptionData: { data } }) {
+      updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.user) return prev;
-        const newData = cloneDeep(prev.data).map(contact => (
-          data.user.id === contact.user.id ? { ...contact, user: data.user } : contact
-        ));
+        const newData = cloneDeep(prev.data).map((contact) => {
+          console.log(contact.user, data.user);
+          if (data.user.id === contact.user.id) {
+            if (
+              contact.id === this.props.callingContactId
+              && data.user.status === 'offline'
+            ) this.props.handleHangUp();
+            return { ...contact, user: data.user };
+          }
+          return contact;
+        });
         return {
           ...prev,
           data: newData,
@@ -237,13 +250,19 @@ PageLayout.propTypes = {
     refetch: PropTypes.func,
   }),
   addNotice: PropTypes.func,
+  callingContactId: PropTypes.number,
+  handleHangUp: PropTypes.func,
 };
 
 export default compose(
   withRouter,
   connect(
-    state => ({ error: state.error, notice: state.notice }),
-    { addError, addNotice },
+    state => ({
+      error: state.error,
+      notice: state.notice,
+      callingContactId: state.call.callingContactId,
+    }),
+    { addError, addNotice, handleHangUp },
   ),
   graphql(
     QUERY_USER_ID,

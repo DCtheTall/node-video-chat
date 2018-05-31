@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setCallStatusToAvailable, CallStatuses } from '../../actions/call';
+import {
+  CallStatuses,
+  setCallStatusToAvailable,
+  toggleVideoTrack,
+  toggleAudioTrack,
+} from '../../actions/call';
+import TrackToggle from './Controller/TrackToggle';
 import '../../styles/video-chat-controller.scss';
 
 /**
@@ -20,6 +26,8 @@ class Controller extends React.PureComponent {
     this.onHangupClick = this.onHangupClick.bind(this);
     this.showHangupMessage = this.showHangupMessage.bind(this);
     this.hideHangupMessage = this.hideHangupMessage.bind(this);
+    this.toggleAudioTrack = this.toggleAudioTrack.bind(this);
+    this.toggleVideoTrack = this.toggleVideoTrack.bind(this);
   }
   /**
    * @returns {undefined}
@@ -54,12 +62,38 @@ class Controller extends React.PureComponent {
     this.setState({ showHangupMessage: false });
   }
   /**
+   * @returns {undefined}
+   */
+  toggleAudioTrack() {
+    this.props.toggleAudioTrack();
+  }
+  /**
+   * @returns {undefined}
+   */
+  toggleVideoTrack() {
+    this.props.toggleVideoTrack();
+  }
+  /**
    * render
    * @returns {JSX.Element} HTML
    */
   render() {
     return (
       <div className="video-chat-bottom-banner">
+        <div className="display-flex track-toggle-container">
+          <TrackToggle
+            iconName="video-camera"
+            onPress={this.toggleVideoTrack}
+            trackEnabled={this.props.videoEnabled}
+            track="video"
+          />
+          <TrackToggle
+            iconName="microphone"
+            onPress={this.toggleAudioTrack}
+            trackEnabled={this.props.audioEnabled}
+            track="audio"
+          />
+        </div>
         <div className="hangup-button-container">
           <button
             className="hangup-button"
@@ -97,13 +131,21 @@ Controller.propTypes = {
   status: PropTypes.shape(),
   setCallStatusToAvailable: PropTypes.func,
   startHangup: PropTypes.func,
+  toggleVideoTrack: PropTypes.func,
+  toggleAudioTrack: PropTypes.func,
+  videoEnabled: PropTypes.bool,
+  audioEnabled: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   status: state.call.status,
+  videoEnabled: state.call.videoEnabled,
+  audioEnabled: state.call.audioEnabled,
 });
 const mapDispatchToProps = {
   setCallStatusToAvailable,
+  toggleVideoTrack,
+  toggleAudioTrack,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controller);

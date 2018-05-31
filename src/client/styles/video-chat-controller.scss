@@ -5,10 +5,15 @@
   justify-content: center;
   background: $dark-grey;
   height: 120px;
+  position: relative;
   width: 100%;
 
+  .track-toggle-container {
+    left: 15%;
+    position: absolute;
+  }
+
   .hangup-button-container {
-    border: 3px solid $black;
     border-radius: 50%;
     height: 70px;
     margin-top: -15px;
@@ -18,7 +23,7 @@
 
     .hangup-button {
       background: $hangup-gradient;
-      border: 1px solid $white;
+      border: 2px solid $black;
       border-radius: 50%;
       position: relative;
       width: 70px;
@@ -26,9 +31,9 @@
       z-index: 100;
 
       svg {
-        left: -3px;
+        left: -4px;
         position: absolute;
-        top: -3px;
+        top: -2px;
       }
     }
 

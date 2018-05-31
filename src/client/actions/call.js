@@ -54,6 +54,9 @@ export const {
 
   setIceCandidate,
   clearIceCandidate,
+
+  toggleVideoTrack,
+  toggleAudioTrack,
 } = createActions({
   SET_CALL_STATUS_TO_AVAILABLE: () => CallStatuses.Available,
   SET_CALL_STATUS_TO_TESTING: () => CallStatuses.Testing,
@@ -78,6 +81,9 @@ export const {
 
   SET_ICE_CANDIDATE: payload => payload,
   CLEAR_ICE_CANDIDATE: () => null,
+
+  TOGGLE_VIDEO_TRACK: () => null,
+  TOGGLE_AUDIO_TRACK: () => null,
 });
 
 const getSocket = async () => (await socketModule).default();

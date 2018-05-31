@@ -120,6 +120,11 @@ class VideoChat extends React.PureComponent {
     ) {
       this.onHangup();
     }
+
+    // Handle video toggle
+    if (props.videoEnabled !== this.props.videoEnabled) this.toggleVideoTrack();
+    // Handle audio toggle
+    if (props.audioEnabled !== this.props.audioEnabled) this.toggleAudioTrack();
   }
   /**
    * @returns {undefined}
@@ -269,6 +274,22 @@ class VideoChat extends React.PureComponent {
     this.remoteVideo.srcObject = this.localStream;
   }
   /**
+   * @returns {undefined}
+   */
+  toggleAudioTrack() {
+    return this.localStream.getAudioTracks().forEach(
+      track => track.enabled = !track.enabled
+    );
+  }
+  /**
+   * @returns {undefined}
+   */
+  toggleVideoTrack() {
+    return this.localStream.getVideoTracks().forEach(
+      track => track.enabled = !track.enabled
+    );
+  }
+  /**
    * render
    * @returns {JSX.Element} HTML
    */
@@ -334,6 +355,8 @@ VideoChat.propTypes = {
   setCallStatusToInCall: PropTypes.func,
   setCallStatusToAvailable: PropTypes.func,
   emitHangup: PropTypes.func,
+  videoEnabled: PropTypes.bool,
+  audioEnabled: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -341,6 +364,8 @@ const mapStateToProps = state => ({
   iceServerConfig: state.call.iceServerConfig,
   remoteDescription: state.call.remoteDescription,
   iceCandidate: state.call.iceCandidate,
+  videoEnabled: state.call.videoEnabled,
+  audioEnabled: state.call.audioEnabled,
 });
 const mapDispatchToProps = {
   addError,
