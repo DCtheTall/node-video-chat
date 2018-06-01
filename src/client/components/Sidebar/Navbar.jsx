@@ -6,7 +6,7 @@ import NavLink from '../../components/Sidebar/Navbar/NavLink';
 import QUERY_PENDING_CONTACT_REQUESTS from '../../graphql/queries/contact-requests/pending-requests.graphql';
 import QUERY_MESSAGE_THREADS from '../../graphql/queries/message-threads/message-threads.graphql';
 import QUERY_USER_ID from '../../graphql/queries/user/id.graphql';
-import { CONTACTS_ROUTE, MESSAGES_ROUTE, CONTACT_REQUESTS_ROUTE } from '../../constants';
+import { CONTACTS_ROUTE, MESSAGES_ROUTE, CONTACT_REQUESTS_ROUTE, SETTINGS_ROUTE } from '../../constants';
 import '../../styles/navbar.scss';
 
 /**
@@ -43,6 +43,10 @@ class Navbar extends React.PureComponent {
           dataKey: 'pendingRequests',
           notifs: null,
           filter: () => true,
+        },
+        {
+          to: SETTINGS_ROUTE,
+          icon: 'gear',
         },
       ],
     };

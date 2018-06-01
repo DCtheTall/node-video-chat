@@ -1,0 +1,8 @@
+query userSettings {
+  data: User {
+    id
+    username
+    email
+    pictureUrl
+  }
+}

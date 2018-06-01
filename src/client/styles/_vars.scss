@@ -20,6 +20,7 @@ $webchat-magenta: #e984bc;
 $webchat-green: #68cf5a;
 $webchat-blue-green: #51d8af;
 $white: #f8f8f8;
+$smokey-white: #e0e0e0;
 
 $app-content-height: unquote('calc(100% - #{$top-bar-height})');
 $hangup-gradient: linear-gradient(15deg, darken($webchat-magenta, 5%), darken($error-red, 15%));

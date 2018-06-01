@@ -1,0 +1,15 @@
+@import './base';
+
+.settings-headroom {
+  background: $white;
+  border-bottom: solid 1px $light-grey;
+  justify-content: space-between;
+  margin-top: 2px;
+  min-height: 32px;
+
+  .webchat-text {
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+  }
+}

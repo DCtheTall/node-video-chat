@@ -27,8 +27,8 @@ export default {
       const user = await models.user.findOne({
         where: {
           [Op.or]: [
-            { email: { $iLike: email.trim() } },
-            { username: { $iLike: email.trim() } },
+            { email: { $iLike: email } },
+            { username: { $iLike: email } },
           ],
         },
       });

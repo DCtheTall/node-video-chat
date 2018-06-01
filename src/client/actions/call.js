@@ -100,6 +100,43 @@ export function handleSocketDisconnect() {
 }
 
 /**
+ * Clear current session data
+ * @param {function} dispatch action
+ * @returns {undefined}
+ */
+function clearSessionData(dispatch) {
+  dispatch(clearCallingContactId());
+  dispatch(clearCallingSocketId());
+  dispatch(clearIceServerConfig());
+  dispatch(clearRemoteDescription());
+  dispatch(clearIceCandidate());
+}
+
+/**
+ * Emit hangup event to other person in the call
+ * @returns {function} thunk
+ */
+export function emitHangup() {
+  return async function innerEmitHangup(dispatch, getState) {
+    const socket = await getSocket();
+    const { callingSocketId } = getState().call;
+    socket.emit(CALL_HANG_UP, { toId: callingSocketId });
+    clearSessionData(dispatch);
+  };
+}
+
+/**
+ * Handle hangup from other person in call
+ * @returns {function} thunk
+ */
+export function handleHangUp() {
+  return function innerHandleHangup(dispatch) {
+    dispatch(setCallStatusToHangingUp());
+    clearSessionData(dispatch);
+  };
+}
+
+/**
  * Handles when the called user is unavailable
  * @returns {function} thunk
  */
@@ -120,7 +157,7 @@ export function handleCallAccepted() {
   return function innerHandleCallAccepted(dispatch, getState) {
     const { status } = getState().call;
     if (status !== CallStatuses.Calling) {
-      // TODO emit hangup event
+      dispatch(emitHangup());
       return;
     }
     dispatch(setCallStatusToAcceptingCall());
@@ -268,42 +305,5 @@ export function sendSessionDescription(description) {
       toId: callingSocketId,
       description,
     });
-  };
-}
-
-/**
- * Clear current session data
- * @param {function} dispatch action
- * @returns {undefined}
- */
-function clearSessionData(dispatch) {
-  dispatch(clearCallingContactId());
-  dispatch(clearCallingSocketId());
-  dispatch(clearIceServerConfig());
-  dispatch(clearRemoteDescription());
-  dispatch(clearIceCandidate());
-}
-
-/**
- * Emit hangup event to other person in the call
- * @returns {function} thunk
- */
-export function emitHangup() {
-  return async function innerEmitHangup(dispatch, getState) {
-    const socket = await getSocket();
-    const { callingSocketId } = getState().call;
-    socket.emit(CALL_HANG_UP, { toId: callingSocketId });
-    clearSessionData(dispatch);
-  };
-}
-
-/**
- * Handle hangup from other person in call
- * @returns {function} thunk
- */
-export function handleHangUp() {
-  return function innerHandleHangup(dispatch) {
-    dispatch(setCallStatusToHangingUp());
-    clearSessionData(dispatch);
   };
 }

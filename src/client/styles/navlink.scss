@@ -11,8 +11,11 @@
     color: lighten($grey, 15%);
     margin-bottom: 7px;
     font-size: 22px;
+  }
 
-    &:hover {
+  &:hover {
+    border-color: $smokey-white;
+    i {
       text-shadow: 0px 0px 3px $light-grey;
     }
   }
