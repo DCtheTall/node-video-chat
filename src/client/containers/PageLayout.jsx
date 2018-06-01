@@ -14,6 +14,7 @@ import QUERY_MESSAGE_THREADS from '../graphql/queries/message-threads/message-th
 import SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED from '../graphql/subscriptions/contact-requests/contact-request-received.graphql';
 import SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED from '../graphql/subscriptions/contact-requests/contact-request-accepted.graphql';
 import SUBSCRIBE_TO_USER_STATUS_CHANGE from '../graphql/subscriptions/users/status-change.graphql';
+import SUBSCRIBE_TO_USER_UPDATES from '../graphql/subscriptions/users/update.graphql';
 import SUBSCRIBE_TO_MESSAGES_CREATED from '../graphql/subscriptions/messages/message-created.graphql';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 
@@ -60,6 +61,7 @@ class PageLayout extends React.PureComponent {
     this.subscribeToAcceptedContactRequests();
     this.subscribeToStatusChanges();
     this.subscribeToNewMessages();
+    this.subscribeToUserUpdates();
   }
   /**
    * @param {Object} props before update
@@ -69,6 +71,11 @@ class PageLayout extends React.PureComponent {
     if (isLoggedIn(props.currentSession.user) && !isLoggedIn(this.props.currentSession.user)) {
       this.context.router.history.replace(LOGIN_ROUTE);
     }
+    this.subscribeToNewContactRequests();
+    this.subscribeToAcceptedContactRequests();
+    this.subscribeToStatusChanges();
+    this.subscribeToNewMessages();
+    this.subscribeToUserUpdates();
   }
   /**
    * @returns {boolean} true if on the login/signup page
@@ -90,7 +97,8 @@ class PageLayout extends React.PureComponent {
    * @returns {undefined}
    */
   subscribeToNewContactRequests() {
-    this.props.pendingRequests.subscribeToMore({
+    if (this.newContacts) this.newContacts();
+    this.newContacts = this.props.pendingRequests.subscribeToMore({
       document: SUBSCRIBE_TO_CONTACT_REQUEST_RECEIVED,
       variables: {
         userId: this.props.currentSession.user && this.props.currentSession.user.id,
@@ -112,7 +120,8 @@ class PageLayout extends React.PureComponent {
    * @returns {undefined}
    */
   subscribeToAcceptedContactRequests() {
-    this.props.contacts.subscribeToMore({
+    if (this.newContactRequests) this.newContactRequests();
+    this.newContactRequests = this.props.contacts.subscribeToMore({
       document: SUBSCRIBE_TO_CONTACT_REQUEST_ACCEPTED,
       variables: {
         userId: this.props.currentSession.user && this.props.currentSession.user.id,
@@ -134,7 +143,8 @@ class PageLayout extends React.PureComponent {
    * @returns {undefined}
    */
   subscribeToStatusChanges() {
-    this.props.contacts.subscribeToMore({
+    if (this.statusChanges) this.statusChanges();
+    this.statusChanges = this.props.contacts.subscribeToMore({
       document: SUBSCRIBE_TO_USER_STATUS_CHANGE,
       variables: {
         userIds: this.props.contacts.data ? this.props.contacts.data.map(contact => contact.user.id) : [],
@@ -162,8 +172,38 @@ class PageLayout extends React.PureComponent {
   /**
    * @returns {undefined}
    */
+  subscribeToUserUpdates() {
+    if (this.userUpdates) this.userUpdates();
+    this.userUpdates = this.props.contacts.subscribeToMore({
+      document: SUBSCRIBE_TO_USER_UPDATES,
+      variables: {
+        userIds: this.props.contacts.data ? this.props.contacts.data.map(contact => contact.user.id) : [],
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        if (!data || !data.user) return prev;
+        const newData = cloneDeep(prev.data).map((contact) => {
+          if (data.user.id === contact.user.id) {
+            if (
+              contact.id === this.props.callingContactId
+              && data.user.status === 'offline'
+            ) this.props.handleHangUp();
+            return { ...contact, user: { ...contact.user, ...data.user } };
+          }
+          return contact;
+        });
+        return {
+          ...prev,
+          data: newData,
+        };
+      },
+    });
+  }
+  /**
+   * @returns {undefined}
+   */
   subscribeToNewMessages() {
-    this.props.messageThreads.subscribeToMore({
+    if (this.newMessages) this.newMessages();
+    this.newMessages = this.props.messageThreads.subscribeToMore({
       document: SUBSCRIBE_TO_MESSAGES_CREATED,
       variables: {
         forUserId: Number(this.props.currentSession.user.id),

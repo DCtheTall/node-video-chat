@@ -1,0 +1,8 @@
+subscription($userIds: [Int]) {
+  user: UserUpdate(userIds: $userIds) {
+    id
+    username
+    email
+    pictureUrl
+  }
+}
