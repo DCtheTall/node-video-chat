@@ -1,18 +1,19 @@
 import { GraphQLString } from 'graphql';
 import { MutationResponse } from '../../types';
+import { uploadImage } from '../../../lib/aws';
 import pubsub, { USER_UPDATE } from '../../subscription/pubsub';
 
 export default {
+  name: 'UpdatePicture',
   type: MutationResponse,
-  name: 'UpdateUser',
   args: {
-    newEmail: { type: GraphQLString },
-    newUsername: { type: GraphQLString },
+    fileUrl: { type: GraphQLString },
+    extension: { type: GraphQLString },
   },
-  async resolve(parent, { newEmail, newUsername }, req) {
+  async resolve(parent, { fileUrl, extension }, req) {
     try {
-      if (newEmail) req.user.email = newEmail;
-      if (newUsername) req.user.username = newUsername;
+      const filename = await uploadImage(fileUrl, extension);
+      req.user.pictureUrl = `https://${process.env.AWS_BUCKET}.s3.amazonaws.com/${filename}`;
       await req.user.save();
       pubsub.publish(USER_UPDATE, { userId: req.user.id });
       return { success: true };
@@ -21,4 +22,4 @@ export default {
       return { success: false };
     }
   },
-};
+}

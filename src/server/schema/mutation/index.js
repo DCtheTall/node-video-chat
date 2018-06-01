@@ -4,6 +4,7 @@ import LoginUser from './user/LoginUser';
 import LogoutUser from './user/LogoutUser';
 import SignupUser from './user/SignupUser';
 import UpdateUser from './user/UpdateUser';
+import UpdatePicture from './user/UpdatePicture';
 
 import CreateContactRequest from './contact-requests/CreateContactRequest';
 import IgnoreContactRequest from './contact-requests/IgnoreContactRequest';
@@ -22,6 +23,7 @@ export default new GraphQLObjectType({
     LogoutUser,
     SignupUser,
     UpdateUser,
+    UpdatePicture,
 
     CreateContactRequest,
     IgnoreContactRequest,

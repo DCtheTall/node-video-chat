@@ -1,0 +1,34 @@
+@import './base';
+
+.settings-upload-picture-container {
+  @include calc('width', '100% - 20px');
+  border-bottom: 1px solid $light-grey;
+  height: 100px;
+  padding: 0 15px;
+
+  input {
+    display: none;
+  }
+
+  .settings-upload-picture {
+    height: 100px;
+
+    img {
+      @include user-info-img;
+      height: 70px;
+      width: 70px;
+    }
+
+    .text {
+      margin-left: 10px;
+
+      .heading {
+        font-size: 14px;
+      }
+
+      button {
+        padding: 5px 0;
+      }
+    }
+  }
+}

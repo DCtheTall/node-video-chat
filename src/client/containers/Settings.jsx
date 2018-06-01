@@ -11,6 +11,7 @@ import { addNotice } from '../actions/notice';
 import Sidebar from './Layout/Sidebar';
 import Headroom from '../components/Settings/Headroom';
 import FormRow from '../components/Settings/FormRow';
+import UploadPicture from '../components/Settings/UploadPicture';
 import Loader from '../components/Layout/Loader';
 
 /**
@@ -91,6 +92,10 @@ class Settings extends React.PureComponent {
             </div>
           ) : (
             <div>
+              <UploadPicture
+                pictureUrl={this.props.userSettings.data.pictureUrl}
+                username={this.props.userSettings.data.username}
+              />
               <FormRow
                 label="Your Username"
                 loading={this.state.loadingUsername}
@@ -121,6 +126,7 @@ Settings.propTypes = {
     data: PropTypes.shape({
       username: PropTypes.string,
       email: PropTypes.string,
+      pictureUrl: PropTypes.string,
     }),
   }),
 };

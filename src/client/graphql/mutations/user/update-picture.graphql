@@ -1,0 +1,5 @@
+mutation updatePicture($fileUrl: String, $extension: String) {
+  result: UpdatePicture(fileUrl: $fileUrl, extension: $extension) {
+    success
+  }
+}
