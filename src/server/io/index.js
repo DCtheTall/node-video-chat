@@ -12,10 +12,7 @@ import attachEventHandlers from './events';
  */
 export default function initIO(server) {
   const instance = io(server);
-  instance.adapter(adapter({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-  }));
+  instance.adapter(adapter(process.env.REDISCLOUD_URL));
   instance.use(authorize({
     handshake: true,
     secret: process.env.JWT_SECRET,
