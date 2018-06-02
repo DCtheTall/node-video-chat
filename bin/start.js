@@ -5,24 +5,11 @@ import debug from 'debug';
 import server from '../src/server';
 
 /**
- * normalizePort
- * @param {string|number} val the port number
- * @returns {number|boolean} normalized port
- */
-function normalizePort(val) {
-  let port = parseInt(val, 10);
-  port = port >= 0 ? port : false;
-  return isNaN(port) ? val : port;
-}
-
-const port = normalizePort(process.env.PORT || 4000);
-
-/**
  * onListen callback for server
  * @returns {undefined}
  */
 function onListen() {
-  console.log(`Listening on port ${port}`);
+  console.log(`Listening on port ${process.env.PORT}`);
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
@@ -36,7 +23,7 @@ function onListen() {
 function onError(err) {
   if (err.syscall !== 'listen') throw err;
 
-  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
+  const bind = typeof port === 'string' ? `Pipe ${process.env.PORT}` : `Port ${process.env.PORT}`;
 
   switch (err.code) {
     case 'EACCESS':
@@ -52,4 +39,4 @@ function onError(err) {
 
 server.on('listening', onListen);
 server.on('error', onError);
-server.listen(port);
+server.listen(process.env.PORT);
