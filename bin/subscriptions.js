@@ -1,8 +1,8 @@
-import { createServer } from 'http';
-import { execute, subscribe } from 'graphql';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-import app from '../src/server/app';
-import schema from '../src/server/schema';
+const { createServer } = require('http').default;
+const { execute, subscribe } = require('graphql').default;
+const { SubscriptionServer } = require('subscriptions-transport-ws').default;
+const app = require('../src/server/app').default;
+const schema = require('../src/server/schema').default;
 
 const websocketServer = createServer((req, res) => {
   res.writeHead(404);
