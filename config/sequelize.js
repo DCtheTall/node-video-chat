@@ -8,3 +8,4 @@ sequelize.authenticate()
          .catch(err => console.log(`Failed to connect to database: ${err.stack}`));
 
 module.exports = sequelize;
+
