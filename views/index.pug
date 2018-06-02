@@ -5,6 +5,10 @@ head
   link(rel="stylesheet" href="/dist/app.css")
   meta(name="viewport" content="width=device-width, initial-scale=1")
 body
+  audio#call-ringtone(style="display:none;" src="/audio/call-ringtone.mp3")
+  audio#calling-ringtone(style="display:none;" src="/audio/calling-ringtone.mp3")
+  audio#contact-sound(style="display:none;" src="/audio/contact.mp3")
+  audio#hangup(style="display:none;" src="/audio/hangup.mp3")
   audio#message-sound(style="display:none;" src="/audio/message.mp3")
   div#entry-point
     !=html

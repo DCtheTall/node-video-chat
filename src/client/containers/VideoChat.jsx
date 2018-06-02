@@ -55,6 +55,11 @@ class VideoChat extends React.PureComponent {
     this.localStream = null;
     this.remoteStream = null;
     this.peerConnection = null;
+    try {
+      this.hangupSound = document.getElementById('hangup');
+    } catch (err) {
+      this.hangupSound = null;
+    }
   }
   /**
    * @param {Object} props component is about to use
@@ -118,6 +123,7 @@ class VideoChat extends React.PureComponent {
       props.status === CallStatuses.InCall
       && this.props.status === CallStatuses.HangingUp
     ) {
+      this.hangupSound.play();
       this.onHangup();
     }
 

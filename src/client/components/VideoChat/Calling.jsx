@@ -27,6 +27,22 @@ class Calling extends React.PureComponent {
   constructor(props) {
     super(props);
     this.cancelCall = this.cancelCall.bind(this);
+    try {
+      this.hangupSound = document.getElementById('hangup');
+      this.ringTone = document.getElementById('calling-ringtone');
+    } catch (err) {
+      this.hangupSound = null;
+      this.ringTone = null;
+    }
+  }
+  /**
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    if (this.ringTone) {
+      this.ringTone.play();
+      this.ring = setInterval(() => this.ringTone.play(), 2e3);
+    }
   }
   /**
    * @param {Object} props component will receive
@@ -34,6 +50,8 @@ class Calling extends React.PureComponent {
    */
   componentWillReceiveProps(props) {
     if (props.status === CallStatuses.CallFailed) {
+      if (this.ring) clearInterval(this.ring);
+      if (this.hangupSound) this.hangupSound.play();
       this.callFailedTimer = setTimeout(() => {
         if (props.status !== CallStatuses.CallFailed) return;
         this.callFailedTimer = null;
@@ -54,6 +72,7 @@ class Calling extends React.PureComponent {
       clearTimeout(this.callFailedTimer);
       this.callFailedTimer = null;
     }
+    if (this.ring) clearInterval(this.ring);
   }
   /**
    * @returns {undefined}

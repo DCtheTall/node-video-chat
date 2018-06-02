@@ -31,8 +31,10 @@
     }
 
     .value {
+      @include ellipsis;
       color: $darker-grey;
       font-size: 14px;
+      max-width: 50%;
     }
 
     .edit-button {

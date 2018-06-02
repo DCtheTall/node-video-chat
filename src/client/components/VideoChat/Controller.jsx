@@ -28,6 +28,11 @@ class Controller extends React.PureComponent {
     this.hideHangupMessage = this.hideHangupMessage.bind(this);
     this.toggleAudioTrack = this.toggleAudioTrack.bind(this);
     this.toggleVideoTrack = this.toggleVideoTrack.bind(this);
+    try {
+      this.hangupSound = document.getElementById('hangup');
+    } catch (err) {
+      this.hangupSound = null;
+    }
   }
   /**
    * @returns {undefined}
@@ -36,6 +41,7 @@ class Controller extends React.PureComponent {
     if (this.props.status === CallStatuses.Testing) {
       return this.props.setCallStatusToAvailable();
     }
+    this.hangupSound.play();
     return this.props.startHangup();
   }
   /**

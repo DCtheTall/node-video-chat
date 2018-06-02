@@ -27,11 +27,20 @@ class ReceivingCall extends React.PureComponent {
     super(props);
     this.acceptCall = this.acceptCall.bind(this);
     this.ignoreCall = this.ignoreCall.bind(this);
+    try {
+      this.ringTone = document.getElementById('call-ringtone');
+    } catch (err) {
+      this.ringTone = null;
+    }
   }
   /**
    * @returns {undefined}
    */
   componentDidMount() {
+    if (this.ringTone) {
+      this.ringTone.play();
+      this.ring = setInterval(() => this.ringTone.play(), 2e3);
+    }
     this.ignoreTimer = setTimeout(() => {
       if (this.props.status !== CallStatuses.ReceivingCall) return;
       this.ignoreTimer = null;
@@ -46,6 +55,7 @@ class ReceivingCall extends React.PureComponent {
       clearTimeout(this.ignoreTimer);
       this.ignoreTimer = null;
     }
+    if (this.ring) clearInterval(this.ring);
   }
   /**
    * @returns {undefined}

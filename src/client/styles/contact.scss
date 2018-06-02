@@ -8,6 +8,7 @@
   width: unquote('calc(100% - 16px)');
 
   .controls {
+    justify-content: flex-end;
     button {
       @include webchat-gradient('background', 10deg);
       border-radius: 50%;

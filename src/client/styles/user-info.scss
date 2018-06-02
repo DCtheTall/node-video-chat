@@ -6,13 +6,14 @@
   }
 
   .username {
+    @include ellipsis;
     color: $darker-grey;
   }
 
   .grey-text {
+    @include ellipsis;
     color: $grey;
     font-size: 10px;
-    max-width: 150px;
-    word-wrap: break-word;
+    max-width: 100px;
   }
 }

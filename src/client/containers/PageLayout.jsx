@@ -46,8 +46,10 @@ class PageLayout extends React.PureComponent {
     this.isMobileDevice = this.isMobileDevice.bind(this);
     try {
       this.messageSound = document.getElementById('message-sound');
+      this.contactSound = document.getElementById('contact-sound');
     } catch (err) {
       this.messageSound = null;
+      this.contactSound = null;
     }
   }
   /**
@@ -105,6 +107,9 @@ class PageLayout extends React.PureComponent {
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.requestReceived) return prev;
+        if (this.contactSound) {
+          this.contactSound.play();
+        }
         this.props.addNotice(`${data.requestReceived.sender.username} sent you a contact request!`);
         return {
           ...prev,
@@ -128,6 +133,9 @@ class PageLayout extends React.PureComponent {
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.newContact) return prev;
+        if (this.contactSound) {
+          this.contactSound.play();
+        }
         this.props.addNotice(`${data.newContact.user.username} accepted your contact request!`);
         return {
           ...prev,
@@ -152,7 +160,6 @@ class PageLayout extends React.PureComponent {
       updateQuery: (prev, { subscriptionData: { data } }) => {
         if (!data || !data.user) return prev;
         const newData = cloneDeep(prev.data).map((contact) => {
-          console.log(contact.user, data.user);
           if (data.user.id === contact.user.id) {
             if (
               contact.id === this.props.callingContactId

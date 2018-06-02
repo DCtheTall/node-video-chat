@@ -28,7 +28,7 @@ const isAvailable = status =>
   [CallStatuses.Available, CallStatuses.CallFailed].includes(status);
 
 const canIgnoreCall = status =>
-  [CallStatuses.ReceivingCall, CallStatuses.AcceptingCall].incudes(status);
+  [CallStatuses.ReceivingCall, CallStatuses.AcceptingCall].includes(status);
 
 export const {
   setCallStatusToAvailable,

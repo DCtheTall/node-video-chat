@@ -4,6 +4,12 @@
   #{$property}: unquote('calc(#{$string})');
 }
 
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @mixin webchat-gradient($property, $deg) {
   #{$property}: linear-gradient($deg, $webchat-orange, $webchat-magenta);
 }
