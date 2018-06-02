@@ -6,8 +6,8 @@ const { serverPlugins: plugins } = require('./config/webpack/plugins');
 const rules = require('./config/webpack/rules');
 
 module.exports = {
-  name: 'sever',
-  entry: ['babel-polyfill', './bin/start.js'],
+  name: 'subscriptionServer',
+  entry: ['babel-polyfill', './bin/subscriptions.js'],
   target: 'node',
   node: {
     __dirname: false,
@@ -16,7 +16,7 @@ module.exports = {
   output: {
     publicPath,
     path: `${__dirname}/build/`,
-    filename: 'server.js',
+    filename: 'subscriptionServer.js',
   },
   externals: [nodeExternals()],
   resolve: {

@@ -8,6 +8,7 @@ import render from './routes/render';
 import schema from './schema';
 import models from './models';
 import deserealizeUser from './lib/deserealize-user';
+import getUserStatus from './routes/get-user-status';
 
 const app = express();
 
@@ -30,19 +31,11 @@ app.set('views', path.join('.', '/views/'));
 
 // globals
 global.models = models;
-global.successResponse =
-  (json = {}, message = 'Success!') =>
-    res => res.set(200).json({ success: true, message, ...json });
-global.failureResponse =
-  (json = {}, message = 'Something went wrong...') =>
-    res => res.set(400).json({ succes: false, message, ...json });
-global.errorResponse =
-  (err, message = 'Internal server error') =>
-    res => res.set(500).json({ success: false, message });
 
 app.use(deserealizeUser);
 
 app.post('/graphql', graphqlExpress({ schema, graphiql: false }));
+app.get('/user/:userid/status', getUserStatus);
 
 app.use(render);
 

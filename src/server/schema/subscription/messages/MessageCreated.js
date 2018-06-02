@@ -20,9 +20,6 @@ export default {
   },
   subscribe: withFilter(
     () => pubsub.asyncIterator(MESSAGE_CREATED),
-    ({ user1, user2 }, { forUserId }) => {
-      console.log('\n\n\n\n\n\n\n\n\n',user1,user2,forUserId);
-      return (forUserId === user1 || forUserId === user2)
-    },
+    ({ user1, user2 }, { forUserId }) => (forUserId === user1 || forUserId === user2),
   ),
 };
