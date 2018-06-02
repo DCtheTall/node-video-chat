@@ -11,7 +11,7 @@ const websocketServer = createServer((req, res) => {
   res.end();
 });
 
-websocketServer.listen(process.env.GRAPHQL_WS_PORT);
+websocketServer.listen(process.env.PORT);
 
 (() => new SubscriptionServer(
   {
