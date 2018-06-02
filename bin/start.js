@@ -1,7 +1,7 @@
 if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line global-require
 
 /* eslint-disable import/first */
-const debug = require('debug').default;
+const debug = require('debug');
 const server = require('../src/server').default;
 
 /**
