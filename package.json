@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node build/server",
-    "heroku-postbuild": "webpack -p --progress"
+    "heroku-postbuild": "webpack -p --progress; sequelize db:migrate"
   },
   "repository": {
     "type": "git",
@@ -88,6 +88,7 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.7",
     "sequelize": "^4.33.4",
+    "sequelize-cli": "^4.0.0",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
     "socket.io-redis": "^5.2.0",
