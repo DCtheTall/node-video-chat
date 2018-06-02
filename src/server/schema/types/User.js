@@ -47,7 +47,7 @@ export default new GraphQLObjectType({
       description: 'the id of the socket the user is currently connected to',
       async resolve(user, args, req) {
         if (!req.app || !req.app.io) { // implies this is on the subscription server
-          const { data } = await axios.get(`${process.env.APP_URL}/user/${user.id}/status`);
+          const { data } = await axios.get(`${process.env.APP_URL}/user/${user.id}/socket-id`);
           return data.socketId;
         }
         const socket = getSocketByUserId(user.id, req.app.io);

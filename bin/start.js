@@ -1,8 +1,8 @@
 if (!process.env.NODE_ENV) require('dotenv').load(); // eslint-disable-line global-require
 
 /* eslint-disable import/first */
-import debug from 'debug';
-import server from '../src/server';
+const debug = require('debug').default;
+const server = require('../src/server').default;
 
 /**
  * onListen callback for server

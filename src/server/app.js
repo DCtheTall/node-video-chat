@@ -9,6 +9,7 @@ import schema from './schema';
 import models from './models';
 import deserealizeUser from './lib/deserealize-user';
 import getUserStatus from './routes/get-user-status';
+import getUserSocketId from './routes/get-user-socketid';
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(deserealizeUser);
 
 app.post('/graphql', graphqlExpress({ schema, graphiql: false }));
 app.get('/user/:userid/status', getUserStatus);
+app.get('/user/:userid/socket-id', getUserSocketId);
 
 app.use(render);
 

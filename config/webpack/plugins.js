@@ -8,9 +8,6 @@ const commonPlugins = [
 ];
 
 const serverPlugins = [
-  new webpack.DefinePlugin({
-    'process.env': JSON.stringify(process.env),
-  }),
   ...commonPlugins,
 ];
 
