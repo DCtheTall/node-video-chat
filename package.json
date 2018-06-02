@@ -93,7 +93,7 @@
     "subscriptions-transport-ws": "^0.9.6",
     "twilio": "^3.17.1",
     "validator": "^9.4.1",
-    "webpack": "^3.11.0",
+    "webpack": "@3.11.0",
     "webpack-node-externals": "^1.6.0",
     "webrtc-adapter": "^6.1.5"
   },
