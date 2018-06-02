@@ -329,6 +329,7 @@ class VideoChat extends React.PureComponent {
             ref={node => this.localVideo = node}
             className="local-video"
             autoPlay
+            muted="muted"
           >
             <track kind="captions" />
           </video>
