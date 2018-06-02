@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import graphqlExpress from 'express-graphql';
 import path from 'path';
 import compression from 'compression';
+import cors from 'cors';
 import render from './routes/render';
 import schema from './schema';
 import models from './models';
@@ -18,6 +19,8 @@ const app = express();
 app.use(morgan('dev'));
 
 // App middleware
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '2mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));

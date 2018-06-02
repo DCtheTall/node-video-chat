@@ -47,6 +47,7 @@
     "compression": "^1.7.2",
     "cookie-parser": "^1.4.3",
     "cookies": "^0.7.1",
+    "cors": "^2.8.4",
     "css-loader": "^0.28.10",
     "debug": "^3.1.0",
     "dotenv": "^5.0.0",
