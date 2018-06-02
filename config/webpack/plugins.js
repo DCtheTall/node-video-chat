@@ -7,10 +7,6 @@ const commonPlugins = [
   new OptimizeCSSPlugin({ canPrint: true }),
 ];
 
-if (process.env.NODE_ENV === 'production') {
-  commonPlugins.push(new webpack.optimize.UglifyJSPlugin());
-}
-
 const serverPlugins = [
   new webpack.DefinePlugin({
     'process.env': JSON.stringify(process.env),
