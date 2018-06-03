@@ -20,7 +20,10 @@ import { setToken } from './actions/token';
 
 store.dispatch(setToken(window.__JWT_TOKEN__));
 
-const httpLink = new HttpLink({ uri: process.env.GRAPHQL_URI, credentials: 'include' });
+const httpLink = new HttpLink({
+  uri: process.env.GRAPHQL_URI,
+  credentials: 'same-origin',
+});
 const wsLink = new WebSocketLink({
   uri: process.env.GRAPHQL_WS_URI,
   options: {
@@ -45,7 +48,7 @@ const link = split(
 );
 
 const cache = new InMemoryCache().restore(window.__APOLLO_STATE__);
-const client = new ApolloClient({ link, cache, connectToDevTools: true });
+const client = new ApolloClient({ link, cache, connectToDevTools: process.env.NODE_ENV === 'development' });
 
 delete window.__APOLLO_STATE__;
 delete window.__JWT_TOKEN__;
