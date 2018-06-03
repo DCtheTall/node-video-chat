@@ -14,6 +14,8 @@ import getUserSocketId from './routes/get-user-socketid';
 
 const app = express();
 
+app.enable('trust proxy');
+
 // Dev middleware
 
 app.use(morgan('dev'));
