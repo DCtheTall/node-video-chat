@@ -16,7 +16,7 @@ module.exports = {
   output: {
     publicPath,
     path: `${__dirname}/build/`,
-    filename: 'server.js',
+    filename: 'start.js',
   },
   externals: [nodeExternals()],
   resolve: {
