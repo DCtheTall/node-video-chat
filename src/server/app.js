@@ -20,7 +20,7 @@ app.use(morgan('dev'));
 
 // App middleware
 
-app.use(cors({ credentials: true, origin: process.env.APP_URL }));
+app.use(cors({ credentials: true }));
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '2mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
