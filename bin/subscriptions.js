@@ -14,6 +14,7 @@ module.exports = function startSubscriptionServer() { /* eslint-disable global-r
 
   (() => new SubscriptionServer(
     {
+      keepAlive: 1000,
       schema,
       execute,
       subscribe,

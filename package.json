@@ -2,10 +2,10 @@
   "name": "node-video-chat",
   "version": "1.0.0",
   "description": "A video chat using NodeJS, GraphQL, React, and WebSockets",
-  "main": "build/server.js",
+  "main": "build/start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node build/server",
+    "start": "node build/start",
     "heroku-postbuild": "webpack -p --progress; sequelize db:migrate"
   },
   "repository": {
