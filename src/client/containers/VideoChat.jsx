@@ -12,6 +12,7 @@ import {
   sendSessionDescription,
   setCallStatusToInCall,
   setCallStatusToAvailable,
+  setCallStatusToHangingUp,
   emitHangup,
 } from '../actions/call';
 import { addError } from '../actions/error';
@@ -62,6 +63,12 @@ class VideoChat extends React.PureComponent {
     }
   }
   /**
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.startHangup);
+  }
+  /**
    * @param {Object} props component is about to use
    * @returns {undefined}
    */
@@ -95,6 +102,10 @@ class VideoChat extends React.PureComponent {
       [CallStatuses.ReceivingCall, CallStatuses.Calling].includes(props.status)
       && this.props.status === CallStatuses.AcceptingCall
     ) {
+      if (this.connectionTimeout) {
+        clearTimeout(this.connectionTimeout);
+      }
+      this.connectionTimeout = setTimeout(this.startHangup, 25e3);
       try {
         await this.startLocalVideo();
       } catch (err) {
@@ -136,10 +147,7 @@ class VideoChat extends React.PureComponent {
    * @returns {undefined}
    */
   componentWillUnmount() {
-    if (this.hangupTimer) {
-      clearTimeout(this.hangupTimer);
-      this.hangupTimer = null;
-    }
+    window.removeEventListener(this.startHangup);
   }
   /**
    * @returns {undefined}
@@ -165,9 +173,9 @@ class VideoChat extends React.PureComponent {
    * @returns {undefined}
    */
   onRemoteStreamRemoved() {
-    console.log('Remote stream removed.');
     this.remoteVideo.srcObject = null;
     VideoChat.stopStream(this.remoteStream);
+    this.props.setCallStatusToHangingUp();
   }
   /**
    * @param {Object} description for session with peer
@@ -189,6 +197,10 @@ class VideoChat extends React.PureComponent {
     const candidate = new RTCIceCandidate(this.props.iceCandidate);
     this.peerConnection.addIceCandidate(candidate);
     this.props.setCallStatusToInCall();
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout);
+      this.connectionTimeout = null;
+    }
   }
   /**
    * @returns {undefined}
@@ -361,6 +373,7 @@ VideoChat.propTypes = {
   iceCandidate: PropTypes.shape(),
   setCallStatusToInCall: PropTypes.func,
   setCallStatusToAvailable: PropTypes.func,
+  setCallStatusToHangingUp: PropTypes.func,
   emitHangup: PropTypes.func,
   videoEnabled: PropTypes.bool,
   audioEnabled: PropTypes.bool,
@@ -382,6 +395,7 @@ const mapDispatchToProps = {
   sendSessionDescription,
   setCallStatusToInCall,
   setCallStatusToAvailable,
+  setCallStatusToHangingUp,
   emitHangup,
 };
 
