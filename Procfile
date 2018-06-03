@@ -1,2 +1,1 @@
-web: node build/server
-subscribe: node build/subscriptionServer
+web: node build/start
