@@ -11,7 +11,7 @@ module.exports = {
     vendor,
     app: ['babel-polyfill', './src/client/index.jsx'],
   },
-  devtool: 'cheap-eval-source-map',
+  devtool: process.env.NODE_ENV === 'production' ? 'cheap-eval-source-map' : false,
   target: 'web',
   output: {
     publicPath,

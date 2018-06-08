@@ -27,6 +27,7 @@ const clientPlugins = [
   }),
   new webpack.optimize.ModuleConcatenationPlugin(),
   new ManifestPlugin(),
+  ...(process.env.NODE_ENV === 'production' ? [new webpack.optimize.UglifyJsPlugin()] : []),
   ...commonPlugins,
 ];
 
