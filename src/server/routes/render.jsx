@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import schema from '../schema';
 import routes from '../../client/routes';
 import store from '../../client/store';
+import manifest from '../../../public/dist/manifest.json';
 
 const context = {};
 
@@ -52,6 +53,7 @@ async function render(req, res) {
     html,
     token: JSON.stringify(token),
     state: JSON.stringify(initialState).replace(/</g, '\\u003c'),
+    manifest,
   });
 }
 

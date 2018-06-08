@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 const commonPlugins = [
   new ExtractTextPlugin('[name].css'),
@@ -25,6 +26,7 @@ const clientPlugins = [
     minChunks: Infinity,
   }),
   new webpack.optimize.ModuleConcatenationPlugin(),
+  new ManifestPlugin(),
   ...commonPlugins,
 ];
 

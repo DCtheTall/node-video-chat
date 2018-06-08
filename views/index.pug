@@ -1,8 +1,11 @@
+- let app = manifest['app.js'];
+- let styles = manifest['app.css'];
+- let vendor = manifest['vendor.js'];
 head
   title WebChat
   link(href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans" rel="stylesheet")
   link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
-  link(rel="stylesheet" href="/dist/app.css")
+  link(rel="stylesheet" href=styles)
   meta(name="viewport" content="width=device-width, initial-scale=1")
 body
   audio#call-ringtone(style="display:none;" src="/audio/call-ringtone.mp3")
@@ -15,5 +18,5 @@ body
   script(type="text/javascript")
     | window.__APOLLO_STATE__ = !{state};
     | window.__JWT_TOKEN__ = !{token};
-  script(type="text/javascript" src="/dist/vendor.js")
-  script(type="text/javascript" src="/dist/app.js")
+  script(type="text/javascript" src=vendor)
+  script(type="text/javascript" src=app)
