@@ -42,7 +42,7 @@ async function render(req, res) {
   const cache = new InMemoryCache();
   const apolloClient = new ApolloClient({ link, cache, ssrMode: true });
   const initialState = apolloClient.extract();
-  const manifest = await import('../../../public/dist/manifest.json');
+  const manifest = await import(`${__dirname}/public/dist/manifest.json`);
 
   const App = createApp(req, apolloClient);
   const html = await renderToStringWithData(<App location={req.url} />);
