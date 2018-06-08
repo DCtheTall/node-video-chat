@@ -10,7 +10,6 @@ import { Provider } from 'react-redux';
 import schema from '../schema';
 import routes from '../../client/routes';
 import store from '../../client/store';
-import manifest from '../../../public/dist/manifest.json';
 
 const context = {};
 
@@ -43,6 +42,7 @@ async function render(req, res) {
   const cache = new InMemoryCache();
   const apolloClient = new ApolloClient({ link, cache, ssrMode: true });
   const initialState = apolloClient.extract();
+  const manifest = await import('../../../public/dist/manifest.json');
 
   const App = createApp(req, apolloClient);
   const html = await renderToStringWithData(<App location={req.url} />);
