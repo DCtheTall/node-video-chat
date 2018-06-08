@@ -7,6 +7,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import { Provider } from 'react-redux';
+import path from 'path';
+import { readFileSync } from 'fs';
 import schema from '../schema';
 import routes from '../../client/routes';
 import store from '../../client/store';
@@ -42,7 +44,7 @@ async function render(req, res) {
   const cache = new InMemoryCache();
   const apolloClient = new ApolloClient({ link, cache, ssrMode: true });
   const initialState = apolloClient.extract();
-  const manifest = await import(`${__dirname}/public/dist/manifest.json`);
+  const manifest = JSON.parse(readFileSync(path.join(__dirname, '../public/dist/manifest.json')));
 
   const App = createApp(req, apolloClient);
   const html = await renderToStringWithData(<App location={req.url} />);

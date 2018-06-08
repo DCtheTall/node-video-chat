@@ -13,6 +13,7 @@ module.exports = {
     __dirname: false,
     __filename: false,
   },
+  context: __dirname,
   output: {
     publicPath,
     path: `${__dirname}/build/`,
