@@ -147,7 +147,7 @@ class VideoChat extends React.PureComponent {
    * @returns {undefined}
    */
   componentWillUnmount() {
-    window.removeEventListener(this.startHangup);
+    window.removeEventListener('beforeunload', this.startHangup);
   }
   /**
    * @returns {undefined}
