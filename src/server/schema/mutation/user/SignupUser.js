@@ -5,6 +5,7 @@ import {
 } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
+import validateEmail from '../../../lib/validate-email';
 
 const SignupResponse = new GraphQLObjectType({
   name: 'SignupResponse',
@@ -33,6 +34,13 @@ export default {
           ],
         },
       });
+      const { success: validEmail } = await validateEmail(email);
+      if (!validEmail) {
+        return {
+          success: false,
+          message: 'Please enter a valid email address',
+        };
+      }
       if (!created) return { success: false, message: 'There is already an account with that email/username' };
       user.email = email.trim().toLowerCase();
       user.username = username.trim();

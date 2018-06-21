@@ -1,5 +1,6 @@
 mutation updateUser($newEmail: String, $newUsername: String) {
   result: UpdateUser(newEmail: $newEmail, newUsername: $newUsername) {
     success
+    message
   }
 }

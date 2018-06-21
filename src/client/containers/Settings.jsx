@@ -35,11 +35,13 @@ class Settings extends React.PureComponent {
   }
   /**
    * @param {string} stateToUpdate key in state to update
+   * @param {string} message to display for error
    * @returns {undefined}
    */
-  async handleError(stateToUpdate) {
+  async handleError(stateToUpdate, message) {
+    message = message || 'Something went wrong updating your account.';
     await new Promise(resolve => this.setState({ [stateToUpdate]: false }, resolve));
-    return this.props.addError('Something went wrong updating your account.');
+    return this.props.addError(message);
   }
   /**
    * @param {Object} payload for update mutation
@@ -54,7 +56,12 @@ class Settings extends React.PureComponent {
         variables: { newEmail, newUsername },
         refetchQueries: [{ query: USER_SETTINGS_QUERY }],
       });
-      if (!data.result || !data.result.success) return this.handleError(stateToUpdate);
+      if (!data.result || !data.result.success) {
+        return this.handleError(
+          stateToUpdate,
+          data.result && data.result.message,
+        );
+      }
       await new Promise(res => this.setState({ [stateToUpdate]: false }, res));
       return this.props.addNotice('Succesfully updated your account.');
     } catch (err) {
