@@ -2,7 +2,7 @@
 if (!process.env.NODE_ENV) require('dotenv').load();
 
 const modules = {
-  server: require('./server'),
-  subscriptionServer: require('./subscriptions'),
+  graphqlServer: require('./graphql-server'),
+  signalServer: require('./signal-server'),
 };
 modules[process.env.APP_NAME]();

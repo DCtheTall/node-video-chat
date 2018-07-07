@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import store from '../store';
 import attachEventHandlers from './events';
 
-const connect = token => io.connect(process.env.APP_URL, { query: `token=${token}` });
+const connect = token => io.connect(process.env.SIGNAL_SERVER_URL, { query: `token=${token}` });
 
 let { token } = store.getState();
 let socket = connect(token);
