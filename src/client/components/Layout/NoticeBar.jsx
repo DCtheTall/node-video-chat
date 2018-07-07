@@ -11,14 +11,19 @@ import '../../styles/notice-bar.scss';
  */
 class NoticeBar extends React.PureComponent {
   /**
+   * @param {Object} props before update
    * @returns {undefined}
    */
-  componentDidUpdate() {
-    if (this.noticeTimeout) {
+  componentDidUpdate(props) {
+    if (!this.props.notice && this.noticeTimeout) {
       clearTimeout(this.noticeTimeout);
       this.noticeTimeout = null;
     }
-    if (this.props.notice) {
+    if (!props.notice && this.props.notice) {
+      if (this.noticeTimeout) {
+        clearTimeout(this.noticeTimeout);
+        this.noticeTimeout = null;
+      }
       this.noticeTimeout = setTimeout(this.props.clearNotice, 5000);
     }
   }
