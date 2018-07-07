@@ -99,9 +99,10 @@ class VideoChat extends React.PureComponent {
     // start local video and start peer connection after
     // outgoing call is accepted
     if (
-      [CallStatuses.ReceivingCall, CallStatuses.Calling].includes(props.status)
+      [CallStatuses.Calling, CallStatuses.ReceivingCall].includes(props.status)
       && this.props.status === CallStatuses.AcceptingCall
     ) {
+      this.state.isInitiator = props.status === CallStatuses.Calling;
       if (this.connectionTimeout) {
         clearTimeout(this.connectionTimeout);
       }
@@ -110,11 +111,15 @@ class VideoChat extends React.PureComponent {
         await this.startLocalVideo();
       } catch (err) {
         console.error(err);
-        (this.props.status === CallStatuses.Calling ?
-          this.startHangup.bind(this) : this.props.ignoreCall)();
+        (props.status === CallStatuses.Calling ?
+          this.startHangup : this.ignoreCall)();
       }
-      if (props.status === CallStatuses.ReceivingCall) this.props.acceptCall();
-      this.state.isInitiator = props.status === CallStatuses.Calling;
+      if (props.status === CallStatuses.Calling) this.startPeerConnection();
+    }
+
+    // Start the peer connection when it gets the ICE config
+    // and local video has been started
+    if (!props.iceServerConfig && this.props.iceServerConfig && this.localStream) {
       this.startPeerConnection();
     }
 
@@ -257,7 +262,9 @@ class VideoChat extends React.PureComponent {
    */
   startPeerConnection() {
     try {
-      this.peerConnection = new RTCPeerConnection(this.props.iceServerConfig);
+      this.peerConnection = new RTCPeerConnection({
+        iceServers: this.props.iceServerConfig,
+      });
       this.peerConnection.onicecandidate = this.props.handleIceCandidate;
       this.peerConnection.onaddstream = this.onRemoteStreamAdded.bind(this);
       this.peerConnection.onremovestream = this.onRemoteStreamRemoved.bind(this);

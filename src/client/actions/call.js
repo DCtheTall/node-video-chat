@@ -153,13 +153,14 @@ export function handleCallUnavailable() {
  * is created in the VideoChat container component
  * @returns {function} thunk
  */
-export function handleCallAccepted() {
+export function handleCallAccepted(iceServerConfig) {
   return function innerHandleCallAccepted(dispatch, getState) {
     const { status } = getState().call;
     if (status !== CallStatuses.Calling) {
       dispatch(emitHangup());
       return;
     }
+    dispatch(setIceServerConfig(iceServerConfig));
     dispatch(setCallStatusToAcceptingCall());
   };
 }

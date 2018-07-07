@@ -50,8 +50,7 @@ const handlers = {
   [CALL_ACCEPTED]: ({ iceServerConfig }) => {
     const { callingContactId } = store.getState().call;
     console.log(`Call request to ${callingContactId} accepted`);
-    store.dispatch(setIceServerConfig(iceServerConfig));
-    store.dispatch(handleCallAccepted());
+    store.dispatch(handleCallAccepted(iceServerConfig));
   },
 
   [CALL_HANG_UP]: () => {
