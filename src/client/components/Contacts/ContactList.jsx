@@ -77,7 +77,13 @@ const mapStateToProps = (state, props) => {
     contactData: props.contacts.data.filter(({ user }) => (
       queryExp.test(removeWhitespace(user.username))
       || queryExp.test(removeWhitespace(user.email))
-    )),
+    )).sort((a, b) => {
+      if (a.user.status === 'available' && b.user.status === 'offline') return -1;
+      if (a.user.status === 'offline' && b.user.status === 'available') return 1;
+      if (a.user.username.toLowerCase().trim() < b.user.username.toLowerCase().trim()) return -1;
+      if (b.user.username.toLowerCase().trim() < a.user.username.toLowerCase().trim()) return 1;
+      return 0;
+    }),
   };
 };
 
