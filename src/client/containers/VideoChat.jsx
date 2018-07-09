@@ -115,6 +115,7 @@ class VideoChat extends React.PureComponent {
           this.startHangup : this.ignoreCall)();
       }
       if (props.status === CallStatuses.Calling) this.startPeerConnection();
+      else this.props.acceptCall();
     }
 
     // Start the peer connection when it gets the ICE config
