@@ -17,6 +17,8 @@ The back end is comprised of 4 servers:
 - A GraphQL API with Redis-backed subscriptions
 - A socket.io server for signaling calls
 - A Redis server backing the publisher/subscriber for GraphQL subscriptions
+  and maintains concurrency between socket.io connections if you want to have
+  multiple instances of the signaling server running
 
 The front end (served from the GraphQL server for SSR) uses React and Apollo
 to interface with the GraphQL API. It also contains a Redux store containing
