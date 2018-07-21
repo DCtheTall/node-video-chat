@@ -21,6 +21,8 @@ import Calling from '../components/VideoChat/Calling';
 import ReceivingCall from '../components/VideoChat/ReceivingCall';
 import Controller from '../components/VideoChat/Controller';
 import CallOverlay from '../components/VideoChat/CallOverlay';
+import BannerContainer from '../components/Layout/BannerContainer';
+
 import '../styles/video-chat-container.scss';
 
 const SDP_CONSTRAINTS = {
@@ -331,6 +333,7 @@ class VideoChat extends React.PureComponent {
     }
     return (
       <div className="video-chat-container">
+        <BannerContainer />
         <div className="remote-video-container">
           {[
             CallStatuses.AcceptingCall,

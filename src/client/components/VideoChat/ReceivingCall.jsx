@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { graphql } from 'react-apollo';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+
 import CALLING_CONTACT_QUERY from '../../graphql/queries/contacts/calling-contact.graphql';
 import {
   CallStatuses,
@@ -11,6 +12,8 @@ import {
   setCallStatusToAcceptingCall,
 } from '../../actions/call';
 import Loader from '../Layout/Loader';
+import BannerContainer from '../Layout/BannerContainer';
+
 import '../../styles/video-chat-receiving-call.scss';
 
 /**
@@ -84,6 +87,7 @@ class ReceivingCall extends React.PureComponent {
           'video-chat-receiving-call'
         )}
       >
+        <BannerContainer />
         {this.props.callingContact.loading ? (
           <Loader />
         ) : (

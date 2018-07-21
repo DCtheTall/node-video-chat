@@ -19,13 +19,11 @@ import SUBSCRIBE_TO_MESSAGES_CREATED from '../graphql/subscriptions/messages/mes
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from '../constants';
 
 import isLoggedIn from '../helpers/is-logged-in';
-import { addError } from '../actions/error';
 import { addNotice } from '../actions/notice';
 import { handleHangUp } from '../actions/call';
 import Topbar from '../components/Layout/Topbar';
-import ErrorBar from '../components/Layout/ErrorBar';
-import NoticeBar from '../components/Layout/NoticeBar';
 import VideoChat from './VideoChat';
+import BannerContainer from '../components/Layout/BannerContainer';
 
 import '../styles/layout.scss';
 
@@ -258,14 +256,11 @@ class PageLayout extends React.PureComponent {
     return (
       <div className="app-container">
         <Topbar />
-        {Boolean(this.props.error || this.props.notice) && (
-          <div className="banner-container">
-            <NoticeBar />
-            <ErrorBar />
-          </div>
-        )}
+        {!isLoggedIn(this.props.currentSession.user) &&
+          <BannerContainer />}
         <div className="app-content display-flex">
-          {isLoggedIn(this.props.currentSession.user) && <VideoChat />}
+          {isLoggedIn(this.props.currentSession.user) &&
+            <VideoChat />}
           {renderRoutes(this.props.route.routes)}
         </div>
       </div>
@@ -285,8 +280,6 @@ PageLayout.propTypes = {
     user: PropTypes.shape(),
     refetch: PropTypes.func,
   }),
-  error: PropTypes.string,
-  notice: PropTypes.string,
   pendingRequests: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.shape()),
     subscribeToMore: PropTypes.func,
@@ -308,12 +301,8 @@ PageLayout.propTypes = {
 export default compose(
   withRouter,
   connect(
-    state => ({
-      error: state.error,
-      notice: state.notice,
-      callingContactId: state.call.callingContactId,
-    }),
-    { addError, addNotice, handleHangUp },
+    state => ({ callingContactId: state.call.callingContactId }),
+    { addNotice, handleHangUp },
   ),
   graphql(
     QUERY_USER_ID,

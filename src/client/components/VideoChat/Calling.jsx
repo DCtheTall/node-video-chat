@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+
 import CALLING_CONTACT_QUERY from '../../graphql/queries/contacts/calling-contact.graphql';
 import {
   cancelCall,
@@ -12,6 +13,8 @@ import {
   clearCallingSocketId,
 } from '../../actions/call';
 import Loader from '../Layout/Loader';
+import BannerContainer from '../Layout/BannerContainer';
+
 import '../../styles/video-chat-calling.scss';
 
 /**
@@ -87,6 +90,7 @@ class Calling extends React.PureComponent {
   render() {
     return (
       <div className="full-width full-height flex-center flex-column video-chat-calling">
+        <BannerContainer />
         {this.props.callingContact.loading ? (
           <Loader />
         ) : (

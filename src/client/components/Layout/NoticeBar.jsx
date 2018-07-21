@@ -15,7 +15,7 @@ class NoticeBar extends React.PureComponent {
    * @returns {undefined}
    */
   componentDidUpdate(props) {
-    if (!props.notice && this.props.notice) {
+    if (props.notice !== this.props.notice) {
       if (this.noticeTimeout) {
         clearTimeout(this.noticeTimeout);
         this.noticeTimeout = null;

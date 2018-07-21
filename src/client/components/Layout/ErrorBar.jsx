@@ -10,14 +10,15 @@ import '../../styles/error-bar.scss';
  */
 class ErrorBar extends React.PureComponent {
   /**
+   * @param {Object} props previous props
    * @returns {undefined}
    */
-  componentDidUpdate() {
-    if (this.errorTimeout) {
-      clearTimeout(this.errorTimeout);
-      this.errorTimeout = null;
-    }
-    if (this.props.error) {
+  componentDidUpdate(props) {
+    if (props.error !== this.props.error) {
+      if (this.errorTimeout) {
+        clearTimeout(this.errorTimeout);
+        this.errorTimeout = null;
+      }
       this.errorTimeout = setTimeout(this.props.clearError, 5000);
     }
   }
@@ -26,6 +27,7 @@ class ErrorBar extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
+    console.log('hello')
     if (!this.props.error) return null;
     return (
       <div className="error-bar display-flex align-items-center">

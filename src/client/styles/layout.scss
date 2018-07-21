@@ -19,11 +19,7 @@
     margin-bottom: 30px;
   }
 
-  .banner-container {
-    left: 0;
-    right: 0;
-    position: absolute;
+  > .banner-container {
     top: 40px;
-    z-index: 500;
   }
 }

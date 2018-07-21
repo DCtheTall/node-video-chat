@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import { setCallStatusToTesting } from '../../actions/call';
+import BannerContainer from '../Layout/BannerContainer';
+
 import '../../styles/video-chat-available.scss';
 
 /**
@@ -31,6 +34,7 @@ class Available extends React.PureComponent {
   render() {
     return (
       <div className="full-width full-height flex-center video-chat-available">
+        <BannerContainer />
         <div className="text-center instructions">
           Click on the
           &nbsp;

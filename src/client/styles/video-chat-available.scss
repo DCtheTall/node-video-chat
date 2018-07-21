@@ -3,6 +3,7 @@
 .video-chat-available {
   @include video-chat-background-gradient;
   flex-direction: column;
+  position: relative;
 
   .instructions {
     color: $white;

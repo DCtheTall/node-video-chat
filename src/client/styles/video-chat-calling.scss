@@ -2,6 +2,7 @@
 
 .video-chat-calling {
   @include video-chat-background-gradient;
+  position: relative;
 
   .calling-contact {
     img {
