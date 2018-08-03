@@ -27,7 +27,6 @@ class ErrorBar extends React.PureComponent {
    * @returns {JSX.Element} HTML
    */
   render() {
-    console.log('hello')
     if (!this.props.error) return null;
     return (
       <div className="error-bar display-flex align-items-center">

@@ -12,6 +12,7 @@ module.exports = [
   'graphql-tag',
   'lodash.clonedeep',
   'lodash.debounce',
+  'lodash.isequal',
   'moment',
   'prop-types',
   'react',

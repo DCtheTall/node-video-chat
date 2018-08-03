@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { compose } from 'redux';
+
 import QUERY_OPEN_MESSAGE_THREAD from '../../graphql/queries/message-threads/open-thread.graphql';
 import QUERY_USER_ID from '../../graphql/queries/user/id.graphql';
 import MESSAGE_CREATED_SUBSCRIPTION from '../../graphql/subscriptions/messages/message-created.graphql';
 import MESSAGE_READ_SUBSCRIPTION from '../../graphql/subscriptions/messages/message-read.graphql';
 import { MESSAGES_ROUTE } from '../../constants';
+
 import Loader from '../../components/Layout/Loader';
 import Headroom from '../../components/Messages/OpenMessageThread/Headroom';
 import Messages from '../../components/Messages/OpenMessageThread/Messages';

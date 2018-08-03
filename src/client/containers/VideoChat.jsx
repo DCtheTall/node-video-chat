@@ -338,9 +338,8 @@ class VideoChat extends React.PureComponent {
           {[
             CallStatuses.AcceptingCall,
             CallStatuses.HangingUp,
-          ].includes(this.props.status) && (
-            <CallOverlay />
-          )}
+          ].includes(this.props.status)
+            && <CallOverlay />}
           <video
             ref={node => this.remoteVideo = node}
             className={classNames(

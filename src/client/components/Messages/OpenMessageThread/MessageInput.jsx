@@ -7,10 +7,13 @@ import { graphql, withApollo } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import isEqual from 'lodash.isequal';
+
 import USER_TYPING_MUTATION from '../../../graphql/mutations/messages/user-typing.graphql';
 import USER_TYPING_SUBSCRIPTION from '../../../graphql/subscriptions/messages/user-typing.graphql';
 import CREATE_MESSAGE_MUTATION from '../../../graphql/mutations/messages/create-message.graphql';
 import { addError, clearError } from '../../../actions/error';
+
 import '../../../styles/message-input.scss';
 
 /**
@@ -50,20 +53,24 @@ class MessageInput extends React.PureComponent {
     })
     .subscribe(async () => {
       if (this.clearTypingMessageTimeout) clearTimeout(this.clearTypingMessageTimeout);
-      await new Promise(resolve => this.setState({ userTyping: true }, resolve));
-      this.clearTypingMessageTimeout = setTimeout(() => this.setState({ userTyping: false }), 1500);
+      await new Promise(resolve =>
+        this.setState({ userTyping: true }, resolve));
+      this.clearTypingMessageTimeout = setTimeout(
+        () => this.setState({ userTyping: false }), 1500);
     });
   }
   /**
    * @param {Object} props component will receive
    * @returns {undefined}
    */
-  componentWillReceiveProps(props) {
+  componentDidUpdate(props) {
     if (
-      props.messages.length !== this.props.messages.length
-      && props.messages[props.messages.length - 1].senderId === this.props.user.id
+      !isEqual(props.messages, this.props.messages)
+      && this.props.messages[this.props.messages.length - 1].senderId === this.props.user.id
     ) {
-      if (this.clearTypingMessageTimeout) clearTimeout(this.clearTypingMessageTimeout);
+      if (this.clearTypingMessageTimeout) {
+        clearTimeout(this.clearTypingMessageTimeout);
+      }
       this.setState({ userTyping: false });
     }
   }

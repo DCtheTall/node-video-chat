@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import { compose } from 'redux';
+
 import UPDATE_PICTURE_MUTATION from '../../graphql/mutations/user/update-picture.graphql';
 import USER_SETTINGS_QUERY from '../../graphql/queries/user/settings.graphql';
 import { addError } from '../../actions/error';
 import { addNotice } from '../../actions/notice';
 import Loader from '../Layout/Loader';
+
 import '../../styles/settings-upload-picture.scss';
 
 /**
@@ -69,13 +71,6 @@ class UploadPicture extends React.PureComponent {
     bufferCtx.drawImage(img, 0, 0);
     toCanvas.width = min;
     toCanvas.height = min;
-    console.log(
-      bufferCanvas,
-      (img.width - min) / 2,
-      -(img.height - min) / 2,
-      min,
-      min,
-    )
     toCtx.drawImage(
       bufferCanvas,
       (img.width - min) / 2,
