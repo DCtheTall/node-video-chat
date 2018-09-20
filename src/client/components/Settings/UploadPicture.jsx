@@ -167,8 +167,8 @@ class UploadPicture extends React.PureComponent {
               <div className="heading">
                 Current Picture
               </div>
-              <button className="webchat-text" onClick={this.onClick}>
-                Change
+              <button className="webchat-button" onClick={this.onClick}>
+                CHANGE
               </button>
             </div>
           </div>
