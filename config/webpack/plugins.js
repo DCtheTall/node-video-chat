@@ -8,10 +8,6 @@ const commonPlugins = [
   new OptimizeCSSPlugin({ canPrint: true }),
 ];
 
-const serverPlugins = [
-  ...commonPlugins,
-];
-
 const clientPlugins = [
   new webpack.DefinePlugin({
     'process.env': {
@@ -31,4 +27,4 @@ const clientPlugins = [
   ...commonPlugins,
 ];
 
-module.exports = { serverPlugins, clientPlugins };
+module.exports = { serverPlugins: commonPlugins, clientPlugins };
