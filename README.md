@@ -29,7 +29,7 @@ The app uses Twilio for STUN/TURN servers but I may use available Node.js librar
 to implement that myself in the future.
 
 #### Environmental variables:
-- `APP_NAME` determines which server to start when running the app
+- `APP_NAME` determines which server to start when running the app (`graphqlServer` or `signalServer`)
 - `PORT` determines which port the server is listening on
 - `NODE_ENV` determines environment (`production` or `development`)
 - `SIGNAL_SERVER_URL` URL of socket.io server
