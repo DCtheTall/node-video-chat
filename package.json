@@ -75,7 +75,7 @@
     "pizzicato": "^0.6.3",
     "postcss-loader": "^2.1.1",
     "prop-types": "^15.6.0",
-    "pug": "^2.0.0-rc.4",
+    "pug": "^3.0.1",
     "react": "^16.2.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
