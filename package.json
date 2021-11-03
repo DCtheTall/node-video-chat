@@ -99,7 +99,7 @@
     "style-loader": "^0.20.2",
     "subscriptions-transport-ws": "^0.9.6",
     "twilio": "^3.17.1",
-    "validator": "^9.4.1",
+    "validator": "^13.7.0",
     "webpack": "~3.11.0",
     "webpack-manifest-plugin": "^2.0.3",
     "webpack-node-externals": "^1.6.0",
